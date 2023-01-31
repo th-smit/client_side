@@ -1,0 +1,21 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+.content{
+  height:80vh;
+}
+.navbar{
+  background-color: lightblue !important;
+  height:10vh;
+} 
+.footer{
+  height:10vh;
+}
+.register-page{
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    height:90vh;
+}
