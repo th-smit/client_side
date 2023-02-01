@@ -21,6 +21,8 @@ const Header = () => {
             <Link className="navbar-brand mr-0" to="/">
               Book My Show
             </Link>
+          </div>
+          <div>
             <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
               <li className="nav-item">
                 <Link

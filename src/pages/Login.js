@@ -20,7 +20,7 @@ const Login = () => {
         navigate("/");
       }
     } catch (error) {
-      message.error("something went wrong");
+      message.error("Invalid credential");
     }
   };
   return (
@@ -68,9 +68,13 @@ const Login = () => {
             <Input.Password type="password" />
           </Form.Item>
 
-          <div className="d-flex justify-content-between">
-            <Link to="/register">
+          <div className="d-flex justify-content-between flex-column">
+            <Link to="/register" className="mb-2">
               Not have a account ? click here to register
+            </Link>
+
+            <Link to="/emailsend" className="mb-2">
+              Forgot password
             </Link>
             <button className="btn btn-primary">Login</button>
           </div>

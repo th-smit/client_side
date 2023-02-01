@@ -6,11 +6,14 @@ import axios from "axios";
 const Register = () => {
   const navigate = useNavigate();
   const submitHandler = async (values) => {
+    delete values.confirmpassword;
+    console.log(values);
     try {
       const value = await axios.post(
         "http://localhost:8080/users/register",
         values
       );
+      console.log(value.data.errorMessage);
       if (typeof value.data.errorMessage == "string") {
         message.error(value.data.errorMessage);
       } else {
