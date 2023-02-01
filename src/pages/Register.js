@@ -4,7 +4,6 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const Register = () => {
-  //form submit
   const navigate = useNavigate();
   const submitHandler = async (values) => {
     try {
@@ -13,7 +12,6 @@ const Register = () => {
         values
       );
       if (typeof value.data.errorMessage == "string") {
-        //console.log(value.data.errorMessage);
         message.error(value.data.errorMessage);
       } else {
         message.success("registation successfully");
@@ -27,11 +25,7 @@ const Register = () => {
   return (
     <>
       <div className="register-page">
-        <Form
-          layout="vertical"
-          style={{ width: "20%" }}
-          onFinish={submitHandler}
-        >
+        <Form layout="vertical" onFinish={submitHandler}>
           <h2>Register Form</h2>
           <Form.Item
             label="Name"
@@ -88,6 +82,30 @@ const Register = () => {
           >
             <Input.Password placeholder="Enter your password" />
           </Form.Item>
+
+          <Form.Item
+            label="Confirm Password"
+            name="confirmpassword"
+            dependencies={["password"]}
+            rules={[
+              {
+                required: true,
+                message: "Please enter your confirm password",
+              },
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  if (!value || getFieldValue("password") === value) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject("the two passwords does not match");
+                },
+              }),
+            ]}
+            hasFeedback
+          >
+            <Input.Password placeholder="Enter your confirm password" />
+          </Form.Item>
+
           <div className="d-flex justify-content-between">
             <Link to="/login">Already registred ? click here to login</Link>
             <button className="btn btn-primary">Register</button>
