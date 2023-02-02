@@ -1,38 +1,33 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Form, Input, message } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
-const Login = () => {
+const ForgotPassword = () => {
   const navigate = useNavigate();
   const submitHandler = async (values) => {
-    console.log(values);
+    let myString = localStorage.getItem("email");
+    myString = myString.replace(/["]/g, "");
+
+    const userData = {
+      password: values.password,
+      email: myString,
+    };
+    console.log(userData);
     try {
-      await axios.post("http://localhost:8080/users/login", values);
-      message.success("login successfully");
+      await axios.post("http://localhost:8080/pwd/changepassword", userData);
+      message.success("password change successfully");
       navigate("/");
     } catch (error) {
-      message.error("Invalid credential");
+      message.error("Password not changed");
     }
   };
+
   return (
     <div>
       <div className="register-page">
         <Form layout="vertical" onFinish={submitHandler}>
-          <h1>login form</h1>
-          <Form.Item
-            label="Email"
-            name="email"
-            rules={[
-              {
-                required: true,
-                message: "Please enter your email",
-              },
-            ]}
-            hasFeedback
-          >
-            <Input type="email" />
-          </Form.Item>
+          <h1 className="mb-3">Enter New Password</h1>
           <Form.Item
             label="Password"
             name="password"
@@ -57,18 +52,11 @@ const Login = () => {
             ]}
             hasFeedback
           >
-            <Input.Password type="password" />
+            <Input.Password placeholder="Enter your password" />
           </Form.Item>
 
           <div className="d-flex justify-content-between flex-column">
-            <Link to="/register" className="mb-2">
-              Not have a account ? click here to register
-            </Link>
-
-            <Link to="/emailsend" className="mb-2">
-              Forgot password
-            </Link>
-            <button className="btn btn-primary">Login</button>
+            <button className="btn btn-primary">Confirm</button>
           </div>
         </Form>
       </div>
@@ -76,4 +64,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default ForgotPassword;

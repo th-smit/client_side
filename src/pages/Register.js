@@ -9,19 +9,11 @@ const Register = () => {
     delete values.confirmpassword;
     console.log(values);
     try {
-      const value = await axios.post(
-        "http://localhost:8080/users/register",
-        values
-      );
-      console.log(value.data.errorMessage);
-      if (typeof value.data.errorMessage == "string") {
-        message.error(value.data.errorMessage);
-      } else {
-        message.success("registation successfully");
-        navigate("/login");
-      }
+      await axios.post("http://localhost:8080/users/register", values);
+      message.success("registation successfully");
+      navigate("/login");
     } catch (error) {
-      console.log(error);
+      message.error(error.errorMessage);
     }
   };
 
@@ -109,8 +101,10 @@ const Register = () => {
             <Input.Password placeholder="Enter your confirm password" />
           </Form.Item>
 
-          <div className="d-flex justify-content-between">
-            <Link to="/login">Already registred ? click here to login</Link>
+          <div className="d-flex justify-content-between flex-column">
+            <Link to="/login" className="mb-2">
+              Already registred ? click here to login
+            </Link>
             <button className="btn btn-primary">Register</button>
           </div>
         </Form>

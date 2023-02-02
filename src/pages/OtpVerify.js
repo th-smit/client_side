@@ -9,15 +9,35 @@ const OtpVerify = () => {
     let myString = localStorage.getItem("email");
     myString = myString.replace(/["]/g, "");
 
-    const valuess = {
+    const userData = {
       otp: values.otp,
       email: myString,
     };
+    console.log(userData);
     try {
-      await axios.post("http://localhost:8080/pwd/otpverify", valuess);
+      await axios.post("http://localhost:8080/pwd/otpverify", userData);
       message.success("otp verified");
+      navigate("/forgotpassword");
     } catch (error) {
-      message.error("otp not verified");
+      message.error("Otp not verified");
+    }
+  };
+
+  const Emailhandler = async () => {
+    try {
+      let userEmail = localStorage.getItem("email");
+      userEmail = userEmail.replace(/["]/g, "");
+
+      const Email = {
+        email: userEmail,
+      };
+      console.log(Email);
+      await axios.post("http://localhost:8080/pwd/emailsend", Email);
+      //localStorage.setItem("email", JSON.stringify(values.email));
+      message.success("email verified");
+      navigate("/otpverify");
+    } catch (error) {
+      message.error("Email does not exist");
     }
   };
 
@@ -25,7 +45,7 @@ const OtpVerify = () => {
     <div>
       <div className="register-page">
         <Form layout="vertical" onFinish={submitHandler}>
-          <h1 className="mb-3">otp</h1>
+          <h1 className="mb-3">Enter Otp</h1>
           <Form.Item
             label="Otp"
             name="otp"
@@ -41,6 +61,12 @@ const OtpVerify = () => {
           </Form.Item>
 
           <div className="d-flex justify-content-between flex-column">
+            <button
+              onClick={() => Emailhandler()}
+              className="mb-2 btn btn-primary"
+            >
+              Resend OTP
+            </button>
             <button className="btn btn-primary">Verify</button>
           </div>
         </Form>
