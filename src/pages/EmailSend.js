@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Form, Input, message } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -16,6 +16,11 @@ const EmailSend = () => {
       message.error("Email does not exist");
     }
   };
+  // useEffect(() => {
+  //   if (localStorage.getItem("email")) {
+  //     navigate("/");
+  //   }
+  // }, [navigate]);
   return (
     <div>
       <div className="register-page">

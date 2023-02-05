@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Form, Input, message } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -16,6 +16,13 @@ const Register = () => {
       message.error(error.errorMessage);
     }
   };
+
+  //prevent for login user
+  // useEffect(() => {
+  //   if (localStorage.getItem("email")) {
+  //     navigate("/");
+  //   }
+  // });
 
   return (
     <>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Form, Input, message } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -6,15 +6,23 @@ import axios from "axios";
 const Login = () => {
   const navigate = useNavigate();
   const submitHandler = async (values) => {
-    console.log(values);
     try {
-      await axios.post("http://localhost:8080/users/login", values);
+      const newUserData = await axios.post(
+        "http://localhost:8080/users/login",
+        values
+      );
+      localStorage.setItem("email", JSON.stringify(values.email));
+
+      console.log(newUserData.data.successMessage.token);
       message.success("login successfully");
-      navigate("/");
+      navigate("/", {
+        state: { token: newUserData.data.successMessage.token },
+      });
     } catch (error) {
       message.error("Invalid credential");
     }
   };
+
   return (
     <div>
       <div className="register-page">

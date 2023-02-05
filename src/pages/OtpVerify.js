@@ -8,7 +8,7 @@ const OtpVerify = () => {
   const submitHandler = async (values) => {
     let myString = localStorage.getItem("email");
     myString = myString.replace(/["]/g, "");
-
+    console.log(myString);
     const userData = {
       otp: values.otp,
       email: myString,
@@ -33,7 +33,7 @@ const OtpVerify = () => {
       };
       console.log(Email);
       await axios.post("http://localhost:8080/pwd/emailsend", Email);
-      //localStorage.setItem("email", JSON.stringify(values.email));
+      localStorage.setItem("email", JSON.stringify(Email));
       message.success("email verified");
       navigate("/otpverify");
     } catch (error) {
