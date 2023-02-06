@@ -6,12 +6,10 @@ import axios from "axios";
 const OtpVerify = () => {
   const navigate = useNavigate();
   const submitHandler = async (values) => {
-    let myString = localStorage.getItem("email");
-    myString = myString.replace(/["]/g, "");
-    console.log(myString);
+    let userEmail = localStorage.getItem("email");
     const userData = {
       otp: values.otp,
-      email: myString,
+      email: userEmail,
     };
     console.log(userData);
     try {
@@ -26,14 +24,11 @@ const OtpVerify = () => {
   const Emailhandler = async () => {
     try {
       let userEmail = localStorage.getItem("email");
-      userEmail = userEmail.replace(/["]/g, "");
-
-      const Email = {
+      console.log("from emailhandler");
+      console.log(userEmail);
+      await axios.post("http://localhost:8080/pwd/emailsend", {
         email: userEmail,
-      };
-      console.log(Email);
-      await axios.post("http://localhost:8080/pwd/emailsend", Email);
-      localStorage.setItem("email", JSON.stringify(Email));
+      });
       message.success("email verified");
       navigate("/otpverify");
     } catch (error) {

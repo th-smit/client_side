@@ -6,18 +6,16 @@ import axios from "axios";
 const ForgotPassword = () => {
   const navigate = useNavigate();
   const submitHandler = async (values) => {
-    let myString = localStorage.getItem("email");
-    myString = myString.replace(/["]/g, "");
-
+    let userEmail = localStorage.getItem("email");
     const userData = {
       password: values.password,
-      email: myString,
+      email: userEmail,
     };
-    console.log(userData);
+
     try {
       await axios.post("http://localhost:8080/pwd/changepassword", userData);
       message.success("password change successfully");
-      navigate("/");
+      navigate("/login");
     } catch (error) {
       message.error("Password not changed");
     }

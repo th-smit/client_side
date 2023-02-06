@@ -1,7 +1,16 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Form, Input, message } from "antd";
+import { Link, useNavigate } from "react-router-dom";
 
 const Header = () => {
+  const navigate = useNavigate();
+  const Emailhandler = async () => {
+    localStorage.removeItem("email");
+    localStorage.removeItem("token");
+    message.success("logout successfully");
+    navigate("/login");
+  };
+
   return (
     <>
       <nav className="navbar navbar-expand-lg navbar-light bg-light">
@@ -32,6 +41,14 @@ const Header = () => {
                 >
                   User
                 </Link>
+              </li>
+              <li>
+                <button
+                  onClick={() => Emailhandler()}
+                  className="mb-2 btn btn-primary"
+                >
+                  Logout
+                </button>
               </li>
             </ul>
           </div>

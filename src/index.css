@@ -3,15 +3,13 @@
   margin: 0;
   box-sizing: border-box;
 }
-.content{
-  height:80vh;
-}
 .navbar{
   background-color: lightblue !important;
-  height:10vh;
+  
 } 
 .footer{
-  height:10vh;
+  margin-bottom: 0px;
+  
 }
 .register-page{
     display:flex;

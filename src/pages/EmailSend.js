@@ -7,20 +7,14 @@ const EmailSend = () => {
   const navigate = useNavigate();
   const submitHandler = async (values) => {
     try {
-      console.log(values);
       await axios.post("http://localhost:8080/pwd/emailsend", values);
-      localStorage.setItem("email", JSON.stringify(values.email));
+      localStorage.setItem("email", values.email);
       message.success("email verified");
       navigate("/otpverify");
     } catch (error) {
       message.error("Email does not exist");
     }
   };
-  // useEffect(() => {
-  //   if (localStorage.getItem("email")) {
-  //     navigate("/");
-  //   }
-  // }, [navigate]);
   return (
     <div>
       <div className="register-page">

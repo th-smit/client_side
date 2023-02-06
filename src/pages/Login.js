@@ -11,13 +11,10 @@ const Login = () => {
         "http://localhost:8080/users/login",
         values
       );
-      localStorage.setItem("email", JSON.stringify(values.email));
-
-      console.log(newUserData.data.successMessage.token);
+      localStorage.setItem("email", values.email);
+      localStorage.setItem("token", newUserData.data.successMessage.token);
       message.success("login successfully");
-      navigate("/", {
-        state: { token: newUserData.data.successMessage.token },
-      });
+      navigate("/");
     } catch (error) {
       message.error("Invalid credential");
     }

@@ -17,13 +17,6 @@ const Register = () => {
     }
   };
 
-  //prevent for login user
-  // useEffect(() => {
-  //   if (localStorage.getItem("email")) {
-  //     navigate("/");
-  //   }
-  // });
-
   return (
     <>
       <div className="register-page">
