@@ -3,17 +3,31 @@
   margin: 0;
   box-sizing: border-box;
 }
+body{
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
 .navbar{
   background-color: lightblue !important;
   
 } 
-.footer{
-  margin-bottom: 0px;
-  
+footer{
+  margin-top: auto;
 }
 .register-page{
     display:flex;
     align-items: center;
     justify-content: center;
     height:90vh;
+}
+img {
+  border-radius: 5%;
+  width: 180px;
+}
+/* .mheader{
+  font-family:"Garamond",Times,serif;
+} */
+.main{
+  display:inline-block;
 }

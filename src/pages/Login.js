@@ -6,6 +6,7 @@ import axios from "axios";
 const Login = () => {
   const navigate = useNavigate();
   const submitHandler = async (values) => {
+    console.log(values);
     try {
       const newUserData = await axios.post(
         "http://localhost:8080/users/login",
