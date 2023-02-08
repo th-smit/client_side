@@ -32,7 +32,6 @@ const HomePage = () => {
     try {
       const token = localStorage.getItem("token");
       console.log(sort[value]);
-      console.log(message);
       const movieData = await axios.get(
         `http://localhost:8080/movie?sortedby=${sort[value].sortedby}&title=${message}`,
         {

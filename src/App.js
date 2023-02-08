@@ -6,6 +6,7 @@ import EmailSend from "./pages/EmailSend";
 import OtpVerify from "./pages/OtpVerify";
 import ForgotPassword from "./pages/ForgotPassword";
 import Protected from "./pages/Protected";
+import AddMovie from "./pages/AddMovie";
 function App() {
   return (
     <Routes>
@@ -21,6 +22,7 @@ function App() {
         path="/otpverify"
         element={<Protected Component={OtpVerify} />}
       ></Route>
+      <Route path="/addmovie" element={<AddMovie />}></Route>
     </Routes>
   );
 }
