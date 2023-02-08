@@ -4,6 +4,7 @@ import axios from "axios";
 
 const HomePage = () => {
   const [allMovie, setAllMovie] = useState([]);
+  const [message, setMessage] = useState("");
   const sort = {
     Asc_created: {
       sortedby: "createdAt",
@@ -24,33 +25,52 @@ const HomePage = () => {
   };
   const [value, setValue] = useState(sort.Asc_created.text);
   useEffect(() => {
-    const getRecords = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        console.log(sort[value]);
-        const movieData = await axios.get(
-          `http://localhost:8080/movie?sortedby=${sort[value].sortedby}`,
-          {
-            headers: { Authorization: token },
-          }
-        );
-        setAllMovie(movieData.data.successMessage);
-      } catch (error) {
-        console.log(error);
-      }
-    };
     getRecords();
   }, [value]);
+
+  const getRecords = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      console.log(sort[value]);
+      console.log(message);
+      const movieData = await axios.get(
+        `http://localhost:8080/movie?sortedby=${sort[value].sortedby}&title=${message}`,
+        {
+          headers: { Authorization: token },
+        }
+      );
+      setAllMovie(movieData.data.successMessage);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const handleChange = (event) => {
     setValue(event.target.value);
   };
 
+  const handlerClick = () => {
+    console.log(message);
+    setMessage(message);
+    getRecords();
+  };
+
+  const handleonChange = (event) => {
+    setMessage(event.target.value);
+  };
   return (
     <>
       <Layout>
         <div classaName="row inline-block">
           <div classaName="row">
             <h3 className="col-md-6">Recomanded Movies</h3>
+            <input
+              type="text"
+              placeholder="Search here"
+              name="message"
+              onChange={handleonChange}
+              value={message}
+            />
+            <button onClick={handlerClick}>Search</button>
             <div className="col-md-6 ml-0">
               <select onChange={handleChange}>
                 <option value={sort.Asc_created.text}>
