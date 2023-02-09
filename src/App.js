@@ -7,6 +7,8 @@ import OtpVerify from "./pages/OtpVerify";
 import ForgotPassword from "./pages/ForgotPassword";
 import Protected from "./pages/Protected";
 import AddMovie from "./pages/AddMovie";
+import MovieDetails from "./pages/MovieDetails";
+import EditMovieDetails from "./pages/EditMovieDetails";
 function App() {
   return (
     <Routes>
@@ -23,6 +25,8 @@ function App() {
         element={<Protected Component={OtpVerify} />}
       ></Route>
       <Route path="/addmovie" element={<AddMovie />}></Route>
+      <Route path="/moviedetails" element={<MovieDetails />}></Route>
+      <Route path="/moviedetails/edit" element={<EditMovieDetails />}></Route>
     </Routes>
   );
 }

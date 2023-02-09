@@ -1,10 +1,8 @@
 import React from "react";
-import { useForm } from "react-hook-form";
-import "../App.css";
 import axios from "axios";
+import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
-
-function AddMovie() {
+const EditMovieDetails = () => {
   const navigate = useNavigate();
   const {
     register,
@@ -12,11 +10,6 @@ function AddMovie() {
     formState: { errors },
   } = useForm();
 
-  const form = useForm({
-    defaultValues: {
-      checkbox: false,
-    },
-  });
   const onSubmit = async (values) => {
     try {
       console.log(values);
@@ -104,5 +97,6 @@ function AddMovie() {
       </form>
     </>
   );
-}
-export default AddMovie;
+};
+
+export default EditMovieDetails;

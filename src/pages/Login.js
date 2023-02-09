@@ -12,6 +12,7 @@ const Login = () => {
         "http://localhost:8080/users/login",
         values
       );
+      localStorage.setItem("role", newUserData.data.successMessage.user.role);
       localStorage.setItem("email", values.email);
       localStorage.setItem("token", newUserData.data.successMessage.token);
       message.success("login successfully");

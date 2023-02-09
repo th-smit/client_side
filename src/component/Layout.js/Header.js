@@ -7,6 +7,7 @@ const Header = () => {
   const Emailhandler = async () => {
     localStorage.removeItem("email");
     localStorage.removeItem("token");
+    localStorage.removeItem("role");
     message.success("logout successfully");
     navigate("/login");
   };
