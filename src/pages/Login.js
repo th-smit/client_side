@@ -1,21 +1,24 @@
-import React, { useState, useEffect } from "react";
+import React, { useContext } from "react";
 import { Form, Input, message } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { RoleContext } from "./Context";
 
 const Login = () => {
   const navigate = useNavigate();
-  const submitHandler = async (values) => {
+  const role = useContext(RoleContext);
+  const onLoginButtonClick = async (values) => {
     console.log(values);
     try {
       const newUserData = await axios.post(
         "http://localhost:8080/users/login",
         values
       );
-      localStorage.setItem("role", newUserData.data.successMessage.user.role);
+      //const useremail = newUserData.data.successMessage.user.role;
+      //localStorage.setItem("role", newUserData.data.successMessage.user.role);
+      role.setRole(newUserData.data.successMessage.user.role);
       localStorage.setItem("email", values.email);
       localStorage.setItem("token", newUserData.data.successMessage.token);
-      message.success("login successfully");
       navigate("/");
     } catch (error) {
       message.error("Invalid credential");
@@ -25,7 +28,7 @@ const Login = () => {
   return (
     <div>
       <div className="register-page">
-        <Form layout="vertical" onFinish={submitHandler}>
+        <Form layout="vertical" onFinish={onLoginButtonClick}>
           <h1>login form</h1>
           <Form.Item
             label="Email"

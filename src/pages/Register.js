@@ -5,12 +5,15 @@ import axios from "axios";
 
 const Register = () => {
   const navigate = useNavigate();
-  const submitHandler = async (values) => {
+  const submitRegisterDetails = async (values) => {
     delete values.confirmpassword;
     console.log(values);
     try {
-      await axios.post("http://localhost:8080/users/register", values);
-      message.success("registation successfully");
+      const userData = await axios.post(
+        "http://localhost:8080/users/register",
+        values
+      );
+      console.log(userData);
       navigate("/login");
     } catch (error) {
       message.error(error.errorMessage);
@@ -20,7 +23,7 @@ const Register = () => {
   return (
     <>
       <div className="register-page">
-        <Form layout="vertical" onFinish={submitHandler}>
+        <Form layout="vertical" onFinish={submitRegisterDetails}>
           <h2>Register Form</h2>
           <Form.Item
             label="Name"

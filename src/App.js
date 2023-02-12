@@ -9,25 +9,28 @@ import Protected from "./pages/Protected";
 import AddMovie from "./pages/AddMovie";
 import MovieDetails from "./pages/MovieDetails";
 import EditMovieDetails from "./pages/EditMovieDetails";
+import { RoleState } from "./pages/Context";
 function App() {
   return (
-    <Routes>
-      <Route path="/" element={<Protected Component={HomePage} />}></Route>
-      <Route path="/register" element={<Register />}></Route>
-      <Route path="/login" element={<Login />}></Route>
-      <Route path="/emailsend" element={<EmailSend />}></Route>
-      <Route
-        path="/forgotpassword"
-        element={<Protected Component={ForgotPassword} />}
-      ></Route>
-      <Route
-        path="/otpverify"
-        element={<Protected Component={OtpVerify} />}
-      ></Route>
-      <Route path="/addmovie" element={<AddMovie />}></Route>
-      <Route path="/moviedetails" element={<MovieDetails />}></Route>
-      <Route path="/moviedetails/edit" element={<EditMovieDetails />}></Route>
-    </Routes>
+    <RoleState>
+      <Routes>
+        <Route path="/" element={<Protected Component={HomePage} />}></Route>
+        <Route path="/register" element={<Register />}></Route>
+        <Route path="/login" element={<Login />}></Route>
+        <Route path="/emailsend" element={<EmailSend />}></Route>
+        <Route
+          path="/forgotpassword"
+          element={<Protected Component={ForgotPassword} />}
+        ></Route>
+        <Route
+          path="/otpverify"
+          element={<Protected Component={OtpVerify} />}
+        ></Route>
+        <Route path="/addmovie" element={<AddMovie />}></Route>
+        <Route path="/moviedetails" element={<MovieDetails />}></Route>
+        <Route path="/edit" element={<EditMovieDetails />}></Route>
+      </Routes>
+    </RoleState>
   );
 }
 

@@ -1,15 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Form, Input, message } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const EmailSend = () => {
   const navigate = useNavigate();
-  const submitHandler = async (values) => {
+  const onEnterEmailHandler = async (values) => {
     try {
       await axios.post("http://localhost:8080/pwd/emailsend", values);
       localStorage.setItem("email", values.email);
-      message.success("email verified");
       navigate("/otpverify");
     } catch (error) {
       message.error("Email does not exist");
@@ -18,7 +17,7 @@ const EmailSend = () => {
   return (
     <div>
       <div className="register-page">
-        <Form layout="vertical" onFinish={submitHandler}>
+        <Form layout="vertical" onFinish={onEnterEmailHandler}>
           <h1>Enter Mail</h1>
           <Form.Item
             label="Email"

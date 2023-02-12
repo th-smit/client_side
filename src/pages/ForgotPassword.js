@@ -5,7 +5,7 @@ import axios from "axios";
 
 const ForgotPassword = () => {
   const navigate = useNavigate();
-  const submitHandler = async (values) => {
+  const onEnterPasswordHandler = async (values) => {
     let userEmail = localStorage.getItem("email");
     const userData = {
       password: values.password,
@@ -14,7 +14,6 @@ const ForgotPassword = () => {
 
     try {
       await axios.post("http://localhost:8080/pwd/changepassword", userData);
-      message.success("password change successfully");
       navigate("/login");
     } catch (error) {
       message.error("Password not changed");
@@ -24,7 +23,7 @@ const ForgotPassword = () => {
   return (
     <div>
       <div className="register-page">
-        <Form layout="vertical" onFinish={submitHandler}>
+        <Form layout="vertical" onFinish={onEnterPasswordHandler}>
           <h1 className="mb-3">Enter New Password</h1>
           <Form.Item
             label="Password"

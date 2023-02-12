@@ -1,13 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { RoleContext } from "./Context";
 import Layout from "../component/Layout.js/Layout";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const HomePage = () => {
   const [allMovie, setAllMovie] = useState([]);
-  const [message, setMessage] = useState("");
-  const role = localStorage.getItem("role");
+  const [movieTitle, setMovieTitle] = useState("");
+  const role = useContext(RoleContext);
 
+  //console.log(role.role);
+  //const token = localStorage.getItem("token");
+  console.log("role  ", role.role);
   const navigate = useNavigate();
   const sort = {
     Asc_created: {
@@ -27,17 +31,20 @@ const HomePage = () => {
       text: "Des_updated",
     },
   };
-  const [value, setValue] = useState(sort.Asc_created.text);
+  const [sortValue, setSortValue] = useState(sort.Asc_created.text);
   useEffect(() => {
+    if (!localStorage.getItem("token")) {
+      navigate("/login");
+    }
     getRecords();
-  }, [value]);
+  }, [sortValue]);
 
   const getRecords = async () => {
     try {
       const token = localStorage.getItem("token");
-      console.log(sort[value].sortedby);
+      console.log(sort[sortValue].sortedby);
       const movieData = await axios.get(
-        `http://localhost:8080/movie?sortedby=${sort[value].sortedby}&title=${message}`,
+        `http://localhost:8080/movie?sortedby=${sort[sortValue].sortedby}&title=${movieTitle}`,
         {
           headers: { Authorization: token },
         }
@@ -47,21 +54,21 @@ const HomePage = () => {
       console.log(error);
     }
   };
-  const handleChange = (event) => {
-    setValue(event.target.value);
+  const onSortingChange = (event) => {
+    setSortValue(event.target.value);
   };
 
-  const handlerClick = () => {
-    console.log(message);
-    setMessage(message);
+  const handlerSearchButton = () => {
+    console.log(movieTitle);
+    setMovieTitle(movieTitle);
     getRecords();
   };
 
-  const handleonChange = (event) => {
-    setMessage(event.target.value);
+  const onSearchChange = (event) => {
+    setMovieTitle(event.target.value);
   };
 
-  const handleDetails = (data) => {
+  const handleImageClickDetails = (data) => {
     console.log(data);
     localStorage.setItem("title", data.title);
     navigate("/moviedetails", {
@@ -71,49 +78,71 @@ const HomePage = () => {
     });
   };
 
-  const handleAddMovie = () => {
+  const handleAddButton = () => {
     console.log("handleAddMovie");
     navigate("/addmovie");
   };
   return (
     <>
       <Layout>
-        <body>
-          <div classaName="row inline-block">
-            <div classaName="row">
-              <h3 className="col-md-6">Recomanded Movies</h3>
-              <input
-                type="text"
-                placeholder="Search here"
-                name="message"
-                onChange={handleonChange}
-                value={message}
-              />
-              <button onClick={handlerClick}>Search</button>
-              <div className="col-md-6 ml-0">
-                <select onChange={handleChange}>
-                  <option value={sort.Asc_created.text}>
-                    {sort.Asc_created.text}
-                  </option>
-                  <option value={sort.Asc_updated.text}>
-                    {sort.Asc_updated.text}
-                  </option>
-                  <option value={sort.Des_created.text}>
-                    {sort.Des_created.text}
-                  </option>
-                  <option value={sort.Des_updated.text}>
-                    {sort.Des_updated.text}
-                  </option>
-                </select>
+        <div className="mt-4 mb-5">
+          <div className="row">
+            <div className="col-sm-4 form-row">
+              <div className="col-sm-6">
+                <input
+                  className="form-control"
+                  type="search"
+                  placeholder="Search here"
+                  name="message"
+                  onChange={onSearchChange}
+                  value={movieTitle}
+                />
+              </div>
+              <div className="col-sm-1">
+                <button
+                  className="btn btn-primary"
+                  onClick={handlerSearchButton}
+                >
+                  Search
+                </button>
               </div>
             </div>
+            <div className="col-sm-5 d-flex">
+              <select onChange={onSortingChange}>
+                <option value={sort.Asc_created.text}>
+                  {sort.Asc_created.text}
+                </option>
+                <option value={sort.Asc_updated.text}>
+                  {sort.Asc_updated.text}
+                </option>
+                <option value={sort.Des_created.text}>
+                  {sort.Des_created.text}
+                </option>
+                <option value={sort.Des_updated.text}>
+                  {sort.Des_updated.text}
+                </option>
+              </select>
+            </div>
+            <div className="col-sm-3 d-flex justify-content-end">
+              {role === "admin" && (
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={() => handleAddButton()}
+                >
+                  Add Movie
+                </button>
+              )}
+            </div>
           </div>
-
+        </div>
+        <body>
+          <h3>Recomanded Movies</h3>
           <div className="row">
             {allMovie.map((data) => {
               return (
                 <div key={data.title} className="col-md-3">
-                  <button onClick={() => handleDetails(data)}>
+                  <button onClick={() => handleImageClickDetails(data)}>
                     <img src={data.poster_api} alt="image not avaliable" />
                   </button>
                   <div className="font-weight-bold">{data.title}</div>
@@ -121,17 +150,6 @@ const HomePage = () => {
                 </div>
               );
             })}
-          </div>
-          <div>
-            {role === "admin" && (
-              <button
-                type="button"
-                className="btn btn-primary"
-                onClick={() => handleAddMovie()}
-              >
-                Add
-              </button>
-            )}
           </div>
         </body>
       </Layout>

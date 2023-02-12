@@ -5,7 +5,7 @@ import axios from "axios";
 
 const OtpVerify = () => {
   const navigate = useNavigate();
-  const submitHandler = async (values) => {
+  const onEnterOTP = async (values) => {
     let userEmail = localStorage.getItem("email");
     const userData = {
       otp: values.otp,
@@ -14,14 +14,13 @@ const OtpVerify = () => {
     console.log(userData);
     try {
       await axios.post("http://localhost:8080/pwd/otpverify", userData);
-      message.success("otp verified");
       navigate("/forgotpassword");
     } catch (error) {
       message.error("Otp not verified");
     }
   };
 
-  const Emailhandler = async () => {
+  const onResendOTP = async () => {
     try {
       let userEmail = localStorage.getItem("email");
       console.log("from emailhandler");
@@ -39,7 +38,7 @@ const OtpVerify = () => {
   return (
     <div>
       <div className="register-page">
-        <Form layout="vertical" onFinish={submitHandler}>
+        <Form layout="vertical" onFinish={onEnterOTP}>
           <h1 className="mb-3">Enter Otp</h1>
           <Form.Item
             label="Otp"
@@ -56,12 +55,7 @@ const OtpVerify = () => {
           </Form.Item>
 
           <div className="d-flex justify-content-between flex-column">
-            <button
-              onClick={() => Emailhandler()}
-              className="mb-2 btn btn-primary"
-            >
-              Resend OTP
-            </button>
+            <a onClick={() => onResendOTP()}>Resend OTP</a>
             <button className="btn btn-primary">Verify</button>
           </div>
         </Form>

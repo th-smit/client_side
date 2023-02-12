@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import "../App.css";
 import axios from "axios";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function AddMovie() {
   const navigate = useNavigate();
@@ -17,7 +17,7 @@ function AddMovie() {
       checkbox: false,
     },
   });
-  const onSubmit = async (values) => {
+  const onAddMovieDetailSubmit = async (values) => {
     try {
       console.log(values);
       const newUserData = await axios.post(
@@ -29,9 +29,19 @@ function AddMovie() {
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    // if (!(localStorage.getItem("role") === "admin")) {
+    //   navigate("/");
+    // }
+    if (!localStorage.getItem("token")) {
+      navigate("/login");
+    }
+  });
+
   return (
     <>
-      <form className="App1" onSubmit={handleSubmit(onSubmit)}>
+      <form className="App1" onSubmit={handleSubmit(onAddMovieDetailSubmit)}>
         <h3 className="title">Add Movies</h3>
         <label htmlFor="title">Movie Title : &nbsp;</label>
         <input

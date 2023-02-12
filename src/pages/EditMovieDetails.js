@@ -1,31 +1,55 @@
-import React from "react";
+import React, { useEffect } from "react";
 import axios from "axios";
+import { useLocation } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+
 const EditMovieDetails = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const {
     register,
+    setValue,
     handleSubmit,
     formState: { errors },
   } = useForm();
 
-  const onSubmit = async (values) => {
+  useEffect(() => {
+    console.log("helllll");
+    if (!localStorage.getItem("token")) {
+      navigate("/login");
+    }
+    if (location.state === null) {
+      navigate("/");
+    } else {
+      setValue("title", location.state.movieData.title);
+      setValue("description", location.state.movieData.description);
+      setValue("movie_type", location.state.movieData.movie_type);
+      setValue("poster_api", location.state.movieData.poster_api);
+      setValue("is_released", location.state.movieData.is_released);
+    }
+  }, []);
+
+  const onEditMovieDetailSubmit = async (values) => {
     try {
+      console.log(location.state.movieData._id);
       console.log(values);
-      const newUserData = await axios.post(
-        "http://localhost:8080/movie",
+      const newUserData = await axios.put(
+        `http://localhost:8080/movie/${location.state.movieData._id}`,
         values
       );
+      console.log(newUserData);
+
       navigate("/");
     } catch (error) {
       console.log(error);
     }
   };
+
   return (
     <>
-      <form className="App1" onSubmit={handleSubmit(onSubmit)}>
-        <h3 className="title">Add Movies</h3>
+      <form className="App1" onSubmit={handleSubmit(onEditMovieDetailSubmit)}>
+        <h3 className="title">Edit Movie Details</h3>
         <label htmlFor="title">Movie Title : &nbsp;</label>
         <input
           type="text"
@@ -93,7 +117,7 @@ const EditMovieDetails = () => {
           <label htmlFor="is_released">Is_Released ? &nbsp;</label>
           <input type="checkbox" {...register("is_released")}></input>
         </div>
-        <input type="submit" className="btn btn-primary" value="Add" />
+        <input type="submit" className="btn btn-primary" value="Update" />
       </form>
     </>
   );
