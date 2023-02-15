@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import "../App.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { clearStorage, setHeader } from "./Utils";
 
 function AddMovie() {
   const navigate = useNavigate();
@@ -12,7 +13,7 @@ function AddMovie() {
     formState: { errors },
   } = useForm();
 
-  const form = useForm({
+  useForm({
     defaultValues: {
       checkbox: false,
     },
@@ -20,24 +21,28 @@ function AddMovie() {
   const onAddMovieDetailSubmit = async (values) => {
     try {
       console.log(values);
-      const newUserData = await axios.post(
-        "http://localhost:8080/movie",
-        values
-      );
+      setHeader(localStorage.getItem("token"));
+      await axios.post("http://localhost:8080/movie", values);
       navigate("/");
     } catch (error) {
       console.log(error);
+      clearStorage();
+      navigate("/login");
     }
   };
 
   useEffect(() => {
-    // if (!(localStorage.getItem("role") === "admin")) {
-    //   navigate("/");
-    // }
+    if (!(localStorage.getItem("role") === "admin")) {
+      navigate("/");
+    }
     if (!localStorage.getItem("token")) {
       navigate("/login");
     }
   });
+
+  const onBack = async () => {
+    navigate("/");
+  };
 
   return (
     <>
@@ -111,6 +116,11 @@ function AddMovie() {
           <input type="checkbox" {...register("is_released")}></input>
         </div>
         <input type="submit" className="btn btn-primary" value="Add" />
+        <div className="mt-2">
+          <a className="pointer-link" onClick={() => onBack()}>
+            &#60;- Back
+          </a>
+        </div>
       </form>
     </>
   );

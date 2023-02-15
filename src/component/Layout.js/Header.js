@@ -1,14 +1,16 @@
 import React from "react";
 import { message } from "antd";
 import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Header = () => {
   const navigate = useNavigate();
-  const Emailhandler = async () => {
-    localStorage.removeItem("email");
-    localStorage.removeItem("token");
-    localStorage.removeItem("role");
+  const name = localStorage.getItem("name");
+
+  const handlerLogout = async () => {
+    localStorage.clear();
     message.success("logout successfully");
+    delete axios.defaults.headers.common["authorization"];
     navigate("/login");
   };
 
@@ -16,36 +18,23 @@ const Header = () => {
     <>
       <nav className="navbar navbar-expand-lg navbar-light bg-light">
         <div className="container-fluid">
-          <button
-            className="navbar-toggler"
-            type="button"
-            data-toggle="collapse"
-            data-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span className="navbar-toggler-icon" />
-          </button>
-          <div className="collapse navbar-collapse" id="navbarSupportedContent">
-            <Link className="navbar-brand mr-0" to="/">
-              Book My Show
-            </Link>
-          </div>
+          <Link className="navbar-brand mr-0" to="/">
+            Book My Show
+          </Link>
           <div>
             <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
               <li className="nav-item">
                 <Link
                   className="nav-link active"
-                  to="/user"
+                  to="/userdetails"
                   aria-current="page"
                 >
-                  User
+                  {name}
                 </Link>
               </li>
               <li>
                 <button
-                  onClick={() => Emailhandler()}
+                  onClick={() => handlerLogout()}
                   className="mb-2 btn btn-primary"
                 >
                   Logout

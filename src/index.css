@@ -4,7 +4,7 @@
   box-sizing: border-box;
 }
 body{
-  min-height: 100vh;
+  min-height: auto;
   display: flex;
   flex-direction: column;
 }
@@ -13,7 +13,13 @@ body{
   
 } 
 footer{
-  margin-top: auto;
+  /* margin-top: auto; */
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+  height: 50px;
 }
 .register-page{
     display:flex;

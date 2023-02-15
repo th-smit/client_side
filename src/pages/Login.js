@@ -1,12 +1,18 @@
-import React, { useContext } from "react";
-import { Form, Input, message } from "antd";
+import React, { useEffect } from "react";
+import { Form, Input } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { RoleContext } from "./Context";
+import { setHeader } from "./Utils";
 
 const Login = () => {
   const navigate = useNavigate();
-  const role = useContext(RoleContext);
+
+  useEffect(() => {
+    if (localStorage.getItem("token")) {
+      navigate("/");
+    }
+  }, []);
+
   const onLoginButtonClick = async (values) => {
     console.log(values);
     try {
@@ -14,14 +20,14 @@ const Login = () => {
         "http://localhost:8080/users/login",
         values
       );
-      //const useremail = newUserData.data.successMessage.user.role;
-      //localStorage.setItem("role", newUserData.data.successMessage.user.role);
-      role.setRole(newUserData.data.successMessage.user.role);
+      localStorage.setItem("role", newUserData.data.successMessage.user.role);
       localStorage.setItem("email", values.email);
       localStorage.setItem("token", newUserData.data.successMessage.token);
+      localStorage.setItem("name", newUserData.data.successMessage.user.name);
+      setHeader(newUserData.data.successMessage.token);
       navigate("/");
     } catch (error) {
-      message.error("Invalid credential");
+      console.log(error);
     }
   };
 

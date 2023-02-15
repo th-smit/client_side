@@ -1,10 +1,18 @@
 import React, { useEffect } from "react";
-import { Form, Input, message } from "antd";
+import { Form, Input } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { setHeader } from "./Utils";
 
 const Register = () => {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (localStorage.getItem("token")) {
+      navigate("/");
+    }
+  }, []);
+
   const submitRegisterDetails = async (values) => {
     delete values.confirmpassword;
     console.log(values);
@@ -13,10 +21,16 @@ const Register = () => {
         "http://localhost:8080/users/register",
         values
       );
+
       console.log(userData);
-      navigate("/login");
+      localStorage.setItem("token", userData.data.successMessage.token);
+      localStorage.setItem("role", userData.data.successMessage.user.role);
+      localStorage.setItem("name", userData.data.successMessage.user.name);
+      localStorage.setItem("email", userData.data.successMessage.user.email);
+      setHeader(localStorage.getItem("token"));
+      navigate("/");
     } catch (error) {
-      message.error(error.errorMessage);
+      console.log(error);
     }
   };
 

@@ -1,17 +1,14 @@
-import React, { useContext, useEffect, useState } from "react";
-import { RoleContext } from "./Context";
+import React, { useEffect, useState } from "react";
 import Layout from "../component/Layout.js/Layout";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { clearStorage, setHeader } from "./Utils";
 
 const HomePage = () => {
   const [allMovie, setAllMovie] = useState([]);
   const [movieTitle, setMovieTitle] = useState("");
-  const role = useContext(RoleContext);
 
-  //console.log(role.role);
-  //const token = localStorage.getItem("token");
-  console.log("role  ", role.role);
+  const role = localStorage.getItem("role");
   const navigate = useNavigate();
   const sort = {
     Asc_created: {
@@ -33,25 +30,25 @@ const HomePage = () => {
   };
   const [sortValue, setSortValue] = useState(sort.Asc_created.text);
   useEffect(() => {
+    console.log("from homepage " + localStorage.getItem("token"));
     if (!localStorage.getItem("token")) {
       navigate("/login");
     }
     getRecords();
-  }, [sortValue]);
+  }, [sortValue, movieTitle]);
 
   const getRecords = async () => {
     try {
-      const token = localStorage.getItem("token");
+      setHeader(localStorage.getItem("token"));
       console.log(sort[sortValue].sortedby);
       const movieData = await axios.get(
-        `http://localhost:8080/movie?sortedby=${sort[sortValue].sortedby}&title=${movieTitle}`,
-        {
-          headers: { Authorization: token },
-        }
+        `http://localhost:8080/movie?sortedby=${sort[sortValue].sortedby}&title=${movieTitle}`
       );
       setAllMovie(movieData.data.successMessage);
     } catch (error) {
       console.log(error);
+      clearStorage();
+      navigate("/login");
     }
   };
   const onSortingChange = (event) => {
@@ -69,7 +66,6 @@ const HomePage = () => {
   };
 
   const handleImageClickDetails = (data) => {
-    console.log(data);
     localStorage.setItem("title", data.title);
     navigate("/moviedetails", {
       state: {
@@ -85,58 +81,59 @@ const HomePage = () => {
   return (
     <>
       <Layout>
-        <div className="mt-4 mb-5">
-          <div className="row">
-            <div className="col-sm-4 form-row">
-              <div className="col-sm-6">
-                <input
-                  className="form-control"
-                  type="search"
-                  placeholder="Search here"
-                  name="message"
-                  onChange={onSearchChange}
-                  value={movieTitle}
-                />
+        <body>
+          <div className="mt-4 mb-5">
+            <div className="row">
+              <div className="col-sm-4 form-row">
+                <div className="col-sm-6">
+                  <input
+                    className="form-control"
+                    type="search"
+                    placeholder="Search here"
+                    name="message"
+                    onChange={onSearchChange}
+                    value={movieTitle}
+                  />
+                </div>
+                <div className="col-sm-1">
+                  <button
+                    className="btn btn-primary"
+                    onClick={handlerSearchButton}
+                  >
+                    Search
+                  </button>
+                </div>
               </div>
-              <div className="col-sm-1">
-                <button
-                  className="btn btn-primary"
-                  onClick={handlerSearchButton}
-                >
-                  Search
-                </button>
+              <div className="col-sm-5 d-flex">
+                <select onChange={onSortingChange}>
+                  <option value={sort.Asc_created.text}>
+                    {sort.Asc_created.text}
+                  </option>
+                  <option value={sort.Asc_updated.text}>
+                    {sort.Asc_updated.text}
+                  </option>
+                  <option value={sort.Des_created.text}>
+                    {sort.Des_created.text}
+                  </option>
+                  <option value={sort.Des_updated.text}>
+                    {sort.Des_updated.text}
+                  </option>
+                </select>
               </div>
-            </div>
-            <div className="col-sm-5 d-flex">
-              <select onChange={onSortingChange}>
-                <option value={sort.Asc_created.text}>
-                  {sort.Asc_created.text}
-                </option>
-                <option value={sort.Asc_updated.text}>
-                  {sort.Asc_updated.text}
-                </option>
-                <option value={sort.Des_created.text}>
-                  {sort.Des_created.text}
-                </option>
-                <option value={sort.Des_updated.text}>
-                  {sort.Des_updated.text}
-                </option>
-              </select>
-            </div>
-            <div className="col-sm-3 d-flex justify-content-end">
-              {role === "admin" && (
-                <button
-                  type="button"
-                  className="btn btn-primary"
-                  onClick={() => handleAddButton()}
-                >
-                  Add Movie
-                </button>
-              )}
+              <div className="col-sm-3 d-flex justify-content-end">
+                {role === "admin" && (
+                  <button
+                    type="button"
+                    className="btn btn-primary"
+                    onClick={() => handleAddButton()}
+                  >
+                    Add Movie
+                  </button>
+                )}
+              </div>
             </div>
           </div>
-        </div>
-        <body>
+
           <h3>Recomanded Movies</h3>
           <div className="row">
             {allMovie.map((data) => {

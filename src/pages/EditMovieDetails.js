@@ -3,6 +3,7 @@ import axios from "axios";
 import { useLocation } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import { setHeader } from "./Utils";
 
 const EditMovieDetails = () => {
   const navigate = useNavigate();
@@ -15,7 +16,6 @@ const EditMovieDetails = () => {
   } = useForm();
 
   useEffect(() => {
-    console.log("helllll");
     if (!localStorage.getItem("token")) {
       navigate("/login");
     }
@@ -32,18 +32,26 @@ const EditMovieDetails = () => {
 
   const onEditMovieDetailSubmit = async (values) => {
     try {
-      console.log(location.state.movieData._id);
-      console.log(values);
+      setHeader(localStorage.getItem("token"));
       const newUserData = await axios.put(
         `http://localhost:8080/movie/${location.state.movieData._id}`,
         values
       );
       console.log(newUserData);
-
       navigate("/");
     } catch (error) {
       console.log(error);
+      localStorage.clear();
+      navigate("/login");
     }
+  };
+
+  const onBack = async () => {
+    navigate("/moviedetails", {
+      state: {
+        movie: location.state.movieData,
+      },
+    });
   };
 
   return (
@@ -118,6 +126,11 @@ const EditMovieDetails = () => {
           <input type="checkbox" {...register("is_released")}></input>
         </div>
         <input type="submit" className="btn btn-primary" value="Update" />
+        <div className="mt-2">
+          <a className="pointer-link" onClick={() => onBack()}>
+            &#60;- Back
+          </a>
+        </div>
       </form>
     </>
   );
