@@ -5,22 +5,24 @@ import Footer from "../component/Layout.js/Footer";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { setHeader } from "./Utils";
+import Layout from "../component/Layout.js/Layout";
 
 const MovieDetails = () => {
-  const location = useLocation();
+  const movieData = useLocation().state.movie;
   const navigate = useNavigate();
-  const [moviedetails, setMovieDetails] = useState({});
   const role = localStorage.getItem("role");
-
+  const language = movieData.language;
+  const format = movieData.format;
   useEffect(() => {
-    setMovieDetails(location.state.movie);
+    console.log(language);
+    console.log(format);
     if (!localStorage.getItem("title")) {
       navigate("/");
     }
     if (!localStorage.getItem("token")) {
       navigate("/login");
     }
-    if (location.state.movie == null) {
+    if (movieData == null) {
       navigate("/");
     }
   }, []);
@@ -28,9 +30,7 @@ const MovieDetails = () => {
   const onDeleteButton = async () => {
     setHeader(localStorage.getItem("token"));
     try {
-      await axios.delete(
-        `http://localhost:8080/movie/${location.state.movie.title}`
-      );
+      await axios.delete(`/movie/${movieData.title}`);
       localStorage.removeItem("title");
       navigate("/");
     } catch (error) {
@@ -41,10 +41,10 @@ const MovieDetails = () => {
   };
 
   const onEditButton = async () => {
-    console.log(location.state.movie);
+    console.log(movieData);
     navigate("/edit", {
       state: {
-        movieData: location.state.movie,
+        movieData: movieData,
       },
     });
   };
@@ -54,8 +54,19 @@ const MovieDetails = () => {
     navigate("/");
   };
 
-  const onBookTicket = async () => {
-    navigate("/");
+  const onBookShow = async () => {
+    navigate("/bookshow", {
+      state: {
+        movieDetails: movieData,
+      },
+    });
+  };
+  const onAddShow = async () => {
+    navigate("/addshow", {
+      state: {
+        movieDetails: movieData,
+      },
+    });
   };
 
   return (
@@ -73,22 +84,44 @@ const MovieDetails = () => {
               <div>
                 <img
                   id="image"
-                  src={location.state.movie.poster_api}
+                  src={movieData.poster_api}
                   alt="image not avaliable"
                 />
               </div>
             </div>
             <div className="col-md-9">
-              <h4>{location.state.movie.title}</h4>
+              <h4>{movieData.title}</h4>
+              <h5>Movie Description : {movieData.description}</h5>
+              <h5>Movie Type : {movieData.movie_type}</h5>
 
-              <h5>Movie Description : {location.state.movie.description}</h5>
-              <h5>Movie Type : {location.state.movie.movie_type}</h5>
+              <div>
+                Language :
+                {language.map((data) => {
+                  return <>{" " + data}</>;
+                })}
+              </div>
+              <div>
+                Format :
+                {format.map((data) => {
+                  return <>{" " + data}</>;
+                })}
+              </div>
+              <div>
+                Movie Length : {movieData.hour}h {movieData.minute}m
+              </div>
               <button
                 type="button"
                 className="btn btn-primary"
-                onClick={() => onBookTicket()}
+                onClick={() => onBookShow()}
               >
-                Book Ticket
+                Book Show
+              </button>
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={() => onAddShow()}
+              >
+                Add Show
               </button>
             </div>
           </div>

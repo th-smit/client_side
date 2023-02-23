@@ -7,7 +7,7 @@ const EmailSend = () => {
   const navigate = useNavigate();
   const onEnterEmailHandler = async (values) => {
     try {
-      await axios.post("http://localhost:8080/pwd/emailsend", values);
+      await axios.post("/pwd/emailsend", values);
       localStorage.setItem("email", values.email);
       navigate("/otpverify");
     } catch (error) {

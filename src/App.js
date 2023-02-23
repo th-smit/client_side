@@ -10,6 +10,10 @@ import MovieDetails from "./pages/MovieDetails";
 import EditMovieDetails from "./pages/EditMovieDetails";
 import UserDetails from "./pages/UserDetails";
 import Protected from "./pages/Protected";
+import BookShow from "./pages/BookShow";
+import AddShow from "./pages/AddShow";
+import BookTicket from "./pages/BookTicket";
+
 function App() {
   return (
     <Routes>
@@ -25,6 +29,9 @@ function App() {
       <Route path="/moviedetails" element={<MovieDetails />}></Route>
       <Route path="/edit" element={<EditMovieDetails />}></Route>
       <Route path="/userdetails" element={<UserDetails />}></Route>
+      <Route path="/bookticket" element={<BookTicket />}></Route>
+      <Route path="/addshow" element={<AddShow />}></Route>
+      <Route path="/bookshow" element={<BookShow />}></Route>
     </Routes>
   );
 }

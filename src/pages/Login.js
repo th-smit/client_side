@@ -16,10 +16,7 @@ const Login = () => {
   const onLoginButtonClick = async (values) => {
     console.log(values);
     try {
-      const newUserData = await axios.post(
-        "http://localhost:8080/users/login",
-        values
-      );
+      const newUserData = await axios.post("/users/login", values);
       localStorage.setItem("role", newUserData.data.successMessage.user.role);
       localStorage.setItem("email", values.email);
       localStorage.setItem("token", newUserData.data.successMessage.token);

@@ -13,7 +13,7 @@ const ForgotPassword = () => {
     };
 
     try {
-      await axios.post("http://localhost:8080/pwd/changepassword", userData);
+      await axios.post("/pwd/changepassword", userData);
       navigate("/login");
     } catch (error) {
       message.error("Password not changed");

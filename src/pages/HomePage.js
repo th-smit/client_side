@@ -42,7 +42,7 @@ const HomePage = () => {
       setHeader(localStorage.getItem("token"));
       console.log(sort[sortValue].sortedby);
       const movieData = await axios.get(
-        `http://localhost:8080/movie?sortedby=${sort[sortValue].sortedby}&title=${movieTitle}`
+        `/movie?sortedby=${sort[sortValue].sortedby}&title=${movieTitle}`
       );
       setAllMovie(movieData.data.successMessage);
     } catch (error) {
@@ -67,6 +67,7 @@ const HomePage = () => {
 
   const handleImageClickDetails = (data) => {
     localStorage.setItem("title", data.title);
+    console.log(data);
     navigate("/moviedetails", {
       state: {
         movie: data,

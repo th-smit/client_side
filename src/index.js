@@ -7,6 +7,7 @@ import axios from "axios";
 import { BrowserRouter } from "react-router-dom";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
+axios.defaults.baseURL = "http://localhost:8080";
 axios.defaults.headers.common["authorization"] = localStorage.getItem("token");
 if (localStorage.getItem("token")) {
   axios.defaults.headers.common["authorization"] =

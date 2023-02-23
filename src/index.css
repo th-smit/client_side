@@ -4,7 +4,7 @@
   box-sizing: border-box;
 }
 body{
-  min-height: auto;
+  min-height: 85.6vh;
   display: flex;
   flex-direction: column;
 }
@@ -12,14 +12,19 @@ body{
   background-color: lightblue !important;
   
 } 
+/* .content{
+  position: sticky;
+} */
 footer{
-  /* margin-top: auto; */
-  position: fixed;
+  position: relative;
   left: 0;
+  margin-top: auto;
+ 
+ 
   bottom: 0;
   width: 100%;
   text-align: center;
-  height: 50px;
+  height: 40px;
 }
 .register-page{
     display:flex;
@@ -34,9 +39,9 @@ img {
 .image{
   width:250px;
 }
-.layout{
+/* .layout{
   margin:auto
-}
+} */
 .main{
   display:inline-block;
 }

@@ -17,10 +17,7 @@ const Register = () => {
     delete values.confirmpassword;
     console.log(values);
     try {
-      const userData = await axios.post(
-        "http://localhost:8080/users/register",
-        values
-      );
+      const userData = await axios.post("/users/register", values);
 
       console.log(userData);
       localStorage.setItem("token", userData.data.successMessage.token);

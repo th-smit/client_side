@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 import { setHeader } from "./Utils";
 
 const UserDetails = () => {
-  const navigate = useNavigate();
   const {
     register,
     setValue,
@@ -14,6 +13,7 @@ const UserDetails = () => {
     formState: { errors },
   } = useForm();
 
+  const navigate = useNavigate();
   const [disable, setDisable] = useState(true);
 
   useEffect(() => {
@@ -28,10 +28,7 @@ const UserDetails = () => {
   const onUserDetailSubmit = async (values) => {
     setHeader(localStorage.getItem("token"));
     try {
-      const updatedUserData = await axios.put(
-        "http://localhost:8080/users/userDetails",
-        values
-      );
+      const updatedUserData = await axios.put("/users/userDetails", values);
       console.log(updatedUserData);
       localStorage.setItem("name", values.name);
 

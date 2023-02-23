@@ -13,7 +13,7 @@ const OtpVerify = () => {
     };
     console.log(userData);
     try {
-      await axios.post("http://localhost:8080/pwd/otpverify", userData);
+      await axios.post("/pwd/otpverify", userData);
       navigate("/forgotpassword");
     } catch (error) {
       message.error("Otp not verified");
