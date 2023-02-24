@@ -13,6 +13,7 @@ import Protected from "./pages/Protected";
 import BookShow from "./pages/BookShow";
 import AddShow from "./pages/AddShow";
 import BookTicket from "./pages/BookTicket";
+import EditShow from "./pages/EditShow";
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
       <Route path="/userdetails" element={<UserDetails />}></Route>
       <Route path="/bookticket" element={<BookTicket />}></Route>
       <Route path="/addshow" element={<AddShow />}></Route>
+      <Route path="/editshow" element={<EditShow />}></Route>
       <Route path="/bookshow" element={<BookShow />}></Route>
     </Routes>
   );

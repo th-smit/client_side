@@ -5,7 +5,7 @@ const ButtonCom = (props) => {
     <input
       type="button"
       value={props.value}
-      className="col btn btn-outline-success btn-sm m-2"
+      className="col-sm-0.2 btn btn-outline-success btn-sm m-2"
       onClick={props.onHandleSeat}
     />
   );

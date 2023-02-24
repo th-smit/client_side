@@ -226,7 +226,9 @@ function AddMovie() {
         <div className="mt-2">
           Format : &nbsp;
           <ButtonCom value="2D" onHandleFormat={handleFormat} />
-          <input
+          <ButtonCom value="3D" onHandleFormat={handleFormat} />
+          <ButtonCom value="4DX" onHandleFormat={handleFormat} />
+          {/* <input
             type="button"
             value="3D"
             className="mr-2"
@@ -237,7 +239,7 @@ function AddMovie() {
             value="4DX"
             className="mr-2"
             onClick={handleFormat}
-          />
+          /> */}
         </div>
         <input type="submit" className="btn btn-primary mt-3" value="Add" />
         <div className="mt-2">

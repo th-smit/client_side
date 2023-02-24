@@ -10,11 +10,12 @@ import TextField from "@mui/material/TextField";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
+import moment from "moment/moment";
 
-const AddShow = () => {
+const EditShow = () => {
   const navigate = useNavigate();
   const movieData = useLocation().state.movieDetails;
-  const [datetime, setDateTime] = React.useState(dayjs(new Date()));
+  const [datetime, setDateTime] = useState(moment(movieData.datetime));
 
   const {
     register,
@@ -23,12 +24,12 @@ const AddShow = () => {
     formState: { errors },
   } = useForm();
 
-  const onAddShowDetailSubmit = async (values) => {
+  const onEditShowDetailSubmit = async (values) => {
     try {
       values.datetime = datetime;
+      console.log("movie id " + movieData._id);
       console.log(values);
-      setHeader(localStorage.getItem("token"));
-      await axios.post("/show", values);
+      await axios.put(`/show/${movieData._id}`, values);
       navigate("/");
     } catch (error) {
       console.log(error);
@@ -38,6 +39,7 @@ const AddShow = () => {
   };
 
   useEffect(() => {
+    //console.log(movieData);
     if (!(localStorage.getItem("role") === "admin")) {
       navigate("/");
     }
@@ -59,8 +61,8 @@ const AddShow = () => {
 
   return (
     <>
-      <form className="App1" onSubmit={handleSubmit(onAddShowDetailSubmit)}>
-        <h3>Add Movies Show</h3>
+      <form className="App1" onSubmit={handleSubmit(onEditShowDetailSubmit)}>
+        <h3>Update Movie Show Details</h3>
         <label htmlFor="title">Movie Title : &nbsp;</label>
         <input
           type="text"
@@ -99,16 +101,7 @@ const AddShow = () => {
             </div>
           </LocalizationProvider>
         </div>
-        {/* <label htmlFor="title">Time: &nbsp;</label>
-        <input
-          type="text"
-          {...register("time", {
-            required: true,
-            minLength: 3,
-            maxLength: 100,
-          })}
-        /> */}
-        <input type="submit" className="btn btn-primary mt-3" value="Add" />
+        <input type="submit" className="btn btn-primary mt-3" value="Update" />
         <div className="mt-2">
           <a className="pointer-link" onClick={() => onBack()}>
             &#60;- Back
@@ -119,4 +112,4 @@ const AddShow = () => {
   );
 };
 
-export default AddShow;
+export default EditShow;

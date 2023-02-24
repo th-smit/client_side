@@ -170,7 +170,7 @@ const EditMovieDetails = () => {
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DesktopDatePicker
                 sx={{ backgroundColor: "white" }}
-                label="Date desktop"
+                label="Date"
                 inputFormat="MM/DD/YYYY"
                 value={date}
                 onChange={handleDate}
