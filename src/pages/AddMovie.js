@@ -9,14 +9,13 @@ import dayjs from "dayjs";
 import TextField from "@mui/material/TextField";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import ButtonCom from "./ButtonCom";
+import ButtonCom from "../component/Button/ButtonCom";
 
 function AddMovie() {
   const navigate = useNavigate();
 
   const [language, setLanguage] = useState([]);
   const [format, setFormat] = useState([]);
-  const [selectedDate, setSelectedDate] = useState(null);
   const [date, setDate] = React.useState(dayjs(new Date()));
   const {
     register,
@@ -43,15 +42,14 @@ function AddMovie() {
         values.language = language;
         values.format = format;
         values.date = date;
-        console.log(values);
         setHeader(localStorage.getItem("token"));
         await axios.post("/movie", values);
         navigate("/");
       }
     } catch (error) {
       console.log(error);
-      clearStorage();
-      navigate("/login");
+      // clearStorage();
+      // navigate("/login");
     }
   };
 
@@ -228,18 +226,6 @@ function AddMovie() {
           <ButtonCom value="2D" onHandleFormat={handleFormat} />
           <ButtonCom value="3D" onHandleFormat={handleFormat} />
           <ButtonCom value="4DX" onHandleFormat={handleFormat} />
-          {/* <input
-            type="button"
-            value="3D"
-            className="mr-2"
-            onClick={handleFormat}
-          />
-          <input
-            type="button"
-            value="4DX"
-            className="mr-2"
-            onClick={handleFormat}
-          /> */}
         </div>
         <input type="submit" className="btn btn-primary mt-3" value="Add" />
         <div className="mt-2">

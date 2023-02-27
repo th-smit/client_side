@@ -111,18 +111,20 @@ const MovieDetails = () => {
               </div>
               <button
                 type="button"
-                className="btn btn-primary"
+                className="btn btn-primary mr-2"
                 onClick={() => onBookShow()}
               >
                 Book Show
               </button>
-              <button
-                type="button"
-                className="btn btn-primary"
-                onClick={() => onAddShow()}
-              >
-                Add Show
-              </button>
+              {role == "admin" && (
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={() => onAddShow()}
+                >
+                  Add Show
+                </button>
+              )}
             </div>
           </div>
           {role === "admin" && (

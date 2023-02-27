@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-
 import Layout from "../component/Layout.js/Layout";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -18,21 +16,19 @@ const BookShow = () => {
   const navigate = useNavigate();
   const [allMovieShow, setAllMovieShow] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
-  //const [datetime, setDateTime] = useState(moment(new Date()));
   useEffect(() => {
     if (!localStorage.getItem("token")) {
       navigate("/login");
     }
     getMovieShowRecords();
-  }, []);
+  }, [selectedDate]);
 
   const getMovieShowRecords = async () => {
     try {
       setHeader(localStorage.getItem("token"));
-      const date = JSON.stringify(selectedDate);
-
-      console.log(date);
-      const movieShowData = await axios.get(`/show?title=${movieShow.title}`);
+      const movieShowData = await axios.get(
+        `/show?title=${movieShow.title}&date=${selectedDate}`
+      );
 
       setAllMovieShow(movieShowData.data.successMessage);
     } catch (error) {
@@ -59,9 +55,10 @@ const BookShow = () => {
       },
     });
   };
-  const handleDeleteShowDetails = (data) => {
-    console.log();
-    console.log(data);
+  const handleDeleteShowDetails = async (data) => {
+    console.log(data._id);
+    const movieShowData = await axios.delete(`/show/${data._id}`);
+    navigate(-1);
   };
 
   const onBack = async () => {
@@ -80,7 +77,7 @@ const BookShow = () => {
           <div className="container">
             <div>
               <h3>
-                {movieShow.title} - {movieShow.language}
+                {movieShow.title} - {movieShow.language + " "}
               </h3>
               <div>
                 <p className="rounded-circle">{movieShow.movie_type}</p>
@@ -104,18 +101,24 @@ const BookShow = () => {
                     <div key={data._id} className="col-md-3">
                       <button
                         type="button"
-                        className="btn btn-outline-primary"
+                        className="btn btn-outline-primary mr-2"
                         onClick={() => handleShowDetails(data)}
                       >
                         {moment(data.datetime).format("LT")}
                       </button>
-
-                      <button onClick={() => handleEditShowDetails(data)}>
-                        edit{" "}
-                      </button>
-                      <button onClick={() => handleDeleteShowDetails(data)}>
-                        delete
-                      </button>
+                      {localStorage.getItem("role") == "admin" && (
+                        <button
+                          className="mr-2"
+                          onClick={() => handleEditShowDetails(data)}
+                        >
+                          Edit{" "}
+                        </button>
+                      )}
+                      {localStorage.getItem("role") == "admin" && (
+                        <button onClick={() => handleDeleteShowDetails(data)}>
+                          Delete
+                        </button>
+                      )}
                     </div>
                   );
                 })}
