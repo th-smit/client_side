@@ -48,8 +48,8 @@ function AddMovie() {
       }
     } catch (error) {
       console.log(error);
-      // clearStorage();
-      // navigate("/login");
+      clearStorage();
+      navigate("/login");
     }
   };
 
@@ -158,9 +158,10 @@ function AddMovie() {
           <div>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DesktopDatePicker
-                label="Date desktop"
+                label="Date"
                 inputFormat="MM/DD/YYYY"
                 value={date}
+                disablePast
                 onChange={handleDate}
                 renderInput={(params) => <TextField {...params} />}
               />

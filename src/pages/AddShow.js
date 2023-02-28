@@ -3,9 +3,10 @@ import "../App.css";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import axios from "axios";
-import { setHeader } from "./Utils";
+import { setHeader, clearStorage } from "./Utils";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import dayjs from "dayjs";
+import { message } from "antd";
 import TextField from "@mui/material/TextField";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -31,8 +32,9 @@ const AddShow = () => {
       await axios.post("/show", values);
       navigate("/");
     } catch (error) {
-      console.log(error);
-      //clearStorage();
+      console.log(error.response.data.errorMessage.err);
+      message.error(error.response.data.errorMessage.err);
+      clearStorage();
       navigate("/login");
     }
   };
@@ -64,6 +66,7 @@ const AddShow = () => {
         <label htmlFor="title">Movie Title : &nbsp;</label>
         <input
           type="text"
+          readOnly={true}
           {...register("title", {
             required: true,
             minLength: 3,
@@ -85,6 +88,8 @@ const AddShow = () => {
                 label="Date"
                 inputFormat="MM/DD/YYYY"
                 value={datetime}
+                // minDate={new Date()}
+                disablePast
                 onChange={handleDateTime}
                 renderInput={(params) => <TextField {...params} />}
               />
@@ -93,21 +98,13 @@ const AddShow = () => {
               <TimePicker
                 label="Time"
                 value={datetime}
+                // minTime={now.hours(now.hour()).minutes(now.minutes())}
                 onChange={handleDateTime}
                 renderInput={(params) => <TextField {...params} />}
               />
             </div>
           </LocalizationProvider>
         </div>
-        {/* <label htmlFor="title">Time: &nbsp;</label>
-        <input
-          type="text"
-          {...register("time", {
-            required: true,
-            minLength: 3,
-            maxLength: 100,
-          })}
-        /> */}
         <input type="submit" className="btn btn-primary mt-3" value="Add" />
         <div className="mt-2">
           <a className="pointer-link" onClick={() => onBack()}>

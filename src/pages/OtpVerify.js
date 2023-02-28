@@ -23,13 +23,10 @@ const OtpVerify = () => {
   const onResendOTP = async () => {
     try {
       let userEmail = localStorage.getItem("email");
-      console.log("from emailhandler");
-      console.log(userEmail);
       await axios.post("http://localhost:8080/pwd/emailsend", {
         email: userEmail,
       });
       message.success("email verified");
-      navigate("/otpverify");
     } catch (error) {
       message.error("Email does not exist");
     }

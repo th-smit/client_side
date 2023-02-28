@@ -5,7 +5,6 @@ import Footer from "../component/Layout.js/Footer";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { setHeader } from "./Utils";
-import Layout from "../component/Layout.js/Layout";
 
 const MovieDetails = () => {
   const movieData = useLocation().state.movie;

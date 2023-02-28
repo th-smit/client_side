@@ -2,6 +2,7 @@ import React from "react";
 import { Form, Input, message } from "antd";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { clearStorage } from "./Utils";
 
 const ForgotPassword = () => {
   const navigate = useNavigate();
@@ -14,6 +15,7 @@ const ForgotPassword = () => {
 
     try {
       await axios.post("/pwd/changepassword", userData);
+      clearStorage();
       navigate("/login");
     } catch (error) {
       message.error("Password not changed");

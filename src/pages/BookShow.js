@@ -34,7 +34,7 @@ const BookShow = () => {
     } catch (error) {
       console.log(error);
       clearStorage();
-      navigate("/login");
+      navigate("/");
     }
   };
 
@@ -96,32 +96,40 @@ const BookShow = () => {
                 </LocalizationProvider>
               </div>
               <div className="row">
-                {allMovieShow.map((data) => {
-                  return (
-                    <div key={data._id} className="col-md-3">
-                      <button
-                        type="button"
-                        className="btn btn-outline-primary mr-2"
-                        onClick={() => handleShowDetails(data)}
-                      >
-                        {moment(data.datetime).format("LT")}
-                      </button>
-                      {localStorage.getItem("role") == "admin" && (
-                        <button
-                          className="mr-2"
-                          onClick={() => handleEditShowDetails(data)}
-                        >
-                          Edit{" "}
-                        </button>
-                      )}
-                      {localStorage.getItem("role") == "admin" && (
-                        <button onClick={() => handleDeleteShowDetails(data)}>
-                          Delete
-                        </button>
-                      )}
-                    </div>
-                  );
-                })}
+                {allMovieShow.length !== 0 ? (
+                  <>
+                    {allMovieShow.map((data) => {
+                      return (
+                        <div key={data._id} className="col-md-3">
+                          <button
+                            type="button"
+                            className="btn btn-outline-primary mr-2"
+                            onClick={() => handleShowDetails(data)}
+                          >
+                            {moment(data.datetime).format("LT")}
+                          </button>
+                          {localStorage.getItem("role") == "admin" && (
+                            <>
+                              <button
+                                className="mr-2"
+                                onClick={() => handleEditShowDetails(data)}
+                              >
+                                Edit{" "}
+                              </button>
+                              <button
+                                onClick={() => handleDeleteShowDetails(data)}
+                              >
+                                Delete
+                              </button>
+                            </>
+                          )}
+                        </div>
+                      );
+                    })}{" "}
+                  </>
+                ) : (
+                  <h5>"Oops No Any Show Available On The Selected Date"</h5>
+                )}
               </div>
               <div className="mt-2">
                 <a className="pointer-link" onClick={() => onBack()}>

@@ -3,9 +3,8 @@ import "../App.css";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import axios from "axios";
-import { setHeader } from "./Utils";
+import { setHeader, clearStorage } from "./Utils";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
-import dayjs from "dayjs";
 import TextField from "@mui/material/TextField";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -29,17 +28,17 @@ const EditShow = () => {
       values.datetime = datetime;
       console.log("movie id " + movieData._id);
       console.log(values);
+      setHeader(localStorage.getItem("token"));
       await axios.put(`/show/${movieData._id}`, values);
       navigate("/");
     } catch (error) {
       console.log(error);
-      //clearStorage();
+      clearStorage();
       navigate("/login");
     }
   };
 
   useEffect(() => {
-    //console.log(movieData);
     if (!(localStorage.getItem("role") === "admin")) {
       navigate("/");
     }
@@ -66,6 +65,7 @@ const EditShow = () => {
         <label htmlFor="title">Movie Title : &nbsp;</label>
         <input
           type="text"
+          // readOnly={true}
           {...register("title", {
             required: true,
             minLength: 3,

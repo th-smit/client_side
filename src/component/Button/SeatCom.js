@@ -3,7 +3,7 @@ import React from "react";
 const SeatCom = (props) => {
   return (
     <>
-      <h6>{props.value}</h6>
+      <h6 className="mt-3">{props.value}</h6>
 
       {props.seatArray.map((data) => {
         return (

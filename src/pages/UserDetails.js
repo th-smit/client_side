@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { setHeader } from "./Utils";
+import { setHeader, clearStorage } from "./Utils";
 
 const UserDetails = () => {
   const {
@@ -35,7 +35,7 @@ const UserDetails = () => {
       navigate("/");
     } catch (error) {
       console.log(error);
-      localStorage.clear();
+      clearStorage();
       navigate("/login");
     }
   };

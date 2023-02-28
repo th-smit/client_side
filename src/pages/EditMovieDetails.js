@@ -3,7 +3,7 @@ import axios from "axios";
 import { useLocation } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { setHeader } from "./Utils";
+import { setHeader, clearStorage } from "./Utils";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import dayjs from "dayjs";
 import TextField from "@mui/material/TextField";
@@ -60,7 +60,7 @@ const EditMovieDetails = () => {
       navigate("/");
     } catch (error) {
       console.log(error);
-      localStorage.clear();
+      clearStorage();
       navigate("/login");
     }
   };
