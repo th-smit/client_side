@@ -96,13 +96,13 @@ const MovieDetails = () => {
               <div>
                 Language :
                 {language.map((data) => {
-                  return <>{" " + data}</>;
+                  return <span key={data}>{" " + data}</span>;
                 })}
               </div>
               <div>
                 Format :
                 {format.map((data) => {
-                  return <>{" " + data}</>;
+                  return <span key={data}>{" " + data}</span>;
                 })}
               </div>
               <div>
@@ -115,7 +115,7 @@ const MovieDetails = () => {
               >
                 Book Show
               </button>
-              {role == "admin" && (
+              {role === "admin" && (
                 <button
                   type="button"
                   className="btn btn-primary"

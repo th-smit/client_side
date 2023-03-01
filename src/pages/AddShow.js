@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import "../App.css";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import axios from "axios";
-import { setHeader, clearStorage } from "./Utils";
+import { setHeader } from "./Utils";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import dayjs from "dayjs";
 import { message } from "antd";
@@ -27,6 +27,8 @@ const AddShow = () => {
   const onAddShowDetailSubmit = async (values) => {
     try {
       values.datetime = datetime;
+      values.hour = parseInt(movieData.hour);
+      values.minute = parseInt(movieData.minute);
       console.log(values);
       setHeader(localStorage.getItem("token"));
       await axios.post("/show", values);
@@ -34,12 +36,14 @@ const AddShow = () => {
     } catch (error) {
       console.log(error.response.data.errorMessage.err);
       message.error(error.response.data.errorMessage.err);
-      clearStorage();
-      navigate("/login");
+
+      navigate(-1);
     }
   };
 
   useEffect(() => {
+    // console.log("movie hour " + movieData.hour);
+    // console.log("movie minute " + movieData.minute);
     if (!(localStorage.getItem("role") === "admin")) {
       navigate("/");
     }
