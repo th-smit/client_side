@@ -12,9 +12,11 @@ const MovieDetails = () => {
   const role = localStorage.getItem("role");
   const language = movieData.language;
   const format = movieData.format;
+  const [moviedata, setMovieData] = useState([]);
   useEffect(() => {
     console.log(language);
     console.log(format);
+    //const selecetdeMovieData = axios.get("/")
     if (!localStorage.getItem("title")) {
       navigate("/");
     }

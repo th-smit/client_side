@@ -14,6 +14,7 @@ import BookShow from "./pages/BookShow";
 import AddShow from "./pages/AddShow";
 import BookTicket from "./pages/BookTicket";
 import EditShow from "./pages/EditShow";
+import MyBooked from "./pages/MyBooked";
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
         <Route path="/addshow" element={<AddShow />}></Route>
         <Route path="/editshow" element={<EditShow />}></Route>
         <Route path="/bookshow" element={<BookShow />}></Route>
+        <Route path="/mybooking" element={<MyBooked />}></Route>
       </Route>
     </Routes>
   );

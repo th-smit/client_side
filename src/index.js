@@ -16,10 +16,8 @@ if (localStorage.getItem("token")) {
   delete axios.defaults.headers.common["authorization"];
 }
 root.render(
-  <React.StrictMode>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
-  </React.StrictMode>
+  <BrowserRouter>
+    <App />
+  </BrowserRouter>
 );
 reportWebVitals();

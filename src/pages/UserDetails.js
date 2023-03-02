@@ -40,6 +40,10 @@ const UserDetails = () => {
     }
   };
 
+  const onMyBooked = async () => {
+    navigate("/mybooking");
+  };
+
   const onBack = async () => {
     navigate("/");
   };
@@ -91,6 +95,13 @@ const UserDetails = () => {
           disabled={disable}
           className="btn btn-primary"
           value="Update"
+        />
+        <input
+          type="button"
+          // disabled={disable}
+          className="btn btn-primary mt-2"
+          value="My Booking"
+          onClick={() => onMyBooked()}
         />
         <div className="mt-2">
           <a className="pointer-link" onClick={() => onBack()}>

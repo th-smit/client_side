@@ -15,12 +15,12 @@ const BookTicket = () => {
   const [temSeat, setTemSeat] = useState([]);
   const seatRow = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K"];
 
-  console.log("hello");
   const onBack = async () => {
     navigate("/");
   };
 
   useEffect(() => {
+    console.log("show id" + movieData._id);
     if (!localStorage.getItem("token")) {
       navigate("/login");
     }
@@ -33,11 +33,11 @@ const BookTicket = () => {
       temSeat.splice(index, 1);
       setTemSeat([...temSeat]);
       e.target.style.backgroundColor = "white";
-      setPrice(price - 1);
+      setPrice(price - 112);
     } else {
       setTemSeat([...temSeat, e.target.value]);
       e.target.style.backgroundColor = "green";
-      setPrice(price + 1);
+      setPrice(price + 112);
     }
   };
   const onPay = async () => {
@@ -46,8 +46,12 @@ const BookTicket = () => {
         seat: temSeat,
         movieTitle: movieData.title,
         date: movieData.datetime,
+        price: price,
+        username: localStorage.getItem("name"),
+        email: localStorage.getItem("email"),
+        showid: movieData._id,
       };
-      await axios.put("/ticket", ticketDetails);
+      await axios.post("/ticket", ticketDetails);
       navigate("/");
     } catch (error) {
       message.error(error.response.data.errorMessage.error);
@@ -82,7 +86,7 @@ const BookTicket = () => {
                   className="btn btn-outline-primary"
                   onClick={() => onPay()}
                 >
-                  {price == 0 ? "" : "Pay : " + price * 112}
+                  {price == 0 ? "" : "Pay : " + price}
                 </button>
               ) : (
                 " "

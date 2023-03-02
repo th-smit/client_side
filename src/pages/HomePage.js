@@ -44,6 +44,7 @@ const HomePage = () => {
       const movieData = await axios.get(
         `/movie?sortedby=${sort[sortValue].sortedby}&title=${movieTitle}`
       );
+      //console.log("from get records " + JSON.stringify(movieData));
       setAllMovie(movieData.data.successMessage);
     } catch (error) {
       console.log(error);
@@ -67,7 +68,7 @@ const HomePage = () => {
 
   const handleImageClickDetails = (data) => {
     localStorage.setItem("title", data.title);
-    console.log(data);
+    console.log("on image clicked " + data);
     navigate("/moviedetails", {
       state: {
         movie: data,
