@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import Header from "../component/Layout.js/Header";
 import Footer from "../component/Layout.js/Footer";
 import axios from "axios";
@@ -7,31 +7,34 @@ import { useNavigate } from "react-router-dom";
 import { setHeader } from "./Utils";
 
 const MovieDetails = () => {
-  const movieData = useLocation().state.movie;
+  const currentdate = new Date().toISOString();
   const navigate = useNavigate();
   const role = localStorage.getItem("role");
-  const language = movieData.language;
-  const format = movieData.format;
-  const [moviedata, setMovieData] = useState([]);
+
+  const [moviedata, setMovieData] = useState(null);
+  var { title } = useParams();
   useEffect(() => {
-    console.log(language);
-    console.log(format);
-    //const selecetdeMovieData = axios.get("/")
+    getMovieRecord();
+
     if (!localStorage.getItem("title")) {
       navigate("/");
     }
     if (!localStorage.getItem("token")) {
       navigate("/login");
     }
-    if (movieData == null) {
-      navigate("/");
-    }
   }, []);
 
+  const getMovieRecord = async () => {
+    const movieDetails = await (
+      await axios.get(`/movie?title=${title}`)
+    ).data.successMessage[0];
+    console.log(movieDetails);
+    setMovieData(movieDetails);
+  };
   const onDeleteButton = async () => {
     setHeader(localStorage.getItem("token"));
     try {
-      await axios.delete(`/movie/${movieData.title}`);
+      await axios.delete(`/movie/${moviedata.title}`);
       localStorage.removeItem("title");
       navigate("/");
     } catch (error) {
@@ -42,12 +45,7 @@ const MovieDetails = () => {
   };
 
   const onEditButton = async () => {
-    console.log(movieData);
-    navigate("/edit", {
-      state: {
-        movieData: movieData,
-      },
-    });
+    navigate(`/edit/${moviedata.title}`);
   };
 
   const onBack = async () => {
@@ -56,111 +54,106 @@ const MovieDetails = () => {
   };
 
   const onBookShow = async () => {
-    navigate("/bookshow", {
-      state: {
-        movieDetails: movieData,
-      },
-    });
+    console.log(moviedata._id);
+    navigate(`/bookshow/${moviedata.title}/${currentdate}`);
   };
   const onAddShow = async () => {
-    navigate("/addshow", {
-      state: {
-        movieDetails: movieData,
-      },
-    });
+    navigate(`/addshow/${moviedata.title}`);
   };
 
   return (
-    <>
-      <Header />
-      <body>
-        <div id="layout" className="container mt-5">
-          <div className="mb-3">
-            <a className="pointer-link" onClick={() => onBack()}>
-              &#60;- Back
-            </a>
-          </div>
-          <div className="row">
-            <div className="col-md-3">
-              <div>
-                <img
-                  id="image"
-                  src={movieData.poster_api}
-                  alt="image not avaliable"
-                />
-              </div>
+    moviedata && (
+      <>
+        <Header />
+        <body>
+          <div id="layout" className="container mt-5">
+            <div className="mb-3">
+              <a className="pointer-link" onClick={() => onBack()}>
+                &#60;- Back
+              </a>
             </div>
-            <div className="col-md-9">
-              <h4>{movieData.title}</h4>
-              <h5>Movie Description : {movieData.description}</h5>
-              <h5>Movie Type : {movieData.movie_type}</h5>
-
-              <div>
-                Language :
-                {language.map((data) => {
-                  return <span key={data}>{" " + data}</span>;
-                })}
-              </div>
-              <div>
-                Format :
-                {format.map((data) => {
-                  return <span key={data}>{" " + data}</span>;
-                })}
-              </div>
-              <div>
-                Movie Length : {movieData.hour}h {movieData.minute}m
-              </div>
-              <button
-                type="button"
-                className="btn btn-primary mr-2"
-                onClick={() => onBookShow()}
-              >
-                Book Show
-              </button>
-              {role === "admin" && (
-                <button
-                  type="button"
-                  className="btn btn-primary"
-                  onClick={() => onAddShow()}
-                >
-                  Add Show
-                </button>
-              )}
-            </div>
-          </div>
-          {role === "admin" && (
-            <div className="row mt-3">
-              <div className="col-md-1">
-                <button
-                  type="button"
-                  className="btn btn-primary"
-                  onClick={() => onEditButton()}
-                >
-                  Edit
-                </button>
-              </div>
+            <div className="row">
               <div className="col-md-3">
+                <div>
+                  <img
+                    id="image"
+                    src={moviedata.poster_api}
+                    alt="image not avaliable"
+                  />
+                </div>
+              </div>
+              <div className="col-md-9">
+                <h4>{moviedata.title}</h4>
+                <h5>Movie Description : {moviedata.description}</h5>
+                <h5>Movie Type : {moviedata.movie_type}</h5>
+
+                <div>
+                  Language :
+                  {moviedata.language.map((data) => {
+                    return <span key={data}>{" " + data}</span>;
+                  })}
+                </div>
+                <div>
+                  Format :
+                  {moviedata.format.map((data) => {
+                    return <span key={data}>{" " + data}</span>;
+                  })}
+                </div>
+                <div>
+                  Movie Length : {moviedata.hour}h {moviedata.minute}m
+                </div>
                 <button
                   type="button"
-                  className="btn btn-primary"
-                  onClick={() => {
-                    const confirmBox = window.confirm(
-                      "Do you Really want to delete this movie?"
-                    );
-                    if (confirmBox === true) {
-                      onDeleteButton();
-                    }
-                  }}
+                  className="btn btn-primary mr-2"
+                  onClick={() => onBookShow()}
                 >
-                  Delete
+                  Book Show
                 </button>
+                {role === "admin" && (
+                  <button
+                    type="button"
+                    className="btn btn-primary"
+                    onClick={() => onAddShow()}
+                  >
+                    Add Show
+                  </button>
+                )}
               </div>
             </div>
-          )}
-        </div>
-      </body>
-      <Footer />
-    </>
+            {role === "admin" && (
+              <div className="row mt-3">
+                <div className="col-md-1">
+                  <button
+                    type="button"
+                    className="btn btn-primary"
+                    onClick={() => onEditButton()}
+                  >
+                    Edit
+                  </button>
+                </div>
+                <div className="col-md-3">
+                  <button
+                    type="button"
+                    className="btn btn-primary"
+                    onClick={() => {
+                      const confirmBox = window.confirm(
+                        "Do you Really want to delete this movie?"
+                      );
+                      if (confirmBox === true) {
+                        onDeleteButton();
+                      }
+                    }}
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        </body>
+        <Footer />
+      </>
+    )
   );
 };
 

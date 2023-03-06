@@ -1,6 +1,6 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "../App.css";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import { setHeader } from "./Utils";
@@ -14,8 +14,10 @@ import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 
 const AddShow = () => {
   const navigate = useNavigate();
-  const movieData = useLocation().state.movieDetails;
   const [datetime, setDateTime] = React.useState(dayjs(new Date()));
+  const [moviedata, setMovieData] = useState(null);
+
+  var { title } = useParams();
 
   const {
     register,
@@ -27,8 +29,8 @@ const AddShow = () => {
   const onAddShowDetailSubmit = async (values) => {
     try {
       values.datetime = datetime;
-      values.hour = parseInt(movieData.hour);
-      values.minute = parseInt(movieData.minute);
+      values.hour = parseInt(moviedata.hour);
+      values.minute = parseInt(moviedata.minute);
       console.log(values);
       setHeader(localStorage.getItem("token"));
       await axios.post("/show", values);
@@ -42,17 +44,24 @@ const AddShow = () => {
   };
 
   useEffect(() => {
-    // console.log("movie hour " + movieData.hour);
-    // console.log("movie minute " + movieData.minute);
+    getMovieRecord();
     if (!(localStorage.getItem("role") === "admin")) {
       navigate("/");
     }
     if (!localStorage.getItem("token")) {
       navigate("/login");
     } else {
-      setValue("title", movieData.title);
+      setValue("title", title);
     }
-  });
+  }, []);
+
+  const getMovieRecord = async () => {
+    console.log(title);
+    const movieDetails = await axios.get(`/movie?title=${title}`);
+
+    console.log(movieDetails.data.successMessage[0]);
+    setMovieData(movieDetails.data.successMessage[0]);
+  };
 
   const handleDateTime = (newDateValue) => {
     setDateTime(newDateValue);
@@ -60,7 +69,7 @@ const AddShow = () => {
   };
 
   const onBack = async () => {
-    navigate("/");
+    navigate(-1);
   };
 
   return (

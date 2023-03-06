@@ -7,12 +7,6 @@ import { setHeader } from "./Utils";
 const Login = () => {
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (localStorage.getItem("token")) {
-      navigate("/");
-    }
-  }, []);
-
   const onLoginButtonClick = async (values) => {
     console.log(values);
     try {

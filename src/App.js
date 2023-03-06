@@ -21,21 +21,27 @@ function App() {
     <Routes>
       <Route element={<Protected />}>
         <Route path="/" element={<HomePage />}></Route>
-        <Route path="/register" element={<Register />}></Route>
-        <Route path="/login" element={<Login />}></Route>
-        <Route path="/emailsend" element={<EmailSend />}></Route>
-        <Route path="/forgotpassword" element={<ForgotPassword />}></Route>
-        <Route path="/otpverify" element={<OtpVerify />}></Route>
-        <Route path="/addmovie" element={<AddMovie />}></Route>
-        <Route path="/moviedetails" element={<MovieDetails />}></Route>
-        <Route path="/edit" element={<EditMovieDetails />}></Route>
-        <Route path="/userdetails" element={<UserDetails />}></Route>
-        <Route path="/bookticket" element={<BookTicket />}></Route>
-        <Route path="/addshow" element={<AddShow />}></Route>
-        <Route path="/editshow" element={<EditShow />}></Route>
-        <Route path="/bookshow" element={<BookShow />}></Route>
-        <Route path="/mybooking" element={<MyBooked />}></Route>
+        <Route
+          path="/bookshow/:title?/:currentdate?"
+          element={<BookShow />}
+        ></Route>
       </Route>
+      <Route path="/register" element={<Register />}></Route>
+      <Route path="/login" element={<Login />}></Route>
+
+      <Route path="/addmovie" element={<AddMovie />}></Route>
+      <Route path="/moviedetails/:title?" element={<MovieDetails />}></Route>
+      <Route path="/edit/:title?" element={<EditMovieDetails />}></Route>
+      <Route path="/userdetails" element={<UserDetails />}></Route>
+
+      <Route path="/addshow/:title?" element={<AddShow />}></Route>
+      <Route path="/editshow" element={<EditShow />}></Route>
+
+      <Route path="/mybooking" element={<MyBooked />}></Route>
+      <Route path="/bookticket/:id?" element={<BookTicket />}></Route>
+      <Route path="/emailsend" element={<EmailSend />}></Route>
+      <Route path="/forgotpassword" element={<ForgotPassword />}></Route>
+      <Route path="/otpverify" element={<OtpVerify />}></Route>
     </Routes>
   );
 }

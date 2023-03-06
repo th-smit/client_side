@@ -31,9 +31,6 @@ const HomePage = () => {
   const [sortValue, setSortValue] = useState(sort.Asc_created.text);
   useEffect(() => {
     console.log("from homepage " + localStorage.getItem("token"));
-    if (!localStorage.getItem("token")) {
-      navigate("/login");
-    }
     getRecords();
   }, [sortValue, movieTitle]);
 
@@ -44,12 +41,11 @@ const HomePage = () => {
       const movieData = await axios.get(
         `/movie?sortedby=${sort[sortValue].sortedby}&title=${movieTitle}`
       );
-      //console.log("from get records " + JSON.stringify(movieData));
       setAllMovie(movieData.data.successMessage);
     } catch (error) {
       console.log(error);
       clearStorage();
-      navigate("/login");
+      //navigate("/login");
     }
   };
   const onSortingChange = (event) => {
@@ -69,11 +65,7 @@ const HomePage = () => {
   const handleImageClickDetails = (data) => {
     localStorage.setItem("title", data.title);
     console.log("on image clicked " + data);
-    navigate("/moviedetails", {
-      state: {
-        movie: data,
-      },
-    });
+    navigate(`/moviedetails/${data.title}`);
   };
 
   const handleAddButton = () => {

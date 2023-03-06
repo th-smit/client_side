@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Layout from "../component/Layout.js/Layout";
-import { setHeader } from "./Utils";
+import { setHeader, clearStorage } from "./Utils";
 import axios from "axios";
 import { useState } from "react";
 import moment from "moment/moment";
@@ -22,14 +22,11 @@ const MyBooked = () => {
     try {
       setHeader(localStorage.getItem("token"));
       const userEmail = localStorage.getItem("email");
-      //console.log(sort[sortValue].sortedby);
       const TicketData = await axios.get(`/ticket?email=${userEmail}`);
-
       setAllTicket(TicketData.data.successMessage);
-      //console.log("show id " + allTicket[0].show_id);
     } catch (error) {
       console.log(error);
-      //clearStorage();
+      clearStorage();
       navigate("/login");
     }
   };
@@ -70,6 +67,8 @@ const MyBooked = () => {
                 <br />
                 Price:{data.price}
                 <br />
+                Date : {moment(data.show_datetime).format("MMM Do YY")}
+                <br />
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="16"
@@ -84,7 +83,6 @@ const MyBooked = () => {
               </h6>
               <input
                 type="button"
-                // disabled={disable}
                 className="btn btn-primary mt-2"
                 value="Cancel Ticket"
                 onClick={() => onDeleteTicket(data)}

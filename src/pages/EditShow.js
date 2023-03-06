@@ -65,7 +65,6 @@ const EditShow = () => {
         <label htmlFor="title">Movie Title : &nbsp;</label>
         <input
           type="text"
-          // readOnly={true}
           {...register("title", {
             required: true,
             minLength: 3,
