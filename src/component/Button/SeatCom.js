@@ -7,7 +7,7 @@ const SeatCom = (props) => {
 
       {props.seatArray.map((data) => {
         return (
-          <td>
+          <td key={`${props.value}${data}`}>
             <button
               value={`${props.value}${data}`}
               key={`${props.value}${data}`}

@@ -16,9 +16,9 @@ const MovieDetails = () => {
   useEffect(() => {
     getMovieRecord();
 
-    if (!localStorage.getItem("title")) {
-      navigate("/");
-    }
+    // if (!localStorage.getItem("title")) {
+    //   navigate("/");
+    // }
     if (!localStorage.getItem("token")) {
       navigate("/login");
     }

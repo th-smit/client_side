@@ -1,11 +1,12 @@
 import React, { useEffect } from "react";
 import { Form, Input } from "antd";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { setHeader } from "./Utils";
 
 const Login = () => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const onLoginButtonClick = async (values) => {
     console.log(values);
@@ -16,7 +17,14 @@ const Login = () => {
       localStorage.setItem("token", newUserData.data.successMessage.token);
       localStorage.setItem("name", newUserData.data.successMessage.user.name);
       setHeader(newUserData.data.successMessage.token);
-      navigate("/");
+      // console.log("state " + JSON.stringify(location.state));
+
+      if (location.state?.from) {
+        console.log(location.state.from.pathname);
+        navigate(location.state.from.pathname);
+      } else {
+        navigate("/");
+      }
     } catch (error) {
       console.log(error);
     }

@@ -3,7 +3,7 @@
   margin: 0;
   box-sizing: border-box;
 }
-body{
+#layout{
   min-height: 85vh;
   display: flex;
   flex-direction: column;
@@ -57,12 +57,12 @@ button{
 .pointer-link {
   cursor: pointer;
 }
-/* #bookticket{
-  text-align: center;
+#bookticket{
+  /* text-align: center; */
     display: flex;
     flex-direction: column;
     margin: auto;
-} */
+}
 /* table{
   overflow: scroll;
  

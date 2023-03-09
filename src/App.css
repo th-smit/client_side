@@ -10,3 +10,7 @@
     border-radius: 0 0 10px 10px;
     /* position:relative; */
 }
+#screenimage{
+    width: 300px;
+    height:80px;
+}

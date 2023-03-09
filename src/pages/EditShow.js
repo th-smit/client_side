@@ -55,7 +55,7 @@ const EditShow = () => {
   };
 
   const onBack = async () => {
-    navigate("/");
+    navigate(-1);
   };
 
   return (

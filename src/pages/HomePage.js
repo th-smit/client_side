@@ -73,78 +73,71 @@ const HomePage = () => {
     navigate("/addmovie");
   };
   return (
-    <>
-      <Layout>
-        <body>
-          <div className="mt-4 mb-5">
-            <div className="row">
-              <div className="col-sm-4 form-row">
-                <div className="col-sm-6">
-                  <input
-                    className="form-control"
-                    type="search"
-                    placeholder="Search here"
-                    name="message"
-                    onChange={onSearchChange}
-                    value={movieTitle}
-                  />
-                </div>
-                <div className="col-sm-1">
-                  <button
-                    className="btn btn-primary"
-                    onClick={handlerSearchButton}
-                  >
-                    Search
-                  </button>
-                </div>
-              </div>
-              <div className="col-sm-5 d-flex">
-                <select onChange={onSortingChange}>
-                  <option value={sort.Asc_created.text}>
-                    {sort.Asc_created.text}
-                  </option>
-                  <option value={sort.Asc_updated.text}>
-                    {sort.Asc_updated.text}
-                  </option>
-                  <option value={sort.Des_created.text}>
-                    {sort.Des_created.text}
-                  </option>
-                  <option value={sort.Des_updated.text}>
-                    {sort.Des_updated.text}
-                  </option>
-                </select>
-              </div>
-              <div className="col-sm-3 d-flex justify-content-end">
-                {role === "admin" && (
-                  <button
-                    type="button"
-                    className="btn btn-primary"
-                    onClick={() => handleAddButton()}
-                  >
-                    Add Movie
-                  </button>
-                )}
-              </div>
+    <Layout>
+      <div className="mt-4 mb-5">
+        <div className="row">
+          <div className="col-sm-4 form-row">
+            <div className="col-sm-6">
+              <input
+                className="form-control"
+                type="search"
+                placeholder="Search here"
+                name="message"
+                onChange={onSearchChange}
+                value={movieTitle}
+              />
+            </div>
+            <div className="col-sm-1">
+              <button className="btn btn-primary" onClick={handlerSearchButton}>
+                Search
+              </button>
             </div>
           </div>
-
-          <h3>Recomanded Movies</h3>
-          <div className="row">
-            {allMovie.map((data) => {
-              return (
-                <div key={data.title} className="col-md-3">
-                  <button onClick={() => handleImageClickDetails(data)}>
-                    <img src={data.poster_api} alt="image not avaliable" />
-                  </button>
-                  <div className="font-weight-bold">{data.title}</div>
-                  <div className="mb-3">{data.movie_type}</div>
-                </div>
-              );
-            })}
+          <div className="col-sm-5 d-flex">
+            <select onChange={onSortingChange}>
+              <option value={sort.Asc_created.text}>
+                {sort.Asc_created.text}
+              </option>
+              <option value={sort.Asc_updated.text}>
+                {sort.Asc_updated.text}
+              </option>
+              <option value={sort.Des_created.text}>
+                {sort.Des_created.text}
+              </option>
+              <option value={sort.Des_updated.text}>
+                {sort.Des_updated.text}
+              </option>
+            </select>
           </div>
-        </body>
-      </Layout>
-    </>
+          <div className="col-sm-3 d-flex justify-content-end">
+            {role === "admin" && (
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={() => handleAddButton()}
+              >
+                Add Movie
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
+
+      <h3>Recomanded Movies</h3>
+      <div className="row">
+        {allMovie.map((data) => {
+          return (
+            <div key={data.title} className="col-md-3">
+              <button onClick={() => handleImageClickDetails(data)}>
+                <img src={data.poster_api} alt="image not avaliable" />
+              </button>
+              <div className="font-weight-bold">{data.title}</div>
+              <div className="mb-3">{data.movie_type}</div>
+            </div>
+          );
+        })}
+      </div>
+    </Layout>
   );
 };
 

@@ -92,75 +92,71 @@ const BookShow = () => {
     moviedata && (
       <Layout>
         <div className="container">
+          <h3>
+            {moviedata.title} - {moviedata.language + " "}
+          </h3>
           <div>
-            <h3>
-              {moviedata.title} - {moviedata.language + " "}
-            </h3>
-            <div>
-              <p className="rounded-circle">{moviedata.movie_type}</p>
-            </div>
-            <div>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <div className="mt-4 mb-4">
-                  <DesktopDatePicker
-                    label="Date"
-                    inputFormat="MM/DD/YYYY"
-                    value={selectedDate}
-                    onChange={handleDateTime}
-                    renderInput={(params) => <TextField {...params} />}
-                  />
-                </div>
-              </LocalizationProvider>
-            </div>
-            <div className="row">
-              {allMovieShow.length !== 0 ? (
-                <>
-                  {allMovieShow.map((data) => {
-                    return (
-                      <div key={data._id} className="col-md-3">
-                        <button
-                          type="button"
-                          className="btn btn-outline-primary mr-2"
-                          onClick={() => handleShowDetails(data)}
-                        >
-                          {moment(data.datetime).format("LT")}
-                        </button>
-                        <h6>
-                          {" "}
-                          {data.seat.length > 8 ? (
-                            <h6> &#128308; fast filling</h6>
-                          ) : (
-                            ""
-                          )}
-                        </h6>
-                        {localStorage.getItem("role") == "admin" && (
-                          <>
-                            <button
-                              className="mr-2"
-                              onClick={() => handleEditShowDetails(data)}
-                            >
-                              Edit{" "}
-                            </button>
-                            <button
-                              onClick={() => handleDeleteShowDetails(data)}
-                            >
-                              Delete
-                            </button>
-                          </>
+            <p className="rounded-circle">{moviedata.movie_type}</p>
+          </div>
+          <div>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <div className="mt-4 mb-4">
+                <DesktopDatePicker
+                  label="Date"
+                  inputFormat="MM/DD/YYYY"
+                  value={selectedDate}
+                  onChange={handleDateTime}
+                  renderInput={(params) => <TextField {...params} />}
+                />
+              </div>
+            </LocalizationProvider>
+          </div>
+          <div className="row">
+            {allMovieShow.length !== 0 ? (
+              <>
+                {allMovieShow.map((data) => {
+                  return (
+                    <div key={data._id} className="col-md-3">
+                      <button
+                        type="button"
+                        className="btn btn-outline-primary mr-2"
+                        onClick={() => handleShowDetails(data)}
+                      >
+                        {moment(data.datetime).format("LT")}
+                      </button>
+                      <h6>
+                        {" "}
+                        {data.seat.length > 8 ? (
+                          <h6> &#128308; fast filling</h6>
+                        ) : (
+                          ""
                         )}
-                      </div>
-                    );
-                  })}{" "}
-                </>
-              ) : (
-                <h5>"Oops No Any Show Available On The Selected Date"</h5>
-              )}
-            </div>
-            <div className="mt-2">
-              <a className="pointer-link" onClick={() => onBack()}>
-                &#60;- Back
-              </a>
-            </div>
+                      </h6>
+                      {localStorage.getItem("role") == "admin" && (
+                        <>
+                          <button
+                            className="mr-2"
+                            onClick={() => handleEditShowDetails(data)}
+                          >
+                            Edit{" "}
+                          </button>
+                          <button onClick={() => handleDeleteShowDetails(data)}>
+                            Delete
+                          </button>
+                        </>
+                      )}
+                    </div>
+                  );
+                })}{" "}
+              </>
+            ) : (
+              <h5>"Oops No Any Show Available On The Selected Date"</h5>
+            )}
+          </div>
+          <div className="mt-2">
+            <a className="pointer-link" onClick={() => onBack()}>
+              &#60;- Back
+            </a>
           </div>
         </div>
       </Layout>
