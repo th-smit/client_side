@@ -230,9 +230,12 @@ function AddMovie() {
         </div>
         <input type="submit" className="btn btn-primary mt-3" value="Add" />
         <div className="mt-2">
-          <a className="pointer-link" onClick={() => onBack()}>
+          <button
+            className="btn btn-primary pointer-link"
+            onClick={() => onBack()}
+          >
             &#60;- Back
-          </a>
+          </button>
         </div>
       </form>
     </>

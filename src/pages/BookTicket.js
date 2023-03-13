@@ -7,15 +7,16 @@ import SeatCom from "../component/Button/SeatCom";
 import "../App.css";
 const BookTicket = () => {
   const query = new URLSearchParams(window.location.search);
-  console.log("location " + window.location.search);
-  console.log("query" + query);
   const seats = query.get("seats");
-
+  console.log("run again");
   const navigate = useNavigate();
   const seat = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18];
   const [selectedSeat, setSelectedSeat] = useState(null);
   const [price, setPrice] = useState(0);
   const [temSeat, setTemSeat] = useState(seats == null ? [] : seats.split(","));
+  const bookedSeat = [null];
+  const [unBookedSeat, setUnbooked] = useState([null]);
+  const [summary, setSummary] = useState(false);
   console.log(temSeat);
   const seatRow = [
     "A",
@@ -40,6 +41,13 @@ const BookTicket = () => {
     navigate(-1);
   };
 
+  const onBackTicket = async () => {
+    setSummary(false);
+  };
+
+  const gotosummary = async () => {
+    setSummary(true);
+  };
   useEffect(() => {
     if (temSeat.length === 0) {
       window.history.replaceState(
@@ -51,16 +59,48 @@ const BookTicket = () => {
       window.history.replaceState(null, null, `?seats=${temSeat.toString()}`);
     }
   }, [temSeat]);
+
   useEffect(() => {
     getShowData();
-    setPrice(temSeat.length * 112);
-  }, []);
+
+    let totalprice = 0;
+    temSeat.map((data) => {
+      if (selectedSeat !== null) {
+        if (!selectedSeat.includes(data)) {
+          console.log("2nd");
+          unBookedSeat.push(data);
+          if (data[0].charCodeAt() > 67 && data[0].charCodeAt() <= 73) {
+            totalprice = totalprice + 150;
+          } else if (data[0].charCodeAt() > 73) {
+            totalprice = totalprice + 180;
+          } else {
+            totalprice = totalprice + 120;
+          }
+        } else {
+          console.log("pushed data " + data);
+          bookedSeat.push(data);
+        }
+      }
+    });
+    if (bookedSeat.length !== 1) {
+      message.error(bookedSeat.slice(1) + " seat already booked");
+      console.log("bookes seat aaray " + bookedSeat);
+      console.log("length of bookes seat aaray " + bookedSeat.length);
+    }
+
+    setPrice(totalprice);
+    console.log("unbooked seat " + unBookedSeat);
+  }, [selectedSeat]);
 
   const getShowData = async () => {
+    console.log("function2 called");
     const showData = await axios.get(`/show/seat/${id}`);
+
     console.log(showData.data.successMessage[0]);
     setShowData(showData.data.successMessage[0]);
-    setSelectedSeat(showData.data.successMessage[0].seat);
+    if (selectedSeat === null) {
+      setSelectedSeat(showData.data.successMessage[0].seat);
+    }
   };
   const handleSeat = async (e) => {
     console.log(temSeat);
@@ -72,7 +112,7 @@ const BookTicket = () => {
       e.target.style.backgroundColor = "white";
       console.log("target value" + e.target.value.charCodeAt(0));
       if (
-        e.target.value.charCodeAt(0) >= 67 &&
+        e.target.value.charCodeAt(0) > 67 &&
         e.target.value.charCodeAt(0) <= 73
       ) {
         setPrice(price - 150);
@@ -85,8 +125,9 @@ const BookTicket = () => {
       setTemSeat([...temSeat, e.target.value]);
       e.target.style.backgroundColor = "green";
       console.log("target value" + e.target.value.charCodeAt(0));
+
       if (
-        e.target.value.charCodeAt(0) >= 67 &&
+        e.target.value.charCodeAt(0) > 67 &&
         e.target.value.charCodeAt(0) <= 73
       ) {
         setPrice(price + 150);
@@ -109,124 +150,156 @@ const BookTicket = () => {
         showid: showdata._id,
       };
       await axios.post("/ticket", ticketDetails);
-      navigate(-1);
+      //setSummary(true);
+      //navigate("/");
     } catch (error) {
       console.log(error);
+      message.error(error.response.data.errorMessage);
     }
   };
 
   return (
-    showdata && (
-      <>
-        <div id="bookticket">
-          <div className="row bg-dark text-white d-flex justify-content-between">
-            <span className="col-sm-1">
-              <a className="pointer-link" onClick={() => onBack()}>
-                &#60;- Back
-              </a>
-            </span>
-
-            <span className="col-sm-11">
-              <h5>{showdata.title}</h5>
-              <p>
-                INOX - NADIAD |{" "}
-                <span>{moment(showdata.datetime).format("llll")}</span>
-              </p>
-            </span>
-          </div>
-          <div className="container">
-            <div id="pay" className="align-bottom d-flex justify-content-left">
-              {price !== 0 ? (
+    <>
+      {showdata && !summary && (
+        <>
+          <div id="bookticket">
+            <div className="row bg-dark text-white ">
+              <div className="col-sm-1">
                 <button
-                  type="button"
-                  className="btn btn-outline-primary"
-                  onClick={() => onPay()}
+                  className="mt-3 btn pointer-link"
+                  onClick={() => onBack()}
                 >
-                  {price == 0 ? "" : "Pay : " + price}
+                  &#60;- Back
                 </button>
-              ) : (
-                " "
-              )}
-            </div>
-            <div className="mt-2"></div>
-            <div>
-              <br />
-              <div>
-                <table>
-                  <tfoot>
-                    <tr className=" mt-1">
-                      <td colspan="9">EXCLUSIVE Rs. 120.0</td>
-                    </tr>
-                    {seatRow.slice(0, 3).map((seatRowAlphabet) => {
-                      return (
-                        <tr key={seatRowAlphabet}>
-                          <SeatCom
-                            key={seatRowAlphabet}
-                            value={seatRowAlphabet}
-                            seatArray={seat}
-                            qseats={temSeat}
-                            onHandleSeat={handleSeat}
-                            selectedSeat={selectedSeat}
-                          />
-                        </tr>
-                      );
-                    })}
-
-                    <hr />
-                    <tr className=" mt-1">
-                      <td colspan="9">PREMIUM Rs. 150.0</td>
-                    </tr>
-
-                    {seatRow.slice(3, 9).map((seatRowAlphabet) => {
-                      return (
-                        <tr key={seatRowAlphabet}>
-                          <SeatCom
-                            key={seatRowAlphabet}
-                            value={seatRowAlphabet}
-                            seatArray={seat}
-                            qseats={temSeat}
-                            onHandleSeat={handleSeat}
-                            selectedSeat={selectedSeat}
-                          />
-                        </tr>
-                      );
-                    })}
-                    <hr />
-                    <tr>
-                      <td colspan="9" className="mt-1">
-                        Golden Rs. 180.0
-                      </td>
-                    </tr>
-                    {seatRow.slice(9).map((seatRowAlphabet) => {
-                      return (
-                        <tr key={seatRowAlphabet}>
-                          <SeatCom
-                            key={seatRowAlphabet}
-                            value={seatRowAlphabet}
-                            seatArray={seat}
-                            qseats={temSeat}
-                            onHandleSeat={handleSeat}
-                            selectedSeat={selectedSeat}
-                          />
-                        </tr>
-                      );
-                    })}
-                  </tfoot>
-                </table>
               </div>
-              <div className="mt-5 ">
-                <img
-                  id="screenimage"
-                  className="rounded mx-auto d-block d-flex justify-content-center"
-                  src="/images/screen.png"
-                  alt="logo"
-                />
+
+              <div className="col-sm-10 ml-4">
+                <h5>{showdata.title}</h5>
+                <p>
+                  Inox Cinema - NADIAD |{" "}
+                  <span>{moment(showdata.datetime).format("llll")}</span>
+                </p>
+              </div>
+            </div>
+            <div className="container">
+              <div
+                id="pay"
+                className="align-bottom d-flex justify-content-left"
+              >
+                {price !== 0 ? (
+                  <button
+                    type="button"
+                    className="btn btn-outline-primary"
+                    onClick={() => gotosummary()}
+                  >
+                    {price == 0 ? "" : "Pay : " + price}
+                  </button>
+                ) : (
+                  ""
+                )}
+              </div>
+              <div className="mt-2"></div>
+              <div>
+                <br />
+                <div>
+                  <table>
+                    <tfoot>
+                      <tr className=" mt-1">
+                        <td colSpan="9">EXCLUSIVE Rs. 120.0</td>
+                      </tr>
+                      {seatRow.slice(0, 3).map((seatRowAlphabet) => {
+                        return (
+                          <tr key={seatRowAlphabet}>
+                            <SeatCom
+                              key={seatRowAlphabet}
+                              value={seatRowAlphabet}
+                              seatArray={seat}
+                              qseats={temSeat}
+                              onHandleSeat={handleSeat}
+                              selectedSeat={selectedSeat}
+                            />
+                          </tr>
+                        );
+                      })}
+
+                      <hr />
+                      <tr className=" mt-1">
+                        <td colSpan="9">PREMIUM Rs. 150.0</td>
+                      </tr>
+
+                      {seatRow.slice(3, 9).map((seatRowAlphabet) => {
+                        return (
+                          <tr key={seatRowAlphabet}>
+                            <SeatCom
+                              key={seatRowAlphabet}
+                              value={seatRowAlphabet}
+                              seatArray={seat}
+                              qseats={temSeat}
+                              onHandleSeat={handleSeat}
+                              selectedSeat={selectedSeat}
+                            />
+                          </tr>
+                        );
+                      })}
+                      <hr />
+                      <tr>
+                        <td colSpan="9" className="mt-1">
+                          Golden Rs. 180.0
+                        </td>
+                      </tr>
+                      {seatRow.slice(9).map((seatRowAlphabet) => {
+                        return (
+                          <tr key={seatRowAlphabet}>
+                            <SeatCom
+                              key={seatRowAlphabet}
+                              value={seatRowAlphabet}
+                              seatArray={seat}
+                              qseats={temSeat}
+                              onHandleSeat={handleSeat}
+                              selectedSeat={selectedSeat}
+                            />
+                          </tr>
+                        );
+                      })}
+                    </tfoot>
+                  </table>
+                </div>
+                <div className="mt-5 ">
+                  <img
+                    id="screenimage"
+                    className="rounded mx-auto d-block d-flex justify-content-center"
+                    src="/images/screen.png"
+                    alt="logo"
+                  />
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </>
-    )
+        </>
+      )}
+      {summary && (
+        <>
+          <div>
+            <h6>hello</h6>
+            <p>{unBookedSeat.length} seat is unbooked</p>
+            <p>{console.log("hello")}</p>
+            <button
+              type="button"
+              className="btn btn-outline-primary"
+              onClick={() => onPay()}
+            >
+              pay
+            </button>
+            <button
+              className="mt-3 btn pointer-link"
+              onClick={() => onBackTicket()}
+            >
+              &#60;- Back
+            </button>
+          </div>
+        </>
+      )}
+    </>
   );
 };
 

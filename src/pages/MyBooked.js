@@ -5,10 +5,12 @@ import { setHeader, clearStorage } from "./Utils";
 import axios from "axios";
 import { useState } from "react";
 import moment from "moment/moment";
+import { message } from "antd";
 
 const MyBooked = () => {
   const navigate = useNavigate();
   const [allTicket, setAllTicket] = useState([]);
+  const currenttime = new Date();
   useEffect(() => {
     console.log("from homepage " + localStorage.getItem("token"));
     if (!localStorage.getItem("token")) {
@@ -26,7 +28,7 @@ const MyBooked = () => {
       setAllTicket(TicketData.data.successMessage);
     } catch (error) {
       console.log(error);
-      clearStorage();
+      //clearStorage();
       navigate("/login");
     }
   };
@@ -41,6 +43,7 @@ const MyBooked = () => {
       navigate("/");
     } catch (error) {
       console.log(error);
+      message.error(error.response.data.errorMessage);
     }
   };
   const onBack = async () => {
@@ -51,9 +54,12 @@ const MyBooked = () => {
     <Layout>
       <div className="container">
         <div className="mt-2">
-          <a className="pointer-link" onClick={() => onBack()}>
+          <button
+            className="btn btn-primary pointer-link"
+            onClick={() => onBack()}
+          >
             &#60;- Back
-          </a>
+          </button>
         </div>
         {allTicket.length !== 0 ? (
           <>
@@ -83,12 +89,16 @@ const MyBooked = () => {
                     </svg>
                     Show Time:{moment(data.show_datetime).format("LT")}
                   </h6>
-                  <input
-                    type="button"
-                    className="btn btn-primary mt-2"
-                    value="Cancel Ticket"
-                    onClick={() => onDeleteTicket(data)}
-                  />
+                  {currenttime > moment(data.show_datetime) ? (
+                    ""
+                  ) : (
+                    <input
+                      type="button"
+                      className="btn btn-primary mt-2"
+                      value="Cancel Ticket"
+                      onClick={() => onDeleteTicket(data)}
+                    />
+                  )}
                 </div>
               );
             })}

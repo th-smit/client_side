@@ -11,17 +11,21 @@ const SeatCom = (props) => {
             <button
               value={`${props.value}${data}`}
               key={`${props.value}${data}`}
-              style={{
-                backgroundColor: props.qseats.includes(`${props.value}${data}`)
-                  ? "green"
-                  : "white",
-              }}
               className="flex-row btn btn-outline-success btn-sm m-2"
               disabled={
                 `${props.selectedSeat}`.includes(`${props.value}${data}`)
                   ? true
                   : false
               }
+              style={{
+                backgroundColor: `${props.selectedSeat}`.includes(
+                  `${props.value}${data}`
+                )
+                  ? "lightgray"
+                  : props.qseats.includes(`${props.value}${data}`)
+                  ? "green"
+                  : "white",
+              }}
               onClick={props.onHandleSeat}
             >
               {data}

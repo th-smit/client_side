@@ -5,6 +5,9 @@ import Footer from "../component/Layout.js/Footer";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { setHeader } from "./Utils";
+import { message } from "antd";
+import { color, padding } from "@mui/system";
+import moment from "moment/moment";
 
 const MovieDetails = () => {
   const currentdate = new Date().toISOString();
@@ -35,12 +38,18 @@ const MovieDetails = () => {
     setHeader(localStorage.getItem("token"));
     try {
       await axios.delete(`/movie/${moviedata.title}`);
-      localStorage.removeItem("title");
-      navigate("/");
+
+      navigate(-1);
     } catch (error) {
       console.log(error);
-      localStorage.clear();
-      navigate("/login");
+      if (error.response.status === 501) {
+        message.error(error.response.data.errorMessage);
+      }
+      //localStorage.clear();
+      else {
+        localStorage.removeItem("title");
+        navigate("/");
+      }
     }
   };
 
@@ -68,9 +77,12 @@ const MovieDetails = () => {
         <body>
           <div id="layout" className="container mt-5">
             <div className="mb-3">
-              <a className="pointer-link" onClick={() => onBack()}>
+              <button
+                className="btn btn-primary pointer-link"
+                onClick={() => onBack()}
+              >
                 &#60;- Back
-              </a>
+              </button>
             </div>
             <div className="row">
               <div className="col-md-3">
@@ -84,23 +96,60 @@ const MovieDetails = () => {
               </div>
               <div className="col-md-9">
                 <h4>{moviedata.title}</h4>
-                <h5>Movie Description : {moviedata.description}</h5>
-                <h5>Movie Type : {moviedata.movie_type}</h5>
+                <span>
+                  <span style={{ fontSize: "22px", fontWeight: "18px" }}>
+                    <bold>About the Movie :</bold>{" "}
+                  </span>
+                  <span style={{ fontSize: "18px" }}>
+                    {moviedata.description}
+                  </span>
+                </span>
 
-                <div>
-                  Language :
-                  {moviedata.language.map((data) => {
-                    return <span key={data}>{" " + data}</span>;
-                  })}
+                <div className="mt-4 mb-1">
+                  <span
+                    className="p-2 mr-2"
+                    style={{
+                      fontSize: "16px",
+                      backgroundColor: "lightgray",
+                      borderRadius: "3px",
+                    }}
+                  >
+                    {moviedata.format + " "}
+                  </span>{" "}
+                  <span
+                    className="p-2"
+                    style={{
+                      fontSize: "16px",
+                      backgroundColor: "lightgray",
+                      borderRadius: "3px",
+                    }}
+                  >
+                    {moviedata.language + " "}
+                  </span>
                 </div>
-                <div>
-                  Format :
-                  {moviedata.format.map((data) => {
-                    return <span key={data}>{" " + data}</span>;
-                  })}
-                </div>
-                <div>
-                  Movie Length : {moviedata.hour}h {moviedata.minute}m
+
+                <div className="mt-3 mb-2">
+                  <span className="mr-1" style={{ fontSize: "16px" }}>
+                    {moviedata.hour}h {moviedata.minute}m{" "}
+                  </span>
+                  <span
+                    className="mr-1"
+                    style={{ paddingBottom: "1px", fontSize: "20px" }}
+                  >
+                    •
+                  </span>{" "}
+                  <span style={{ fontSize: "16px" }} className="mr-1">
+                    {moviedata.movie_type}
+                  </span>
+                  <span
+                    className="mr-1"
+                    style={{ paddingBottom: "1px", fontSize: "20px" }}
+                  >
+                    •
+                  </span>{" "}
+                  <span style={{ fontSize: "16px" }}>
+                    {moment(moviedata.date).format("ll")}
+                  </span>
                 </div>
                 <button
                   type="button"

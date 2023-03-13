@@ -75,7 +75,7 @@ const EditMovieDetails = () => {
       setHeader(localStorage.getItem("token"));
       const newUserData = await axios.put(`/movie/${moviedata._id}`, values);
       console.log(newUserData);
-      navigate("/");
+      navigate(-1);
     } catch (error) {
       console.log(error);
       clearStorage();
@@ -126,6 +126,7 @@ const EditMovieDetails = () => {
             <label htmlFor="title">Movie Title : &nbsp;</label>
             <input
               type="text"
+              disabled
               {...register("title", {
                 required: true,
                 minLength: 3,
@@ -323,9 +324,12 @@ const EditMovieDetails = () => {
             </div>
             <input type="submit" className="btn btn-primary" value="Update" />
             <div className="mt-2">
-              <a className="pointer-link" onClick={() => onBack()}>
+              <button
+                className="btn btn-primary pointer-link"
+                onClick={() => onBack()}
+              >
                 &#60;- Back
-              </a>
+              </button>
             </div>
           </form>
         </>

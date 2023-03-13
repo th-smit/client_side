@@ -20,14 +20,15 @@ function App() {
   return (
     <Routes>
       <Route element={<Protected />}>
-        <Route path="/" element={<HomePage />}></Route>
         <Route
           path="/bookshow/:title?/:currentdate?"
           element={<BookShow />}
         ></Route>
+        <Route path="/" element={<HomePage />}></Route>
         <Route path="/moviedetails/:title?" element={<MovieDetails />}></Route>
         <Route path="/bookticket/:id?" element={<BookTicket />}></Route>
       </Route>
+
       <Route path="/register" element={<Register />}></Route>
       <Route path="/login" element={<Login />}></Route>
 

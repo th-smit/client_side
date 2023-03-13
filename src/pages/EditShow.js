@@ -65,6 +65,7 @@ const EditShow = () => {
         <label htmlFor="title">Movie Title : &nbsp;</label>
         <input
           type="text"
+          disabled
           {...register("title", {
             required: true,
             minLength: 3,
@@ -102,9 +103,12 @@ const EditShow = () => {
         </div>
         <input type="submit" className="btn btn-primary mt-3" value="Update" />
         <div className="mt-2">
-          <a className="pointer-link" onClick={() => onBack()}>
+          <button
+            className="btn btn-primary pointer-link"
+            onClick={() => onBack()}
+          >
             &#60;- Back
-          </a>
+          </button>
         </div>
       </form>
     </>

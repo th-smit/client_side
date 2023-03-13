@@ -8,6 +8,12 @@ const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  useEffect(() => {
+    if (localStorage.getItem("token")) {
+      navigate("/");
+    }
+  });
+
   const onLoginButtonClick = async (values) => {
     console.log(values);
     try {

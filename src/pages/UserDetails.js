@@ -104,9 +104,12 @@ const UserDetails = () => {
           onClick={() => onMyBooked()}
         />
         <div className="mt-2">
-          <a className="pointer-link" onClick={() => onBack()}>
+          <button
+            className="btn btn-primary pointer-link"
+            onClick={() => onBack()}
+          >
             &#60;- Back
-          </a>
+          </button>
         </div>
       </form>
     </>
