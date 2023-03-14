@@ -13,7 +13,8 @@ const MovieDetails = () => {
   const currentdate = new Date().toISOString();
   const navigate = useNavigate();
   const role = localStorage.getItem("role");
-
+  const [movieShow, setMovieShow] = useState(null);
+  let count = 0;
   const [moviedata, setMovieData] = useState(null);
   var { title } = useParams();
   useEffect(() => {
@@ -31,6 +32,14 @@ const MovieDetails = () => {
     const movieDetails = await (
       await axios.get(`/movie?title=${title}`)
     ).data.successMessage[0];
+
+    const showDetails = await axios.get(`/show?title=${movieDetails.title}`);
+    console.log(
+      "show details from the movieDetails " + showDetails.data.successMessage
+    );
+
+    setMovieShow(showDetails.data.successMessage);
+    console.log("show details " + movieShow);
     console.log(movieDetails);
     setMovieData(movieDetails);
   };
@@ -92,6 +101,37 @@ const MovieDetails = () => {
                     src={moviedata.poster_api}
                     alt="image not avaliable"
                   />
+                </div>
+                <div>
+                  {role === "admin" && (
+                    <div className="row mt-3">
+                      <div className="col-md-3">
+                        <button
+                          type="button"
+                          className="btn btn-primary"
+                          onClick={() => onEditButton()}
+                        >
+                          Edit
+                        </button>
+                      </div>
+                      <div className="col-md-3">
+                        <button
+                          type="button"
+                          className="btn btn-primary"
+                          onClick={() => {
+                            const confirmBox = window.confirm(
+                              "Do you Really want to delete this movie?"
+                            );
+                            if (confirmBox === true) {
+                              onDeleteButton();
+                            }
+                          }}
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
               <div className="col-md-9">
@@ -167,37 +207,29 @@ const MovieDetails = () => {
                     Add Show
                   </button>
                 )}
+                <div className="mt-2">
+                  {/* {movieShow && role === "admin" ? (
+                    <h6>"available"</h6>
+                  ) : (
+                    <h6>"not available"</h6>
+                  )} */}
+                  {role === "admin" && movieShow ? (
+                    <>
+                      <span>Available Show : </span>
+                      {movieShow.map((data) => {
+                        return (
+                          <span className="mr-2 border border-success">
+                            {moment(data.datetime).format("LT")}
+                          </span>
+                        );
+                      })}{" "}
+                    </>
+                  ) : (
+                    <h6>"no any show available"</h6>
+                  )}
+                </div>
               </div>
             </div>
-            {role === "admin" && (
-              <div className="row mt-3">
-                <div className="col-md-1">
-                  <button
-                    type="button"
-                    className="btn btn-primary"
-                    onClick={() => onEditButton()}
-                  >
-                    Edit
-                  </button>
-                </div>
-                <div className="col-md-3">
-                  <button
-                    type="button"
-                    className="btn btn-primary"
-                    onClick={() => {
-                      const confirmBox = window.confirm(
-                        "Do you Really want to delete this movie?"
-                      );
-                      if (confirmBox === true) {
-                        onDeleteButton();
-                      }
-                    }}
-                  >
-                    Delete
-                  </button>
-                </div>
-              </div>
-            )}
           </div>
         </body>
         <Footer />

@@ -15,7 +15,7 @@ const BookTicket = () => {
   const [price, setPrice] = useState(0);
   const [temSeat, setTemSeat] = useState(seats == null ? [] : seats.split(","));
   const bookedSeat = [null];
-  const [unBookedSeat, setUnbooked] = useState([null]);
+  const [unBookedSeat, setUnbooked] = useState([]);
   const [summary, setSummary] = useState(false);
   console.log(temSeat);
   const seatRow = [
@@ -38,16 +38,13 @@ const BookTicket = () => {
   var { id } = useParams();
 
   const onBack = async () => {
-    navigate(-1);
+    if (window.history.state && window.history.state.idx > 0) {
+      navigate(-1);
+    } else {
+      navigate("/");
+    }
   };
 
-  const onBackTicket = async () => {
-    setSummary(false);
-  };
-
-  const gotosummary = async () => {
-    setSummary(true);
-  };
   useEffect(() => {
     if (temSeat.length === 0) {
       window.history.replaceState(
@@ -68,7 +65,7 @@ const BookTicket = () => {
       if (selectedSeat !== null) {
         if (!selectedSeat.includes(data)) {
           console.log("2nd");
-          unBookedSeat.push(data);
+          // unBookedSeat.push(data);
           if (data[0].charCodeAt() > 67 && data[0].charCodeAt() <= 73) {
             totalprice = totalprice + 150;
           } else if (data[0].charCodeAt() > 73) {
@@ -149,12 +146,41 @@ const BookTicket = () => {
         email: localStorage.getItem("email"),
         showid: showdata._id,
       };
-      await axios.post("/ticket", ticketDetails);
-      //setSummary(true);
-      //navigate("/");
+      const unbookedseat = await axios.post("/ticket", ticketDetails);
+      console.log("movieShowData[0] " + unbookedseat.data.successMessage);
+
+      setSummary(false);
+      // navigate("/");
     } catch (error) {
       console.log(error);
       message.error(error.response.data.errorMessage);
+    }
+  };
+
+  const onBackTicket = async () => {
+    setSummary(false);
+  };
+
+  const gotosummary = async () => {
+    try {
+      const ticketDetails = {
+        seat: temSeat,
+        movieTitle: showdata.title,
+        date: showdata.datetime,
+        price: price,
+        username: localStorage.getItem("name"),
+        email: localStorage.getItem("email"),
+        showid: showdata._id,
+      };
+      const unbookedseat = await axios.post(
+        "/ticket/checkticket",
+        ticketDetails
+      );
+      console.log("unbooked seat is " + unbookedseat.data.successMessage);
+      setUnbooked(unbookedseat.data.successMessage);
+      setSummary(true);
+    } catch (error) {
+      console.log("error + ", error.response.data.errorMessage);
     }
   };
 
@@ -264,7 +290,7 @@ const BookTicket = () => {
                     </tfoot>
                   </table>
                 </div>
-                <div className="mt-5 ">
+                <div className="mt-5">
                   <img
                     id="screenimage"
                     className="rounded mx-auto d-block d-flex justify-content-center"
@@ -279,23 +305,67 @@ const BookTicket = () => {
       )}
       {summary && (
         <>
-          <div>
-            <h6>hello</h6>
-            <p>{unBookedSeat.length} seat is unbooked</p>
-            <p>{console.log("hello")}</p>
-            <button
-              type="button"
-              className="btn btn-outline-primary"
-              onClick={() => onPay()}
-            >
-              pay
-            </button>
-            <button
-              className="mt-3 btn pointer-link"
-              onClick={() => onBackTicket()}
-            >
-              &#60;- Back
-            </button>
+          <div className="mt-3 container border border-success">
+            <div className="row">
+              <div className="col-md-4 border border-warning">
+                <span className="__circle-left"></span>
+                <div className="m-4">
+                  <h6>BOOKING SUMMARY</h6>
+                </div>
+                <div className="ml-4 d-flex justify-content-between">
+                  <span>
+                    {unBookedSeat} {"("} {unBookedSeat.length} {" Tickets )"}{" "}
+                  </span>
+                  <span>Rs. {price}.00</span>
+                </div>
+                <div className="ml-4 d-flex justify-content-between">
+                  <span> Convenience fees </span>
+                  <span>Rs. {(price * 3) / 100 + (price * 15) / 100}</span>
+                </div>
+
+                <div style={{ display: "block" }}>
+                  <div className="ml-4 d-flex justify-content-between">
+                    <span>Base Amount </span>
+                    <span>Rs. {(price * 3) / 100}</span>
+                  </div>
+                  <div className="ml-4 d-flex justify-content-between">
+                    <span>Integrated GST </span>
+                    <span>Rs. {(price * 15) / 100}</span>
+                  </div>
+                </div>
+
+                <div className="ml-4 d-flex justify-content-between">
+                  <span>.................</span>
+                </div>
+                <div className="ml-4 d-flex justify-content-between">
+                  <span> Sub Total </span>
+                  <span>
+                    Rs. {price + (price * 3) / 100 + (price * 15) / 100}
+                  </span>
+                </div>
+
+                <div>
+                  <button
+                    type="button"
+                    className="btn btn-outline-primary"
+                    onClick={() => onPay()}
+                  >
+                    pay
+                  </button>
+                </div>
+                <div>
+                  <button
+                    className="mt-3 btn pointer-link"
+                    onClick={() => onBackTicket()}
+                  >
+                    &#60;- Back
+                  </button>
+                </div>
+              </div>
+              <div className="col-md-5">
+                <h6>hello</h6>
+              </div>
+            </div>
           </div>
         </>
       )}
