@@ -137,6 +137,12 @@ const HomePage = () => {
           );
         })}
       </div>
+      <div className="container">
+        <div className="row">
+          <div class="col-md-8 col-lg-9">Two-thirds width column</div>
+          <div class="col-md-4 col-lg-3">One-third width column</div>
+        </div>
+      </div>
     </Layout>
   );
 };

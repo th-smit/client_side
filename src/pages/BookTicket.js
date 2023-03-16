@@ -5,6 +5,8 @@ import { message } from "antd";
 import moment from "moment/moment";
 import SeatCom from "../component/Button/SeatCom";
 import "../App.css";
+import { FaAngleDown, FaAngleUp } from "react-icons/fa";
+
 const BookTicket = () => {
   const query = new URLSearchParams(window.location.search);
   const seats = query.get("seats");
@@ -17,6 +19,9 @@ const BookTicket = () => {
   const bookedSeat = [null];
   const [unBookedSeat, setUnbooked] = useState([]);
   const [summary, setSummary] = useState(false);
+
+  const [elementVisible, setElementVisible] = useState(false);
+
   console.log(temSeat);
   const seatRow = [
     "A",
@@ -319,20 +324,43 @@ const BookTicket = () => {
                   <span>Rs. {price}.00</span>
                 </div>
                 <div className="ml-4 d-flex justify-content-between">
-                  <span> Convenience fees </span>
+                  <span>
+                    {!elementVisible ? (
+                      <span onClick={() => setElementVisible(!elementVisible)}>
+                        <FaAngleDown />
+                      </span>
+                    ) : (
+                      ""
+                    )}
+
+                    {elementVisible ? (
+                      <span onClick={() => setElementVisible(!elementVisible)}>
+                        <FaAngleUp />
+                      </span>
+                    ) : (
+                      ""
+                    )}
+
+                    <span> Convenience fees </span>
+                  </span>
+
                   <span>Rs. {(price * 3) / 100 + (price * 15) / 100}</span>
                 </div>
-
-                <div style={{ display: "block" }}>
-                  <div className="ml-4 d-flex justify-content-between">
-                    <span>Base Amount </span>
-                    <span>Rs. {(price * 3) / 100}</span>
+                {/* <div className="ml-4 d-flex justify-content-between"></div> */}
+                {elementVisible ? (
+                  <div>
+                    <div className="ml-4 d-flex justify-content-between">
+                      <span>Base Amount </span>
+                      <span>Rs. {(price * 3) / 100}</span>
+                    </div>
+                    <div className="ml-4 d-flex justify-content-between">
+                      <span>Integrated GST </span>
+                      <span>Rs. {(price * 15) / 100}</span>
+                    </div>
                   </div>
-                  <div className="ml-4 d-flex justify-content-between">
-                    <span>Integrated GST </span>
-                    <span>Rs. {(price * 15) / 100}</span>
-                  </div>
-                </div>
+                ) : (
+                  " "
+                )}
 
                 <div className="ml-4 d-flex justify-content-between">
                   <span>.................</span>

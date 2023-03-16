@@ -13,8 +13,7 @@ const MovieDetails = () => {
   const currentdate = new Date().toISOString();
   const navigate = useNavigate();
   const role = localStorage.getItem("role");
-  const [movieShow, setMovieShow] = useState(null);
-  let count = 0;
+
   const [moviedata, setMovieData] = useState(null);
   var { title } = useParams();
   useEffect(() => {
@@ -33,13 +32,6 @@ const MovieDetails = () => {
       await axios.get(`/movie?title=${title}`)
     ).data.successMessage[0];
 
-    const showDetails = await axios.get(`/show?title=${movieDetails.title}`);
-    console.log(
-      "show details from the movieDetails " + showDetails.data.successMessage
-    );
-
-    setMovieShow(showDetails.data.successMessage);
-    console.log("show details " + movieShow);
     console.log(movieDetails);
     setMovieData(movieDetails);
   };
@@ -213,7 +205,7 @@ const MovieDetails = () => {
                   ) : (
                     <h6>"not available"</h6>
                   )} */}
-                  {role === "admin" && movieShow ? (
+                  {/* {role === "admin" && movieShow ? (
                     <>
                       <span>Available Show : </span>
                       {movieShow.map((data) => {
@@ -226,7 +218,7 @@ const MovieDetails = () => {
                     </>
                   ) : (
                     <h6>"no any show available"</h6>
-                  )}
+                  )} */}
                 </div>
               </div>
             </div>

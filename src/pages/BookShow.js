@@ -19,6 +19,7 @@ const BookShow = () => {
   const [allMovieShow, setAllMovieShow] = useState([]);
 
   const [moviedata, setMovieData] = useState(null);
+  const [sortValue, setSortValue] = useState("all");
 
   useEffect(() => {
     // if (!localStorage.getItem("token")) {
@@ -33,7 +34,7 @@ const BookShow = () => {
     console.log("1st");
     getMovieRecord();
     console.log("2nd");
-  }, []);
+  }, [sortValue]);
 
   const getMovieRecord = async () => {
     const movieDetails = await axios.get(`/movie?title=${title}`);
@@ -73,6 +74,12 @@ const BookShow = () => {
     console.log(data._id);
     const movieShowData = await axios.delete(`/show/${data._id}`);
     navigate(-1);
+  };
+
+  const onSortingChange = (event) => {
+    console.log(event.target.value);
+    console.log(typeof event.target.value);
+    setSortValue(event.target.value);
   };
 
   const onBack = async () => {
@@ -117,6 +124,20 @@ const BookShow = () => {
               <h6 style={{ fontSize: "12px" }} className="mt-4 mb-4">
                 &#128308; FAST FILLING &nbsp;&#128994; AVAILABLE{" "}
               </h6>
+              <span>
+                <select
+                  onChange={onSortingChange}
+                  name={"showtime"}
+                  label={"hello"}
+                >
+                  {/* <option selected disabled hidden>
+                    Choose here
+                  </option> */}
+                  <option value="all">All Time</option>
+                  <option value="1">12PM - 11PM</option>
+                  <option value="2">7AM - 11AM</option>
+                </select>
+              </span>
             </div>
           </div>
           <div className="d-flex justify-content-center m-2">
@@ -124,23 +145,99 @@ const BookShow = () => {
           </div>
           <div className="row">
             {allMovieShow.length !== 0 ? (
-              <>
-                {allMovieShow.map((data) => {
-                  return (
-                    <div key={data._id} className="col-md-3">
-                      <button
-                        type="button"
-                        className={`btn mr-2 ${
-                          (data.seat.length * 100) / 126 > 80
-                            ? "btn-outline-danger"
-                            : "btn-outline-success"
-                        }`}
-                        onClick={() => handleShowDetails(data)}
-                      >
-                        {moment(data.datetime).format("LT")}
-                      </button>
+              allMovieShow.map((data) => {
+                return (
+                  <>
+                    {sortValue === "1" &&
+                      parseInt(
+                        moment(new Date().setHours(13, 0, 0)).format("H")
+                      ) < parseInt(moment(data.datetime).format("H")) &&
+                      parseInt(
+                        moment(new Date().setHours(23, 59, 59)).format("H")
+                      ) > parseInt(moment(data.datetime).format("H")) && (
+                        <div key={data._id} className="col-md-3">
+                          <>
+                            <button
+                              type="button"
+                              className={`btn mr-2 ${
+                                (data.seat.length * 100) / 126 > 80
+                                  ? "btn-outline-danger"
+                                  : "btn-outline-success"
+                              }`}
+                              onClick={() => handleShowDetails(data)}
+                            >
+                              {moment(data.datetime).format("LT")}
+                            </button>
+                            <p>afternoon</p>
+                          </>
+                        </div>
+                      )}
 
-                      {localStorage.getItem("role") == "admin" && (
+                    {sortValue === "2" &&
+                      parseInt(
+                        moment(new Date().setHours(2, 0, 0)).format("H")
+                      ) <= parseInt(moment(data.datetime).format("H")) &&
+                      parseInt(
+                        moment(new Date().setHours(11, 0, 0)).format("H")
+                      ) >= parseInt(moment(data.datetime).format("H")) && (
+                        <div key={data._id} className="col-md-3">
+                          <>
+                            <button
+                              type="button"
+                              className={`btn mr-2 ${
+                                (data.seat.length * 100) / 126 > 80
+                                  ? "btn-outline-danger"
+                                  : "btn-outline-success"
+                              }`}
+                              onClick={() => handleShowDetails(data)}
+                            >
+                              {moment(data.datetime).format("LT")}
+                            </button>
+                            <p>morning</p>
+                          </>
+                        </div>
+                      )}
+
+                    {sortValue === "all" && (
+                      <div key={data._id} className="col-md-3">
+                        <>
+                          <button
+                            type="button"
+                            className={`btn mr-2 ${
+                              (data.seat.length * 100) / 126 > 80
+                                ? "btn-outline-danger"
+                                : "btn-outline-success"
+                            }`}
+                            onClick={() => handleShowDetails(data)}
+                          >
+                            {moment(data.datetime).format("LT")}
+                          </button>
+                        </>
+                      </div>
+                    )}
+                  </>
+                );
+              })
+            ) : (
+              <h5>"Oops No Any Show Available On The Selected Date"</h5>
+            )}
+          </div>
+          <div className="mt-2">
+            <button
+              className="btn btn-primary pointer-link"
+              onClick={() => onBack()}
+            >
+              &#60;- Back
+            </button>
+          </div>
+        </div>
+      </Layout>
+    )
+  );
+};
+
+{
+  /* {localStorage.getItem("role") == "admin" && (
                         <>
                           <button
                             className="mr-2"
@@ -162,27 +259,6 @@ const BookShow = () => {
                             Delete
                           </button>
                         </>
-                      )}
-                    </div>
-                  );
-                })}{" "}
-              </>
-            ) : (
-              <h5>"Oops No Any Show Available On The Selected Date"</h5>
-            )}
-          </div>
-          <div className="mt-2">
-            <button
-              className="btn btn-primary pointer-link"
-              onClick={() => onBack()}
-            >
-              &#60;- Back
-            </button>
-          </div>
-        </div>
-      </Layout>
-    )
-  );
-};
-
+                      )} */
+}
 export default BookShow;
