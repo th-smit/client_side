@@ -13,6 +13,7 @@ const MovieDetails = () => {
   const currentdate = new Date().toISOString();
   const navigate = useNavigate();
   const role = localStorage.getItem("role");
+  const [movieShow, setMovieShow] = useState(null);
 
   const [moviedata, setMovieData] = useState(null);
   var { title } = useParams();
@@ -32,6 +33,16 @@ const MovieDetails = () => {
       await axios.get(`/movie?title=${title}`)
     ).data.successMessage[0];
 
+    const showDetails = await axios.get(`/show?title=${movieDetails.title}`);
+    console.log(
+      "show details from the movieDetails " + showDetails.data.successMessage
+    );
+
+    setMovieShow(showDetails.data.successMessage);
+    console.log(
+      "show details " + JSON.stringify(showDetails.data.successMessage)
+    );
+    console.log(showDetails.data.successMessage.length);
     console.log(movieDetails);
     setMovieData(movieDetails);
   };
@@ -97,7 +108,7 @@ const MovieDetails = () => {
                 <div>
                   {role === "admin" && (
                     <div className="row mt-3">
-                      <div className="col-md-3">
+                      <div className="col-md-4">
                         <button
                           type="button"
                           className="btn btn-primary"
@@ -183,42 +194,46 @@ const MovieDetails = () => {
                     {moment(moviedata.date).format("ll")}
                   </span>
                 </div>
-                <button
-                  type="button"
-                  className="btn btn-primary mr-2"
-                  onClick={() => onBookShow()}
-                >
-                  Book Show
-                </button>
-                {role === "admin" && (
+                <div>
                   <button
                     type="button"
-                    className="btn btn-primary"
-                    onClick={() => onAddShow()}
+                    className="btn btn-primary mr-2"
+                    onClick={() => onBookShow()}
                   >
-                    Add Show
+                    Book Show
                   </button>
-                )}
+                  {role === "admin" && (
+                    <button
+                      type="button"
+                      className="btn btn-primary"
+                      onClick={() => onAddShow()}
+                    >
+                      Add Show
+                    </button>
+                  )}
+                </div>
                 <div className="mt-2">
                   {/* {movieShow && role === "admin" ? (
                     <h6>"available"</h6>
                   ) : (
                     <h6>"not available"</h6>
                   )} */}
-                  {/* {role === "admin" && movieShow ? (
+                  {role === "admin" && movieShow.length !== 0 ? (
                     <>
-                      <span>Available Show : </span>
                       {movieShow.map((data) => {
                         return (
-                          <span className="mr-2 border border-success">
-                            {moment(data.datetime).format("LT")}
-                          </span>
+                          <div>
+                            <span className="mr-2 border border-success">
+                              {moment(data.datetime).format("L")}-{" "}
+                              {moment(data.datetime).format("LT")}
+                            </span>
+                          </div>
                         );
                       })}{" "}
                     </>
                   ) : (
                     <h6>"no any show available"</h6>
-                  )} */}
+                  )}
                 </div>
               </div>
             </div>

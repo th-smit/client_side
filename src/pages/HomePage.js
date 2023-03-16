@@ -131,17 +131,19 @@ const HomePage = () => {
               <button onClick={() => handleImageClickDetails(data)}>
                 <img src={data.poster_api} alt="image not avaliable" />
               </button>
-              <div className="font-weight-bold">{data.title}</div>
-              <div className="mb-3">{data.movie_type}</div>
+              <div
+                style={{ overflowWrap: "break-word" }}
+                className="font-weight-bold"
+              >
+                {data.title}
+              </div>
+
+              <div style={{ overflowWrap: "break-word" }} className="mb-3">
+                {data.movie_type}
+              </div>
             </div>
           );
         })}
-      </div>
-      <div className="container">
-        <div className="row">
-          <div class="col-md-8 col-lg-9">Two-thirds width column</div>
-          <div class="col-md-4 col-lg-3">One-third width column</div>
-        </div>
       </div>
     </Layout>
   );

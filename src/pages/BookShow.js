@@ -21,6 +21,15 @@ const BookShow = () => {
   const [moviedata, setMovieData] = useState(null);
   const [sortValue, setSortValue] = useState("all");
 
+  const [startHour, setStartHour] = useState("0");
+  const [endHour, setEndHour] = useState("23");
+
+  useEffect(() => {
+    console.log("1st");
+    getMovieRecord();
+    console.log("2nd");
+  }, [selectedDate]);
+
   useEffect(() => {
     // if (!localStorage.getItem("token")) {
     //   navigate("/login");
@@ -31,9 +40,16 @@ const BookShow = () => {
   }, [selectedDate]);
 
   useEffect(() => {
-    console.log("1st");
-    getMovieRecord();
-    console.log("2nd");
+    if (sortValue === "1") {
+      setStartHour(13);
+      setEndHour(23);
+    } else if (sortValue === "2") {
+      setStartHour(5);
+      setEndHour(12);
+    } else {
+      setStartHour(1);
+      setEndHour(23);
+    }
   }, [sortValue]);
 
   const getMovieRecord = async () => {
@@ -125,11 +141,7 @@ const BookShow = () => {
                 &#128308; FAST FILLING &nbsp;&#128994; AVAILABLE{" "}
               </h6>
               <span>
-                <select
-                  onChange={onSortingChange}
-                  name={"showtime"}
-                  label={"hello"}
-                >
+                <select onChange={onSortingChange}>
                   {/* <option selected disabled hidden>
                     Choose here
                   </option> */}
@@ -148,13 +160,8 @@ const BookShow = () => {
               allMovieShow.map((data) => {
                 return (
                   <>
-                    {sortValue === "1" &&
-                      parseInt(
-                        moment(new Date().setHours(13, 0, 0)).format("H")
-                      ) < parseInt(moment(data.datetime).format("H")) &&
-                      parseInt(
-                        moment(new Date().setHours(23, 59, 59)).format("H")
-                      ) > parseInt(moment(data.datetime).format("H")) && (
+                    {startHour < parseInt(moment(data.datetime).format("H")) &&
+                      endHour > parseInt(moment(data.datetime).format("H")) && (
                         <div key={data._id} className="col-md-3">
                           <>
                             <button
@@ -168,53 +175,9 @@ const BookShow = () => {
                             >
                               {moment(data.datetime).format("LT")}
                             </button>
-                            <p>afternoon</p>
                           </>
                         </div>
                       )}
-
-                    {sortValue === "2" &&
-                      parseInt(
-                        moment(new Date().setHours(2, 0, 0)).format("H")
-                      ) <= parseInt(moment(data.datetime).format("H")) &&
-                      parseInt(
-                        moment(new Date().setHours(11, 0, 0)).format("H")
-                      ) >= parseInt(moment(data.datetime).format("H")) && (
-                        <div key={data._id} className="col-md-3">
-                          <>
-                            <button
-                              type="button"
-                              className={`btn mr-2 ${
-                                (data.seat.length * 100) / 126 > 80
-                                  ? "btn-outline-danger"
-                                  : "btn-outline-success"
-                              }`}
-                              onClick={() => handleShowDetails(data)}
-                            >
-                              {moment(data.datetime).format("LT")}
-                            </button>
-                            <p>morning</p>
-                          </>
-                        </div>
-                      )}
-
-                    {sortValue === "all" && (
-                      <div key={data._id} className="col-md-3">
-                        <>
-                          <button
-                            type="button"
-                            className={`btn mr-2 ${
-                              (data.seat.length * 100) / 126 > 80
-                                ? "btn-outline-danger"
-                                : "btn-outline-success"
-                            }`}
-                            onClick={() => handleShowDetails(data)}
-                          >
-                            {moment(data.datetime).format("LT")}
-                          </button>
-                        </>
-                      </div>
-                    )}
                   </>
                 );
               })
@@ -236,29 +199,4 @@ const BookShow = () => {
   );
 };
 
-{
-  /* {localStorage.getItem("role") == "admin" && (
-                        <>
-                          <button
-                            className="mr-2"
-                            onClick={() => handleEditShowDetails(data)}
-                          >
-                            Edit{" "}
-                          </button>
-                          <button
-                            className="mr-2"
-                            onClick={() => {
-                              const confirmBox = window.confirm(
-                                "Do you Really want to delete this show?"
-                              );
-                              if (confirmBox === true) {
-                                handleDeleteShowDetails(data);
-                              }
-                            }}
-                          >
-                            Delete
-                          </button>
-                        </>
-                      )} */
-}
 export default BookShow;
