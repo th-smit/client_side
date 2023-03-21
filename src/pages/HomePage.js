@@ -72,6 +72,12 @@ const HomePage = () => {
     console.log("handleAddMovie");
     navigate("/addmovie");
   };
+
+  const handlePromoButton = () => {
+    console.log("handleAddMovie");
+    navigate("/addpromocode");
+  };
+
   return (
     <Layout>
       <div className="mt-4 mb-5">
@@ -111,19 +117,28 @@ const HomePage = () => {
           </div>
           <div className="col-sm-3 d-flex justify-content-end">
             {role === "admin" && (
-              <button
-                type="button"
-                className="btn btn-primary"
-                onClick={() => handleAddButton()}
-              >
-                Add Movie
-              </button>
+              <>
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={() => handleAddButton()}
+                >
+                  Add Movie
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-primary ml-2"
+                  onClick={() => handlePromoButton()}
+                >
+                  Add Promo
+                </button>
+              </>
             )}
           </div>
         </div>
       </div>
 
-      <h3>Recomanded Movies</h3>
+      <h3>Recommended Movies</h3>
       <div className="row">
         {allMovie.map((data) => {
           return (

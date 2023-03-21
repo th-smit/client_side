@@ -71,7 +71,10 @@ const MyBooked = () => {
                 >
                   <h6>
                     <h5>{data.movie_title}</h5>
-                    Booked seat: {" " + data.seat}
+                    Booked seat:{" "}
+                    <span style={{ overflowWrap: "break-word" }}>
+                      {" " + data.seat}
+                    </span>
                     <br />
                     Price:{data.price}
                     <br />

@@ -15,6 +15,9 @@ import AddShow from "./pages/AddShow";
 import BookTicket from "./pages/BookTicket";
 import EditShow from "./pages/EditShow";
 import MyBooked from "./pages/MyBooked";
+import AddPromoCode from "./pages/AddPromoCode";
+import PromoList from "./pages/PromoList";
+import EditPromo from "./pages/EditPromo";
 
 function App() {
   return (
@@ -45,6 +48,9 @@ function App() {
       <Route path="/emailsend" element={<EmailSend />}></Route>
       <Route path="/forgotpassword" element={<ForgotPassword />}></Route>
       <Route path="/otpverify" element={<OtpVerify />}></Route>
+      <Route path="/addpromocode" element={<AddPromoCode />}></Route>
+      <Route path="/promocodelist" element={<PromoList />}></Route>
+      <Route path="/editpromo/:id?" element={<EditPromo />}></Route>
     </Routes>
   );
 }

@@ -310,16 +310,23 @@ const BookTicket = () => {
       )}
       {summary && (
         <>
-          <div className="mt-3 container border border-success">
+          <div className="mt-3 container">
             <div className="row">
-              <div className="col-md-4 border border-warning">
+              <div className="col-md-6 border border-warning">
                 <span className="__circle-left"></span>
                 <div className="m-4">
                   <h6>BOOKING SUMMARY</h6>
                 </div>
                 <div className="ml-4 d-flex justify-content-between">
-                  <span>
-                    {unBookedSeat} {"("} {unBookedSeat.length} {" Tickets )"}{" "}
+                  <span
+                    className="col-md-6"
+                    style={{ overflowWrap: "break-word" }}
+                  >
+                    {unBookedSeat + " "}
+                    {"("} {unBookedSeat.length} {" Tickets )"}{" "}
+                    {/* <div>
+                      
+                    </div> */}
                   </span>
                   <span>Rs. {price}.00</span>
                 </div>
@@ -390,7 +397,7 @@ const BookTicket = () => {
                   </button>
                 </div>
               </div>
-              <div className="col-md-5">
+              <div className="col-md-6 border border-success">
                 <h6>hello</h6>
               </div>
             </div>

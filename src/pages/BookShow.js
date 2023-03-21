@@ -9,6 +9,8 @@ import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import TextField from "@mui/material/TextField";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { FiEdit2 } from "react-icons/fi";
+import { MdDelete } from "react-icons/md";
 
 const BookShow = () => {
   var { title, currentdate } = useParams();
@@ -79,18 +81,18 @@ const BookShow = () => {
     navigate(`/bookticket/${data._id}`);
   };
 
-  const handleEditShowDetails = (data) => {
-    navigate("/editshow", {
-      state: {
-        movieDetails: data,
-      },
-    });
-  };
-  const handleDeleteShowDetails = async (data) => {
-    console.log(data._id);
-    const movieShowData = await axios.delete(`/show/${data._id}`);
-    navigate(-1);
-  };
+  // const handleEditShowDetails = (data) => {
+  //   navigate("/editshow", {
+  //     state: {
+  //       movieDetails: data,
+  //     },
+  //   });
+  // };
+  // const handleDeleteShowDetails = async (data) => {
+  //   console.log(data._id);
+  //   const movieShowData = await axios.delete(`/show/${data._id}`);
+  //   navigate(-1);
+  // };
 
   const onSortingChange = (event) => {
     console.log(event.target.value);
@@ -153,7 +155,7 @@ const BookShow = () => {
             </div>
           </div>
           <div className="d-flex justify-content-center m-2">
-            <h3>Inox Cinema, Nadiad</h3>
+            {allMovieShow.length !== 0 ? <h3>Inox Cinema, Nadiad</h3> : ""}
           </div>
           <div className="row">
             {allMovieShow.length !== 0 ? (
