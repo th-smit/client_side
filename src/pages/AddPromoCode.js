@@ -9,6 +9,16 @@ import dayjs from "dayjs";
 import TextField from "@mui/material/TextField";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+
+import { useTheme } from "@mui/material/styles";
+import Box from "@mui/material/Box";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import Chip from "@mui/material/Chip";
+
 const AddPromoCode = () => {
   const navigate = useNavigate();
   const {
@@ -20,6 +30,50 @@ const AddPromoCode = () => {
   const [expiry_date, setExpiryDate] = React.useState(dayjs(new Date()));
   const [promocode_type, setType] = useState(null);
   const [movies, setMovies] = useState([]);
+
+  const theme = useTheme();
+  const [personName, setPersonName] = React.useState([]);
+  const [movieData, setMovieData] = useState([]);
+
+  const ITEM_HEIGHT = 48;
+  const ITEM_PADDING_TOP = 8;
+  const MenuProps = {
+    PaperProps: {
+      style: {
+        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+        width: 250,
+      },
+    },
+  };
+
+  useEffect(() => {
+    getMovieRecord();
+  }, []);
+
+  const getMovieRecord = async () => {
+    const movieRecord = await axios.get("/movie");
+    console.log("movie record is" + movieRecord);
+    setMovieData(movieRecord.data.successMessage);
+  };
+
+  function getStyles(name, personName, theme) {
+    return {
+      fontWeight:
+        personName.indexOf(name) === -1
+          ? theme.typography.fontWeightRegular
+          : theme.typography.fontWeightMedium,
+    };
+  }
+
+  const handleChange = (event) => {
+    const {
+      target: { value },
+    } = event;
+    setPersonName(
+      // On autofill we get a stringified value.
+      typeof value === "string" ? value.split(",") : value
+    );
+  };
 
   const handleDate = (newDateValue) => {
     setExpiryDate(newDateValue);
@@ -45,7 +99,7 @@ const AddPromoCode = () => {
   const onAddMovieDetailSubmit = async (values) => {
     values.promocode_type = promocode_type;
     values.expiry_date = expiry_date;
-    values.movies = movies;
+    values.movies = personName;
     console.log("promocode value " + JSON.stringify(values));
     try {
       // if (language.length === 0 || format.length === 0) {
@@ -78,6 +132,14 @@ const AddPromoCode = () => {
             <span style={{ color: "red" }}>promocode name is mandatory</span>
           )}
         </p>
+
+        <label htmlFor="discount">Discount : &nbsp;</label>
+        <input
+          type="text"
+          {...register("discount", {
+            required: true,
+          })}
+        />
 
         <div>
           Expiry Date:
@@ -142,6 +204,38 @@ const AddPromoCode = () => {
           <span>Percentage</span>
         </div>
 
+        <div>
+          <FormControl sx={{ m: 1, width: 300 }}>
+            <InputLabel id="demo-multiple-chip-label">Movies</InputLabel>
+            <Select
+              labelId="demo-multiple-chip-label"
+              id="demo-multiple-chip"
+              multiple
+              value={personName}
+              onChange={handleChange}
+              input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
+              renderValue={(selected) => (
+                <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                  {selected.map((value) => (
+                    <Chip key={value} label={value} />
+                  ))}
+                </Box>
+              )}
+              MenuProps={MenuProps}
+            >
+              {movieData !== null &&
+                movieData.map((name) => (
+                  <MenuItem
+                    key={name.title}
+                    value={name.title}
+                    style={getStyles(name.title, personName, theme)}
+                  >
+                    {name.title}
+                  </MenuItem>
+                ))}
+            </Select>
+          </FormControl>
+        </div>
         <div className="mt-3">
           <label htmlFor="active_status">Active ? &nbsp;</label>
           <input type="checkbox" {...register("active_status")}></input>

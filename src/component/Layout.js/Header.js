@@ -14,6 +14,10 @@ const Header = () => {
     navigate("/login");
   };
 
+  const handlerPromos = async () => {
+    navigate("/promocodelist");
+  };
+
   return (
     <>
       <nav className="navbar navbar-expand-lg navbar-light bg-light">
@@ -31,6 +35,14 @@ const Header = () => {
                 >
                   {name}
                 </Link>
+              </li>
+              <li>
+                <button
+                  onClick={() => handlerPromos()}
+                  className="mb-2 mr-2 btn btn-primary"
+                >
+                  Promos
+                </button>
               </li>
               <li>
                 <button

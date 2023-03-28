@@ -18,7 +18,8 @@ const MovieDetails = () => {
   const [movieShow, setMovieShow] = useState(null);
 
   const [moviedata, setMovieData] = useState(null);
-  var { title } = useParams();
+  const { title } = useParams();
+  console.log("movie title is " + title);
   useEffect(() => {
     getMovieRecord();
 
@@ -103,7 +104,7 @@ const MovieDetails = () => {
       <>
         <Header />
         <body>
-          <div id="layout" className="container mt-5">
+          <div id="layout" className="container mt-3">
             <div className="mb-3">
               <button
                 className="btn btn-primary pointer-link"

@@ -36,8 +36,8 @@ const AddShow = () => {
       await axios.post("/show", values);
       navigate("/");
     } catch (error) {
-      console.log(error.response.data.errorMessage.err);
-      message.error(error.response.data.errorMessage.err);
+      console.log(error.response.data.errorMessage);
+      message.error(error.response.data.errorMessage);
 
       navigate(-1);
     }

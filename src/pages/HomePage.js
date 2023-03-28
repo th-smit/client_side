@@ -64,7 +64,8 @@ const HomePage = () => {
 
   const handleImageClickDetails = (data) => {
     localStorage.setItem("title", data.title);
-    console.log("on image clicked " + data);
+    console.log("on image clicked " + JSON.stringify(data));
+    console.log("movie title " + data.title);
     navigate(`/moviedetails/${data.title}`);
   };
 

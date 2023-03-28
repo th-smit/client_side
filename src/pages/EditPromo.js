@@ -34,6 +34,7 @@ const EditPromo = () => {
   const [promo_type, setPromo_type] = useState();
   const theme = useTheme();
   const [personName, setPersonName] = React.useState([]);
+
   const {
     register,
     handleSubmit,
@@ -59,11 +60,11 @@ const EditPromo = () => {
   useEffect(() => {
     if (promoData !== null) {
       setValue("promo_name", promoData.promo_name);
+      setValue("discount", promoData.discount);
       setValue("active_status", promoData.active_status);
       setValue("count", promoData.limit);
       setValue("promo_type", promoData.promocode_type);
       setPromo_type(promoData.promocode_type);
-      console.log("promo type is " + promoData.promocode_type);
       setDate(moment(promoData.expiry_date));
     }
   }, [promoData]);
@@ -93,8 +94,12 @@ const EditPromo = () => {
     const promoRecord = await axios.get(`/promocode/${id}`);
     console.log("promo is " + promoRecord.data.successMessage[0]);
     setPromoData(promoRecord.data.successMessage[0]);
+    console.log(
+      "stored movie data " + promoRecord.data.successMessage[0].movies
+    );
+    setPersonName(promoRecord.data.successMessage[0].movies);
     const movieRecord = await axios.get("/movie");
-
+    console.log("movie record is" + movieRecord);
     setMovieData(movieRecord.data.successMessage);
   };
 
@@ -106,7 +111,7 @@ const EditPromo = () => {
       const updatedData = axios.put(`/promocode/${id}`, values);
       // console.log()
       console.log(updatedData);
-      // navigate("/");
+      navigate("/");
     } catch (error) {
       console.log(error);
       clearStorage();
@@ -123,6 +128,9 @@ const EditPromo = () => {
     console.log("type is " + e.target.value);
     setPromo_type(e.target.value);
   };
+  const onBack = async () => {
+    navigate(-1);
+  };
   return (
     promoData &&
     movieData && (
@@ -134,6 +142,15 @@ const EditPromo = () => {
               <input
                 type="text"
                 {...register("promo_name", {
+                  required: true,
+                })}
+              />
+            </p>
+            <p>
+              <label htmlFor="discount">Discount : &nbsp;</label>
+              <input
+                type="text"
+                {...register("discount", {
                   required: true,
                 })}
               />
@@ -226,6 +243,12 @@ const EditPromo = () => {
               className="btn btn-primary mt-3"
               value="Update"
             />
+            <button
+              className="btn btn-primary pointer-link"
+              onClick={() => onBack()}
+            >
+              &#60;- Back
+            </button>
           </form>
         </>
       </Layout>

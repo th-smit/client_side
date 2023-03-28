@@ -6,11 +6,24 @@ import moment from "moment/moment";
 import SeatCom from "../component/Button/SeatCom";
 import "../App.css";
 import { FaAngleDown, FaAngleUp } from "react-icons/fa";
+import { useForm } from "react-hook-form";
+import { RxCross2 } from "react-icons/rx";
+import { MdDiscount } from "react-icons/md";
+
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemText from "@mui/material/ListItemText";
+import Divider from "@mui/material/Divider";
 
 const BookTicket = () => {
   const query = new URLSearchParams(window.location.search);
   const seats = query.get("seats");
-  console.log("run again");
+
   const navigate = useNavigate();
   const seat = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18];
   const [selectedSeat, setSelectedSeat] = useState(null);
@@ -20,9 +33,21 @@ const BookTicket = () => {
   const [unBookedSeat, setUnbooked] = useState([]);
   const [summary, setSummary] = useState(false);
 
-  const [elementVisible, setElementVisible] = useState(false);
+  const [discount, setDiscount] = useState();
 
-  console.log(temSeat);
+  const [elementVisible, setElementVisible] = useState(false);
+  const [promocodeList, setPromocodeList] = useState(null);
+  const [grandTotal, setGrandTotal] = useState();
+
+  const [applyStatus, setApplyStatus] = useState(false);
+  const [promocodeType, setPromocodeType] = useState();
+  const [promoName, setPromoName] = useState();
+  const [promoId, setPromoId] = useState();
+
+  const [userPromo, setUserPromo] = useState();
+  let [userPromoArray] = useState([]);
+  const useremail = localStorage.getItem("email");
+
   const seatRow = [
     "A",
     "B",
@@ -50,6 +75,13 @@ const BookTicket = () => {
     }
   };
 
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm();
+
   useEffect(() => {
     if (temSeat.length === 0) {
       window.history.replaceState(
@@ -64,13 +96,13 @@ const BookTicket = () => {
 
   useEffect(() => {
     getShowData();
-
+    getPromoData();
+    getUserPromo();
     let totalprice = 0;
     temSeat.map((data) => {
       if (selectedSeat !== null) {
         if (!selectedSeat.includes(data)) {
           console.log("2nd");
-          // unBookedSeat.push(data);
           if (data[0].charCodeAt() > 67 && data[0].charCodeAt() <= 73) {
             totalprice = totalprice + 150;
           } else if (data[0].charCodeAt() > 73) {
@@ -84,9 +116,10 @@ const BookTicket = () => {
         }
       }
     });
+
     if (bookedSeat.length !== 1) {
       message.error(bookedSeat.slice(1) + " seat already booked");
-      console.log("bookes seat aaray " + bookedSeat);
+      console.log("bookes seat array " + bookedSeat);
       console.log("length of bookes seat aaray " + bookedSeat.length);
     }
 
@@ -104,9 +137,33 @@ const BookTicket = () => {
       setSelectedSeat(showData.data.successMessage[0].seat);
     }
   };
-  const handleSeat = async (e) => {
-    console.log(temSeat);
 
+  const getUserPromo = async () => {
+    try {
+      const userPromoData = await axios.get(`/getuserpromo/promo/${useremail}`);
+      setUserPromo(userPromoData.data.successMessage);
+      if (userPromoArray.length === 0) {
+        userPromoData.data.successMessage.map((data) => {
+          userPromoArray.push(data.promo_name);
+        });
+      }
+
+      console.log("use promo array " + userPromoArray);
+      console.log("existance ", userPromoArray.includes("p3"));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getPromoData = async () => {
+    try {
+      const promoData = await axios.get(`/promocode/${useremail}`);
+      setPromocodeList(promoData.data.successMessage);
+    } catch (error) {
+      console.log("error in fetching data from the promocode " + error);
+    }
+  };
+  const handleSeat = async (e) => {
     if (temSeat.includes(e.target.value)) {
       const index = temSeat.indexOf(e.target.value);
       temSeat.splice(index, 1);
@@ -126,7 +183,6 @@ const BookTicket = () => {
     } else {
       setTemSeat([...temSeat, e.target.value]);
       e.target.style.backgroundColor = "green";
-      console.log("target value" + e.target.value.charCodeAt(0));
 
       if (
         e.target.value.charCodeAt(0) > 67 &&
@@ -142,6 +198,8 @@ const BookTicket = () => {
   };
   const onPay = async () => {
     try {
+      console.log("grand total is " + grandTotal);
+      const userEmail = localStorage.getItem("email");
       const ticketDetails = {
         seat: temSeat,
         movieTitle: showdata.title,
@@ -150,15 +208,19 @@ const BookTicket = () => {
         username: localStorage.getItem("name"),
         email: localStorage.getItem("email"),
         showid: showdata._id,
+        promoname: promoName,
+        promoid: promoId,
       };
       const unbookedseat = await axios.post("/ticket", ticketDetails);
       console.log("movieShowData[0] " + unbookedseat.data.successMessage);
 
       setSummary(false);
-      // navigate("/");
+      navigate("/");
     } catch (error) {
-      console.log(error);
       message.error(error.response.data.errorMessage);
+      console.log(error.response.data.errorMessage);
+
+      navigate(-1);
     }
   };
 
@@ -181,12 +243,60 @@ const BookTicket = () => {
         "/ticket/checkticket",
         ticketDetails
       );
+      setGrandTotal(price + ((price * 3) / 100 + (price * 15) / 100));
       console.log("unbooked seat is " + unbookedseat.data.successMessage);
       setUnbooked(unbookedseat.data.successMessage);
       setSummary(true);
     } catch (error) {
       console.log("error + ", error.response.data.errorMessage);
     }
+  };
+
+  const handlePromocodeStatus = (data) => {
+    console.log("seleceted promo is " + JSON.stringify(data));
+    console.log("selected type is " + JSON.stringify(data.promocode_type));
+    console.log("selected discount is " + JSON.stringify(data.discount));
+    if (promoName === data.promo_name) {
+      console.log("active status is " + applyStatus);
+      setApplyStatus(false);
+      setValue("promo_name", "");
+      setGrandTotal(price + ((price * 3) / 100 + (price * 15) / 100));
+      setPromoId(null);
+      setPromocodeType(null);
+      setDiscount(null);
+      setPromoName("");
+    } else {
+      console.log("active status is " + applyStatus);
+      setApplyStatus(true);
+      setPromocodeType(data.promocode_type);
+      setPromoId(data._id);
+      setValue("promo_name", data.promo_name);
+      setPromoName(data.promo_name);
+
+      if (data.promocode_type === "Flat") {
+        const flatprice =
+          price + ((price * 3) / 100 + (price * 15) / 100) - data.discount;
+        setGrandTotal(flatprice);
+        setDiscount(data.discount);
+        console.log("got discount is " + data.discount);
+      } else {
+        let perprice = price + ((price * 3) / 100 + (price * 15) / 100);
+        perprice = perprice - (perprice * data.discount) / 100;
+        setGrandTotal(perprice);
+        let discount =
+          ((price + ((price * 3) / 100 + (price * 15) / 100)) * data.discount) /
+          100;
+        console.log("got discount is " + discount);
+        setDiscount(discount);
+      }
+    }
+  };
+
+  const onCross = () => {
+    console.log("cross clicked");
+    setApplyStatus(false);
+    setValue("promo_name", "");
+    setGrandTotal(price + ((price * 3) / 100 + (price * 15) / 100));
   };
 
   return (
@@ -308,98 +418,275 @@ const BookTicket = () => {
           </div>
         </>
       )}
-      {summary && (
+      {summary && showdata && promocodeList && (
         <>
-          <div className="mt-3 container">
-            <div className="row">
-              <div className="col-md-6 border border-warning">
-                <span className="__circle-left"></span>
-                <div className="m-4">
-                  <h6>BOOKING SUMMARY</h6>
-                </div>
-                <div className="ml-4 d-flex justify-content-between">
-                  <span
-                    className="col-md-6"
-                    style={{ overflowWrap: "break-word" }}
+          <div>
+            <div className="d-flex justify-content-center mt-4">
+              <Card className="bg-light" style={{ width: 450 }}>
+                <CardContent>
+                  <Typography
+                    sx={{ fontSize: 18 }}
+                    component="div"
+                    className="d-flex justify-content-center"
                   >
-                    {unBookedSeat + " "}
-                    {"("} {unBookedSeat.length} {" Tickets )"}{" "}
-                    {/* <div>
-                      
-                    </div> */}
-                  </span>
-                  <span>Rs. {price}.00</span>
-                </div>
-                <div className="ml-4 d-flex justify-content-between">
-                  <span>
-                    {!elementVisible ? (
-                      <span onClick={() => setElementVisible(!elementVisible)}>
-                        <FaAngleDown />
-                      </span>
-                    ) : (
-                      ""
-                    )}
-
-                    {elementVisible ? (
-                      <span onClick={() => setElementVisible(!elementVisible)}>
-                        <FaAngleUp />
-                      </span>
-                    ) : (
-                      ""
-                    )}
-
-                    <span> Convenience fees </span>
-                  </span>
-
-                  <span>Rs. {(price * 3) / 100 + (price * 15) / 100}</span>
-                </div>
-                {/* <div className="ml-4 d-flex justify-content-between"></div> */}
-                {elementVisible ? (
-                  <div>
-                    <div className="ml-4 d-flex justify-content-between">
-                      <span>Base Amount </span>
-                      <span>Rs. {(price * 3) / 100}</span>
-                    </div>
-                    <div className="ml-4 d-flex justify-content-between">
-                      <span>Integrated GST </span>
-                      <span>Rs. {(price * 15) / 100}</span>
-                    </div>
+                    B O O K I N G &nbsp; S U M M A R Y
+                  </Typography>
+                  <div className="ml-4 mr-2 mt-4 d-flex justify-content-between">
+                    <span style={{ overflowWrap: "break-word" }}>
+                      <Typography sx={{ fontSize: 18 }} gutterBottom>
+                        {unBookedSeat + " "}
+                        {`(${unBookedSeat.length}Tickets)`}
+                      </Typography>
+                    </span>
+                    <span>
+                      <Typography sx={{ fontSize: 14 }}>
+                        Rs. {price}.00
+                      </Typography>
+                    </span>
                   </div>
-                ) : (
-                  " "
-                )}
 
-                <div className="ml-4 d-flex justify-content-between">
-                  <span>.................</span>
-                </div>
-                <div className="ml-4 d-flex justify-content-between">
-                  <span> Sub Total </span>
-                  <span>
-                    Rs. {price + (price * 3) / 100 + (price * 15) / 100}
-                  </span>
-                </div>
+                  <div className="ml-4 mr-2 d-flex justify-content-between">
+                    <span>
+                      <Typography sx={{ fontSize: 14 }} color="text.secondary">
+                        {elementVisible ? (
+                          <span
+                            onClick={() => setElementVisible(!elementVisible)}
+                          >
+                            <FaAngleUp />
+                          </span>
+                        ) : (
+                          ""
+                        )}
+                        {!elementVisible ? (
+                          <span
+                            onClick={() => setElementVisible(!elementVisible)}
+                          >
+                            <FaAngleDown />
+                          </span>
+                        ) : (
+                          ""
+                        )}
+                        <span style={{ fontSize: 15 }}>Convenience fees</span>
+                      </Typography>
+                    </span>
+                    <span>Rs. {(price * 3) / 100 + (price * 15) / 100}</span>
+                  </div>
 
-                <div>
-                  <button
-                    type="button"
-                    className="btn btn-outline-primary"
-                    onClick={() => onPay()}
-                  >
-                    pay
-                  </button>
-                </div>
-                <div>
-                  <button
-                    className="mt-3 btn pointer-link"
-                    onClick={() => onBackTicket()}
-                  >
-                    &#60;- Back
-                  </button>
-                </div>
-              </div>
-              <div className="col-md-6 border border-success">
-                <h6>hello</h6>
-              </div>
+                  {elementVisible ? (
+                    <Typography sx={{ fontSize: 12 }} color="text.secondary">
+                      <div className="mr-2">
+                        <div className="ml-4 d-flex justify-content-between">
+                          <span>Base Amount </span>
+                          <span>Rs. {(price * 3) / 100}</span>
+                        </div>
+                        <div className="ml-4 d-flex justify-content-between">
+                          <span>Integrated GST </span>
+                          <span>Rs. {(price * 15) / 100}</span>
+                        </div>
+                      </div>
+                    </Typography>
+                  ) : (
+                    " "
+                  )}
+
+                  <div>
+                    <Typography>
+                      <div className="ml-4 mr-2 d-flex justify-content-between">
+                        {applyStatus === true ? (
+                          <>
+                            <span>Discount</span>
+                            {promocodeType === "Flat" ? (
+                              <span>- Rs. {discount}</span>
+                            ) : (
+                              <span>- Rs. {discount}</span>
+                            )}
+                          </>
+                        ) : (
+                          <span></span>
+                        )}
+                      </div>
+                    </Typography>
+                  </div>
+
+                  <Divider
+                    className="ml-4 mt-3 mb-3 mr-2"
+                    sx={{ borderStyle: "dashed" }}
+                  />
+                  <Typography>
+                    <div className="ml-4 d-flex justify-content-between"></div>
+                    <div className="ml-4 d-flex justify-content-between">
+                      <span> Grand Total </span>
+
+                      <span className="mr-2">Rs. {grandTotal}</span>
+                    </div>
+                  </Typography>
+
+                  <div className="ml-4 d-flex justify-content-between">
+                    <span>
+                      <label htmlFor="promo_name">
+                        Apply Promocode : &nbsp;
+                      </label>
+                    </span>
+                    <span>
+                      <input
+                        className="mr-2 bg-light border border-black"
+                        type="text"
+                        onChange={(e) => handlePromocodeStatus(e)}
+                        {...register("promo_name", {})}
+                      />
+                      <RxCross2 onClick={() => onCross()} />
+                    </span>
+                  </div>
+                  <div className="mt-4 ml-4 mb-2">
+                    <Typography sx={{ fontSize: 14 }}>PROMO CODES</Typography>
+                  </div>
+
+                  <div className="mb-4 ml-4">
+                    <List
+                      sx={{
+                        width: "100%",
+                        overflow: "auto",
+                        maxHeight: 150,
+                        bgcolor: "background.gray",
+                        position: "relative",
+                      }}
+                    >
+                      {promocodeList.map((data) => {
+                        if (data.movies.includes(showdata.title)) {
+                          console.log(userPromoArray);
+                          console.log(data.promo_name);
+                          console.log(userPromoArray.includes(data.promo_name));
+                          if (userPromoArray.includes(data.promo_name)) {
+                            return userPromo.map((data1) => {
+                              if (data1.promo_name == data.promo_name) {
+                                if (data1.limit < data.limit) {
+                                  return (
+                                    <>
+                                      <ListItem disablePadding>
+                                        <MdDiscount className="mr-2" />
+                                        <ListItemText
+                                          primary={data.promo_name}
+                                          secondary={
+                                            <React.Fragment>
+                                              <Typography
+                                                sx={{ display: "inline" }}
+                                                component="span"
+                                                variant="body2"
+                                                color="text.primary"
+                                              >
+                                                Get {data.discount}{" "}
+                                                {data.promocode_type === "Flat"
+                                                  ? "₹ Flat"
+                                                  : "%"}{" "}
+                                                OFF
+                                              </Typography>
+
+                                              {/* {" — Wish I could come, but I'm out of town this…"} */}
+                                            </React.Fragment>
+                                          }
+                                        />
+
+                                        {promoName === data.promo_name &&
+                                        applyStatus === true ? (
+                                          <Button
+                                            color="error"
+                                            onClick={() =>
+                                              handlePromocodeStatus(data)
+                                            }
+                                          >
+                                            Remove
+                                          </Button>
+                                        ) : (
+                                          <Button
+                                            color="primary"
+                                            onClick={() =>
+                                              handlePromocodeStatus(data)
+                                            }
+                                          >
+                                            Apply
+                                          </Button>
+                                        )}
+                                      </ListItem>
+                                    </>
+                                  );
+                                }
+                              }
+                            });
+                          } else {
+                            return (
+                              <>
+                                <ListItem disablePadding>
+                                  <MdDiscount className="mr-2" />
+                                  <ListItemText
+                                    primary={data.promo_name}
+                                    secondary={
+                                      <React.Fragment>
+                                        <Typography
+                                          sx={{ display: "inline" }}
+                                          component="span"
+                                          variant="body2"
+                                          color="text.primary"
+                                        >
+                                          Get {data.discount}{" "}
+                                          {data.promocode_type === "Flat"
+                                            ? "₹ Flat"
+                                            : "%"}{" "}
+                                          OFF
+                                        </Typography>
+                                      </React.Fragment>
+                                    }
+                                  />
+
+                                  {promoName === data.promo_name &&
+                                  applyStatus === true ? (
+                                    <Button
+                                      color="error"
+                                      onClick={() =>
+                                        handlePromocodeStatus(data)
+                                      }
+                                    >
+                                      Remove
+                                    </Button>
+                                  ) : (
+                                    <Button
+                                      color="primary"
+                                      onClick={() =>
+                                        handlePromocodeStatus(data)
+                                      }
+                                    >
+                                      Apply
+                                    </Button>
+                                  )}
+                                </ListItem>
+                              </>
+                            );
+                          }
+                        }
+                      })}
+                    </List>
+                  </div>
+
+                  <div className="d-flex justify-content-center">
+                    <button
+                      style={{ width: 300, background: "#ADD8E6" }}
+                      type="button"
+                      className="ml-4 btn "
+                      onClick={() => onPay()}
+                    >
+                      Pay Rs.{grandTotal}
+                    </button>
+                  </div>
+
+                  <div>
+                    <button
+                      className="mt-3 btn pointer-link bg-light"
+                      onClick={() => onBackTicket()}
+                    >
+                      &#60;- Back
+                    </button>
+                  </div>
+                </CardContent>
+              </Card>
             </div>
           </div>
         </>
