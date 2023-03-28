@@ -91,7 +91,7 @@ const EditPromo = () => {
   // ---------------
 
   const getPromoRecord = async () => {
-    const promoRecord = await axios.get(`/promocode/${id}`);
+    const promoRecord = await axios.get(`/promocode?id=${id}`);
     console.log("promo is " + promoRecord.data.successMessage[0]);
     setPromoData(promoRecord.data.successMessage[0]);
     console.log(

@@ -97,7 +97,7 @@ const BookTicket = () => {
   useEffect(() => {
     getShowData();
     getPromoData();
-    getUserPromo();
+    // getUserPromo();
     let totalprice = 0;
     temSeat.map((data) => {
       if (selectedSeat !== null) {
@@ -138,26 +138,29 @@ const BookTicket = () => {
     }
   };
 
-  const getUserPromo = async () => {
-    try {
-      const userPromoData = await axios.get(`/getuserpromo/promo/${useremail}`);
-      setUserPromo(userPromoData.data.successMessage);
-      if (userPromoArray.length === 0) {
-        userPromoData.data.successMessage.map((data) => {
-          userPromoArray.push(data.promo_name);
-        });
-      }
+  // const getUserPromo = async () => {
+  //   try {
+  //     const userPromoData = await axios.get(`/getuserpromo/promo/${useremail}`);
+  //     setUserPromo(userPromoData.data.successMessage);
+  //     if (userPromoArray.length === 0) {
+  //       userPromoData.data.successMessage.map((data) => {
+  //         userPromoArray.push(data.promo_name);
+  //       });
+  //     }
 
-      console.log("use promo array " + userPromoArray);
-      console.log("existance ", userPromoArray.includes("p3"));
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  //     console.log("use promo array " + userPromoArray);
+  //     console.log("existance ", userPromoArray.includes("p3"));
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   const getPromoData = async () => {
     try {
-      const promoData = await axios.get(`/promocode/${useremail}`);
+      const promoData = await axios.get(
+        `/promocode/${useremail}/${showdata.title}`
+      );
+      console.log("final data is ", promoData);
       setPromocodeList(promoData.data.successMessage);
     } catch (error) {
       console.log("error in fetching data from the promocode " + error);
@@ -199,7 +202,6 @@ const BookTicket = () => {
   const onPay = async () => {
     try {
       console.log("grand total is " + grandTotal);
-      const userEmail = localStorage.getItem("email");
       const ticketDetails = {
         seat: temSeat,
         movieTitle: showdata.title,
@@ -551,7 +553,51 @@ const BookTicket = () => {
                         position: "relative",
                       }}
                     >
-                      {promocodeList.map((data) => {
+                      {promocodeList &&
+                        promocodeList.map((data) => {
+                          return (
+                            <ListItem disablePadding>
+                              <MdDiscount className="mr-2" />
+                              <ListItemText
+                                primary={data.promo_name}
+                                secondary={
+                                  <React.Fragment>
+                                    <Typography
+                                      sx={{ display: "inline" }}
+                                      component="span"
+                                      variant="body2"
+                                      color="text.primary"
+                                    >
+                                      Get {data.discount}{" "}
+                                      {data.promocode_type === "Flat"
+                                        ? "₹ Flat"
+                                        : "%"}{" "}
+                                      OFF
+                                    </Typography>
+                                  </React.Fragment>
+                                }
+                              />
+
+                              {promoName === data.promo_name &&
+                              applyStatus === true ? (
+                                <Button
+                                  color="error"
+                                  onClick={() => handlePromocodeStatus(data)}
+                                >
+                                  Remove
+                                </Button>
+                              ) : (
+                                <Button
+                                  color="primary"
+                                  onClick={() => handlePromocodeStatus(data)}
+                                >
+                                  Apply
+                                </Button>
+                              )}
+                            </ListItem>
+                          );
+                        })}
+                      {/* {promocodeList.map((data) => {
                         if (data.movies.includes(showdata.title)) {
                           console.log(userPromoArray);
                           console.log(data.promo_name);
@@ -581,7 +627,7 @@ const BookTicket = () => {
                                                 OFF
                                               </Typography>
 
-                                              {/* {" — Wish I could come, but I'm out of town this…"} */}
+                                              " — Wish I could come, but I'm out of town this…"
                                             </React.Fragment>
                                           }
                                         />
@@ -662,7 +708,7 @@ const BookTicket = () => {
                             );
                           }
                         }
-                      })}
+                      })} */}
                     </List>
                   </div>
 

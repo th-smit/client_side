@@ -18,6 +18,7 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import Chip from "@mui/material/Chip";
+import { message } from "antd";
 
 const AddPromoCode = () => {
   const navigate = useNavigate();
@@ -111,8 +112,9 @@ const AddPromoCode = () => {
       // }
     } catch (error) {
       console.log(error);
-      clearStorage();
-      navigate("/login");
+      message.error(error.response.data.errorMessage);
+      // clearStorage();
+      navigate("/");
     }
   };
 
