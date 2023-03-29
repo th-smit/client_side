@@ -44,8 +44,6 @@ const MovieDetails = () => {
     console.log(
       "show details " + JSON.stringify(showDetails.data.successMessage)
     );
-    console.log(showDetails.data.successMessage.length);
-    console.log(movieDetails);
     setMovieData(movieDetails);
   };
   const onDeleteButton = async () => {
