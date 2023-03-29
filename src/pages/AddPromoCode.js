@@ -49,7 +49,7 @@ const AddPromoCode = () => {
 
   useEffect(() => {
     getMovieRecord();
-  }, []);
+  }, [promocode_type]);
 
   const getMovieRecord = async () => {
     const movieRecord = await axios.get("/movie");
@@ -103,18 +103,13 @@ const AddPromoCode = () => {
     values.movies = personName;
     console.log("promocode value " + JSON.stringify(values));
     try {
-      // if (language.length === 0 || format.length === 0) {
-      //   throw new Error("array is empty");
-      // } else {
-      // setHeader(localStorage.getItem("token"));
       await axios.post("/promocode", values);
       navigate("/");
-      // }
     } catch (error) {
       console.log(error);
       message.error(error.response.data.errorMessage);
       // clearStorage();
-      navigate("/");
+      // navigate("/");
     }
   };
 
@@ -130,18 +125,25 @@ const AddPromoCode = () => {
           })}
         />
         <p>
-          {errors.title && (
+          {errors.promo_name && (
             <span style={{ color: "red" }}>promocode name is mandatory</span>
           )}
         </p>
 
         <label htmlFor="discount">Discount : &nbsp;</label>
         <input
-          type="text"
+          type="number"
+          min={promocode_type === "Percentage" ? 1 : 1}
+          max={promocode_type === "Percentage" ? 100 : undefined}
           {...register("discount", {
             required: true,
           })}
         />
+        <p>
+          {errors.discount && (
+            <span style={{ color: "red" }}>promocode number is mandatory</span>
+          )}
+        </p>
 
         <div>
           Expiry Date:

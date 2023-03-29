@@ -47,6 +47,7 @@ const PromoList = () => {
 
   const handleDeleteShowDetails = async (data) => {
     console.log(data.promo_name);
+    axios.delete(`/promocode/${data.promo_name}`);
     navigate(-1);
   };
   const onBack = async () => {

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { message } from "antd";
 import "../App.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -48,8 +49,10 @@ function AddMovie() {
       }
     } catch (error) {
       console.log(error);
-      clearStorage();
-      navigate("/login");
+      message.error(error.response.data.errorMessage);
+      navigate("/");
+      // clearStorage();
+      // navigate("/login");
     }
   };
 

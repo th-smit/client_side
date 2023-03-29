@@ -19,6 +19,7 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import Divider from "@mui/material/Divider";
+import { getValue } from "@mui/system";
 
 const BookTicket = () => {
   const query = new URLSearchParams(window.location.search);
@@ -274,22 +275,20 @@ const BookTicket = () => {
       setPromoId(data._id);
       setValue("promo_name", data.promo_name);
       setPromoName(data.promo_name);
-
       if (data.promocode_type === "Flat") {
-        const flatprice =
-          price + ((price * 3) / 100 + (price * 15) / 100) - data.discount;
-        setGrandTotal(flatprice);
+        const gh = price - data.discount;
+        if (gh <= 0) {
+          setGrandTotal((price * 3) / 100 + (price * 15) / 100);
+        } else {
+          setGrandTotal(gh + ((price * 3) / 100 + (price * 15) / 100));
+        }
         setDiscount(data.discount);
-        console.log("got discount is " + data.discount);
       } else {
-        let perprice = price + ((price * 3) / 100 + (price * 15) / 100);
-        perprice = perprice - (perprice * data.discount) / 100;
-        setGrandTotal(perprice);
-        let discount =
-          ((price + ((price * 3) / 100 + (price * 15) / 100)) * data.discount) /
-          100;
-        console.log("got discount is " + discount);
+        let discount = (price * data.discount) / 100;
         setDiscount(discount);
+        let perprice =
+          price - discount + ((price * 3) / 100 + (price * 15) / 100);
+        setGrandTotal(perprice);
       }
     }
   };
@@ -447,6 +446,25 @@ const BookTicket = () => {
                     </span>
                   </div>
 
+                  <div>
+                    <Typography>
+                      <div className="ml-4 mr-2 d-flex justify-content-between">
+                        {applyStatus === true ? (
+                          <>
+                            <span>Discount</span>
+                            {promocodeType === "Flat" ? (
+                              <span>- Rs. {discount}</span>
+                            ) : (
+                              <span>- Rs. {discount}</span>
+                            )}
+                          </>
+                        ) : (
+                          <span></span>
+                        )}
+                      </div>
+                    </Typography>
+                  </div>
+
                   <div className="ml-4 mr-2 d-flex justify-content-between">
                     <span>
                       <Typography sx={{ fontSize: 14 }} color="text.secondary">
@@ -491,25 +509,6 @@ const BookTicket = () => {
                     " "
                   )}
 
-                  <div>
-                    <Typography>
-                      <div className="ml-4 mr-2 d-flex justify-content-between">
-                        {applyStatus === true ? (
-                          <>
-                            <span>Discount</span>
-                            {promocodeType === "Flat" ? (
-                              <span>- Rs. {discount}</span>
-                            ) : (
-                              <span>- Rs. {discount}</span>
-                            )}
-                          </>
-                        ) : (
-                          <span></span>
-                        )}
-                      </div>
-                    </Typography>
-                  </div>
-
                   <Divider
                     className="ml-4 mt-3 mb-3 mr-2"
                     sx={{ borderStyle: "dashed" }}
@@ -529,12 +528,13 @@ const BookTicket = () => {
                         Apply Promocode : &nbsp;
                       </label>
                     </span>
+
                     <span>
                       <input
                         className="mr-2 bg-light border border-black"
                         type="text"
                         onChange={(e) => handlePromocodeStatus(e)}
-                        {...register("promo_name", {})}
+                        {...register("promo_name")}
                       />
                       <RxCross2 onClick={() => onCross()} />
                     </span>
@@ -597,118 +597,6 @@ const BookTicket = () => {
                             </ListItem>
                           );
                         })}
-                      {/* {promocodeList.map((data) => {
-                        if (data.movies.includes(showdata.title)) {
-                          console.log(userPromoArray);
-                          console.log(data.promo_name);
-                          console.log(userPromoArray.includes(data.promo_name));
-                          if (userPromoArray.includes(data.promo_name)) {
-                            return userPromo.map((data1) => {
-                              if (data1.promo_name == data.promo_name) {
-                                if (data1.limit < data.limit) {
-                                  return (
-                                    <>
-                                      <ListItem disablePadding>
-                                        <MdDiscount className="mr-2" />
-                                        <ListItemText
-                                          primary={data.promo_name}
-                                          secondary={
-                                            <React.Fragment>
-                                              <Typography
-                                                sx={{ display: "inline" }}
-                                                component="span"
-                                                variant="body2"
-                                                color="text.primary"
-                                              >
-                                                Get {data.discount}{" "}
-                                                {data.promocode_type === "Flat"
-                                                  ? "₹ Flat"
-                                                  : "%"}{" "}
-                                                OFF
-                                              </Typography>
-
-                                              " — Wish I could come, but I'm out of town this…"
-                                            </React.Fragment>
-                                          }
-                                        />
-
-                                        {promoName === data.promo_name &&
-                                        applyStatus === true ? (
-                                          <Button
-                                            color="error"
-                                            onClick={() =>
-                                              handlePromocodeStatus(data)
-                                            }
-                                          >
-                                            Remove
-                                          </Button>
-                                        ) : (
-                                          <Button
-                                            color="primary"
-                                            onClick={() =>
-                                              handlePromocodeStatus(data)
-                                            }
-                                          >
-                                            Apply
-                                          </Button>
-                                        )}
-                                      </ListItem>
-                                    </>
-                                  );
-                                }
-                              }
-                            });
-                          } else {
-                            return (
-                              <>
-                                <ListItem disablePadding>
-                                  <MdDiscount className="mr-2" />
-                                  <ListItemText
-                                    primary={data.promo_name}
-                                    secondary={
-                                      <React.Fragment>
-                                        <Typography
-                                          sx={{ display: "inline" }}
-                                          component="span"
-                                          variant="body2"
-                                          color="text.primary"
-                                        >
-                                          Get {data.discount}{" "}
-                                          {data.promocode_type === "Flat"
-                                            ? "₹ Flat"
-                                            : "%"}{" "}
-                                          OFF
-                                        </Typography>
-                                      </React.Fragment>
-                                    }
-                                  />
-
-                                  {promoName === data.promo_name &&
-                                  applyStatus === true ? (
-                                    <Button
-                                      color="error"
-                                      onClick={() =>
-                                        handlePromocodeStatus(data)
-                                      }
-                                    >
-                                      Remove
-                                    </Button>
-                                  ) : (
-                                    <Button
-                                      color="primary"
-                                      onClick={() =>
-                                        handlePromocodeStatus(data)
-                                      }
-                                    >
-                                      Apply
-                                    </Button>
-                                  )}
-                                </ListItem>
-                              </>
-                            );
-                          }
-                        }
-                      })} */}
                     </List>
                   </div>
 

@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import Header from "../component/Layout.js/Header";
 import Footer from "../component/Layout.js/Footer";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { setHeader } from "./Utils";
 import { message } from "antd";
-import { color, padding } from "@mui/system";
 import moment from "moment/moment";
 import { FiEdit2 } from "react-icons/fi";
 import { MdDelete } from "react-icons/md";
@@ -57,6 +56,7 @@ const MovieDetails = () => {
       navigate(-1);
     } catch (error) {
       console.log(error);
+      message.error(error.response.data.errorMessage);
       if (error.response.status === 501) {
         message.error(error.response.data.errorMessage);
       }
