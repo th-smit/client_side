@@ -236,8 +236,6 @@ const BookTicket = () => {
     } catch (error) {
       message.error(error.response.data.errorMessage);
       console.log(error.response.data.errorMessage);
-
-      navigate(-1);
     }
   };
 

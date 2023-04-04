@@ -18,6 +18,7 @@ import MyBooked from "./pages/MyBooked";
 import AddPromoCode from "./pages/AddPromoCode";
 import PromoList from "./pages/PromoList";
 import EditPromo from "./pages/EditPromo";
+import Report from "./pages/Report";
 
 function App() {
   return (
@@ -51,6 +52,7 @@ function App() {
       <Route path="/addpromocode" element={<AddPromoCode />}></Route>
       <Route path="/promocodelist" element={<PromoList />}></Route>
       <Route path="/editpromo/:id?" element={<EditPromo />}></Route>
+      <Route path="/report" element={<Report />}></Route>
     </Routes>
   );
 }

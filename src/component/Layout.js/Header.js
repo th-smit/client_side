@@ -17,6 +17,9 @@ const Header = () => {
   const handlerPromos = async () => {
     navigate("/promocodelist");
   };
+  const handlerReport = async () => {
+    navigate("/report");
+  };
 
   return (
     <>
@@ -50,6 +53,14 @@ const Header = () => {
                   className="mb-2 btn btn-primary"
                 >
                   Logout
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => handlerReport()}
+                  className="mb-2 btn btn-primary"
+                >
+                  Report
                 </button>
               </li>
             </ul>

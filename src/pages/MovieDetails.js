@@ -230,54 +230,52 @@ const MovieDetails = () => {
                   )}
                 </div>
                 <div className="mt-4">
-                  {/* {movieShow && role === "admin" ? (
-                    <h6>"available"</h6>
-                  ) : (
-                    <h6>"not available"</h6>
-                  )} */}
                   <div className="w-50 mb-4">
-                    {role === "admin" && movieShow.length !== 0 ? (
-                      <>
-                        <span>
-                          <h5>"Available shows"</h5>
-                        </span>
-                        <ul className="list-group">
-                          {movieShow.map((data) => {
-                            return (
-                              <li className="list-group-item d-flex justify-content-between align-items-center">
-                                <span
-                                  className={`mr-2 ${
-                                    (data.seat.length * 100) / 126 > 80
-                                      ? "btn-outline-danger"
-                                      : "btn-outline-success"
-                                  }`}
-                                >
-                                  {moment(data.datetime).format("ll")} -{" "}
-                                  {moment(data.datetime).format("LT")}
-                                </span>
-                                <span>
-                                  <FiEdit2
-                                    onClick={() => handleEditShowDetails(data)}
-                                  />
-                                  <MdDelete
-                                    onClick={() => {
-                                      const confirmBox = window.confirm(
-                                        "Do you Really want to delete this show?"
-                                      );
-                                      if (confirmBox === true) {
-                                        handleDeleteShowDetails(data);
+                    {role === "admin" &&
+                      (movieShow.length !== 0 ? (
+                        <>
+                          <span>
+                            <h5>"Available shows"</h5>
+                          </span>
+                          <ul className="list-group">
+                            {movieShow.map((data) => {
+                              return (
+                                <li className="list-group-item d-flex justify-content-between align-items-center">
+                                  <span
+                                    className={`mr-2 ${
+                                      (data.seat.length * 100) / 126 > 80
+                                        ? "btn-outline-danger"
+                                        : "btn-outline-success"
+                                    }`}
+                                  >
+                                    {moment(data.datetime).format("ll")} -{" "}
+                                    {moment(data.datetime).format("LT")}
+                                  </span>
+                                  <span>
+                                    <FiEdit2
+                                      onClick={() =>
+                                        handleEditShowDetails(data)
                                       }
-                                    }}
-                                  />
-                                </span>
-                              </li>
-                            );
-                          })}{" "}
-                        </ul>
-                      </>
-                    ) : (
-                      <h6>"No Any Show Available"</h6>
-                    )}
+                                    />
+                                    <MdDelete
+                                      onClick={() => {
+                                        const confirmBox = window.confirm(
+                                          "Do you Really want to delete this show?"
+                                        );
+                                        if (confirmBox === true) {
+                                          handleDeleteShowDetails(data);
+                                        }
+                                      }}
+                                    />
+                                  </span>
+                                </li>
+                              );
+                            })}{" "}
+                          </ul>
+                        </>
+                      ) : (
+                        <h6>"No Any Show Available"</h6>
+                      ))}
                   </div>
                 </div>
               </div>
