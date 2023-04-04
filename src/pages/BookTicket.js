@@ -45,6 +45,12 @@ const BookTicket = () => {
   const [promoName, setPromoName] = useState();
   const [promoId, setPromoId] = useState();
 
+  const [promoDiscount, setPromoDiscount] = useState();
+  const [promoExpiry_Date, setPromoExpiry_Date] = useState();
+  const [promoLimit, setPromoLimit] = useState();
+  const [promoActive_Status, setPromoActive_Status] = useState();
+  const [movieTitle, setMovieTitle] = useState();
+
   const [userPromo, setUserPromo] = useState();
   let [userPromoArray] = useState([]);
   const useremail = localStorage.getItem("email");
@@ -134,6 +140,8 @@ const BookTicket = () => {
 
     console.log(showData.data.successMessage[0]);
     setShowData(showData.data.successMessage[0]);
+    setMovieTitle(showData.data.successMessage[0].title);
+
     if (selectedSeat === null) {
       setSelectedSeat(showData.data.successMessage[0].seat);
     }
@@ -213,6 +221,12 @@ const BookTicket = () => {
         showid: showdata._id,
         promoname: promoName,
         promoid: promoId,
+        promoDiscount: promoDiscount,
+        expiry_date: promoExpiry_Date,
+        limit: promoLimit,
+        active_status: promoActive_Status,
+        promocode_type: promocodeType,
+        title: movieTitle,
       };
       const unbookedseat = await axios.post("/ticket", ticketDetails);
       console.log("movieShowData[0] " + unbookedseat.data.successMessage);
@@ -267,6 +281,10 @@ const BookTicket = () => {
       setPromoId(null);
       setPromocodeType(null);
       setDiscount(null);
+      setPromoDiscount(null);
+      setPromoExpiry_Date(null);
+      setPromoLimit(null);
+      setPromoActive_Status(null);
       setPromoName("");
     } else {
       console.log("active status is " + applyStatus);
@@ -275,6 +293,10 @@ const BookTicket = () => {
       setPromoId(data._id);
       setValue("promo_name", data.promo_name);
       setPromoName(data.promo_name);
+      setPromoDiscount(data.discount);
+      setPromoExpiry_Date(data.expiry_date);
+      setPromoLimit(data.limit);
+      setPromoActive_Status(data.active_status);
       if (data.promocode_type === "Flat") {
         const gh = price - data.discount;
         if (gh <= 0) {

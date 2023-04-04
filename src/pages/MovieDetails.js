@@ -47,22 +47,24 @@ const MovieDetails = () => {
     setMovieData(movieDetails);
   };
   const onDeleteButton = async () => {
-    setHeader(localStorage.getItem("token"));
+    // setHeader(localStorage.getItem("token"));
     try {
       await axios.delete(`/movie/${moviedata.title}`);
-
-      navigate(-1);
+      console.log("deleted successfully ");
+      navigate("/");
     } catch (error) {
       console.log(error);
-      message.error(error.response.data.errorMessage);
-      if (error.response.status === 501) {
-        message.error(error.response.data.errorMessage);
-      }
-      //localStorage.clear();
-      else {
-        localStorage.removeItem("title");
-        navigate("/");
-      }
+      navigate("/");
+      // message.error(error.response.data.errorMessage);
+
+      // if (error.response.status === 501) {
+      //   message.error(error.response.data.errorMessage);
+      // }
+      // //localStorage.clear();
+      // else {
+      //   localStorage.removeItem("title");
+      //   navigate("/");
+      // }
     }
   };
 
