@@ -67,7 +67,7 @@ const BookShow = () => {
       const movieShowData = await axios.get(
         `/show?title=${title}&date=${selectedDate}`
       );
-      console.log(movieShowData);
+      console.log(movieShowData.data.successMessage);
       setAllMovieShow(movieShowData.data.successMessage);
     } catch (error) {
       console.log(error);
@@ -162,24 +162,25 @@ const BookShow = () => {
               allMovieShow.map((data) => {
                 return (
                   <>
-                    {startHour < parseInt(moment(data.datetime).format("H")) &&
-                      endHour > parseInt(moment(data.datetime).format("H")) && (
-                        <div key={data._id} className="col-md-3">
-                          <>
-                            <button
-                              type="button"
-                              className={`btn mr-2 ${
-                                (data.seat.length * 100) / 126 > 80
-                                  ? "btn-outline-danger"
-                                  : "btn-outline-success"
-                              }`}
-                              onClick={() => handleShowDetails(data)}
-                            >
-                              {moment(data.datetime).format("LT")}
-                            </button>
-                          </>
-                        </div>
-                      )}
+                    {startHour <
+                      parseInt(moment(data.datetime).format("H")) && (
+                      // endHour > parseInt(moment(data.datetime).format("H")) &&
+                      <div key={data._id} className="col-md-3">
+                        <>
+                          <button
+                            type="button"
+                            className={`btn mr-2 ${
+                              (data.seat.length * 100) / 126 > 80
+                                ? "btn-outline-danger"
+                                : "btn-outline-success"
+                            }`}
+                            onClick={() => handleShowDetails(data)}
+                          >
+                            {moment(data.datetime).format("LT")}
+                          </button>
+                        </>
+                      </div>
+                    )}
                   </>
                 );
               })

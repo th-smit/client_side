@@ -51,6 +51,8 @@ const BookTicket = () => {
   const [promoActive_Status, setPromoActive_Status] = useState();
   const [movieTitle, setMovieTitle] = useState();
 
+  const [movieId, setMovieId] = useState();
+
   const [userPromo, setUserPromo] = useState();
   let [userPromoArray] = useState([]);
   const useremail = localStorage.getItem("email");
@@ -138,7 +140,8 @@ const BookTicket = () => {
     console.log("function2 called");
     const showData = await axios.get(`/show/seat/${id}`);
 
-    console.log(showData.data.successMessage[0]);
+    setMovieId(showData.data.successMessage[0]._id);
+
     setShowData(showData.data.successMessage[0]);
     setMovieTitle(showData.data.successMessage[0].title);
 
@@ -227,6 +230,7 @@ const BookTicket = () => {
         active_status: promoActive_Status,
         promocode_type: promocodeType,
         title: movieTitle,
+        movieId: movieId,
       };
       const unbookedseat = await axios.post("/ticket", ticketDetails);
       console.log("movieShowData[0] " + unbookedseat.data.successMessage);
