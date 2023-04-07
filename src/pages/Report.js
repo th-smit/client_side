@@ -14,6 +14,11 @@ const Report = () => {
   const [highestTimeUsedPC, setHighestTimeUsedPC] = useState([]);
   const [highestTimeUsedPCCount, setHighestTimeUsedPCCount] = useState();
 
+  const [moviesPromos, getMoviesPromos] = useState();
+
+  const [mpc, setMpc] = useState();
+  const [savingData, setSavingData] = useState();
+
   let pl = [];
   let ptl = [];
 
@@ -38,6 +43,7 @@ const Report = () => {
     getPCNameHighestTimeUsed();
     getUserNameHighestTimeUsedPC();
     getMoviePromo();
+    getSaving();
   }, []);
 
   const getPCNameHighestTimeUsed = async () => {
@@ -115,9 +121,48 @@ const Report = () => {
     }
   };
 
+  const getSaving = async () => {
+    try {
+      const saving = await axios.get("/promocode/getsaving");
+      console.log("saving data  " + JSON.stringify(saving.data.successMessage));
+      setSavingData(saving.data.successMessage);
+      // console.log(
+      //   "saving data is " + JSON.stringify(saving.data.successMessage)
+      // );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const getMoviePromo = async () => {
     try {
-      const moviepromo = axios.get("/promocode/getmoviepromo");
+      console.log("movie promo data1");
+      const moviepromo = await axios.get("/promocode/getmoviepromo");
+      console.log(
+        "movie promo data2" + JSON.stringify(moviepromo.data.successMessage)
+      );
+
+      const mergedPromocodes = {};
+
+      moviepromo.data.successMessage.forEach((doc) => {
+        const { promoname, movie_title } = doc;
+        if (mergedPromocodes[movie_title]) {
+          mergedPromocodes[movie_title] += "," + promoname;
+        } else {
+          mergedPromocodes[movie_title] = promoname;
+        }
+      });
+
+      console.log("merged promo is " + JSON.stringify(mergedPromocodes));
+
+      const result = Object.entries(mergedPromocodes).map(([key, value]) => ({
+        movieName: key,
+        promoCodes: value.split(","),
+      }));
+
+      console.log("resultant is " + JSON.stringify(result));
+      setMpc(result);
+      getMoviesPromos(moviepromo.data.successMessage);
     } catch (error) {
       console.log(error);
     }
@@ -212,6 +257,85 @@ const Report = () => {
               <canvas id="BarChart"></canvas>
             </div>
           )}
+        </div>
+        <div
+          className="row mt-4"
+          style={{
+            backgroundColor: "#dcf7fc",
+            padding: "30px",
+            width: "80%",
+            margin: "auto",
+          }}
+        >
+          {/* <List
+            sx={{
+              width: "70%",
+              overflow: "auto",
+              maxHeight: 300,
+              bgcolor: "background.gray",
+              position: "relative",
+            }}
+          >
+            {moviesPromos && (
+              <ListItem
+                disablePadding
+                secondaryAction={
+                  <React.Fragment>{"Promo Codes"}</React.Fragment>
+                }
+              >
+                <ListItemText primary={"Movie Name"} />
+              </ListItem>
+            )}
+
+            {moviesPromos &&
+              moviesPromos.map((data) => {
+                return (
+                  <ListItem
+                    disablePadding
+                    secondaryAction={
+                      <React.Fragment>{data.promoname}</React.Fragment>
+                    }
+                  >
+                    <ListItemText primary={data._id} />
+                  </ListItem>
+                );
+              })}
+          </List> */}
+
+          <div className="row">
+            {/* <p>{mpc}</p> */}
+            {mpc &&
+              mpc.map((data) => {
+                return (
+                  <>
+                    <span>{data.movieName}</span>
+                    <p>hello</p>
+                    <span>{data.promoCodes.join(", ")}</span>
+                  </>
+                );
+              })}
+          </div>
+        </div>
+        <div
+          className="row mt-4"
+          style={{
+            backgroundColor: "#dcf7fc",
+            padding: "30px",
+            width: "80%",
+            margin: "auto",
+          }}
+        >
+          <p>
+            {savingData.map((data) => {
+              return (
+                <>
+                  <span>{data._id}</span>
+                  <span>{data.totalSaving}</span>
+                  <br />
+                </>
+              );
+            })}
+          </p>
         </div>
       </>
     </Layout>

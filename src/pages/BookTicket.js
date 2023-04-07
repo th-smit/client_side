@@ -51,7 +51,7 @@ const BookTicket = () => {
   const [promoActive_Status, setPromoActive_Status] = useState();
   const [movieTitle, setMovieTitle] = useState();
 
-  const [movieId, setMovieId] = useState();
+  // const [movieTitle, setMovieTitle] = useState();
 
   const [userPromo, setUserPromo] = useState();
   let [userPromoArray] = useState([]);
@@ -106,6 +106,7 @@ const BookTicket = () => {
   useEffect(() => {
     getShowData();
     getPromoData();
+    getMovieId();
     // getUserPromo();
     let totalprice = 0;
     temSeat.map((data) => {
@@ -140,7 +141,10 @@ const BookTicket = () => {
     console.log("function2 called");
     const showData = await axios.get(`/show/seat/${id}`);
 
-    setMovieId(showData.data.successMessage[0]._id);
+    console.log(
+      "movie data is " + JSON.stringify(showData.data.successMessage[0].title)
+    );
+    // setMovieId(showData.data.successMessage[0]._id);
 
     setShowData(showData.data.successMessage[0]);
     setMovieTitle(showData.data.successMessage[0].title);
@@ -150,6 +154,11 @@ const BookTicket = () => {
     }
   };
 
+  const getMovieId = async () => {
+    try {
+      const movieId = axios.get(`/show/movieid/${id}`);
+    } catch {}
+  };
   // const getUserPromo = async () => {
   //   try {
   //     const userPromoData = await axios.get(`/getuserpromo/promo/${useremail}`);
@@ -218,7 +227,7 @@ const BookTicket = () => {
         seat: temSeat,
         movieTitle: showdata.title,
         date: showdata.datetime,
-        price: price,
+        price: grandTotal,
         username: localStorage.getItem("name"),
         email: localStorage.getItem("email"),
         showid: showdata._id,
@@ -230,7 +239,7 @@ const BookTicket = () => {
         active_status: promoActive_Status,
         promocode_type: promocodeType,
         title: movieTitle,
-        movieId: movieId,
+        saving: discount,
       };
       const unbookedseat = await axios.post("/ticket", ticketDetails);
       console.log("movieShowData[0] " + unbookedseat.data.successMessage);
@@ -279,6 +288,9 @@ const BookTicket = () => {
       console.log("active status is " + applyStatus);
       setApplyStatus(false);
       setValue("promo_name", "");
+      console.log(
+        "grand total is " + (price + ((price * 3) / 100 + (price * 15) / 100))
+      );
       setGrandTotal(price + ((price * 3) / 100 + (price * 15) / 100));
       setPromoId(null);
       setPromocodeType(null);
@@ -289,6 +301,7 @@ const BookTicket = () => {
       setPromoActive_Status(null);
       setPromoName("");
     } else {
+      console.log("promo is " + data.promo_name);
       console.log("active status is " + applyStatus);
       setApplyStatus(true);
       setPromocodeType(data.promocode_type);
@@ -302,8 +315,14 @@ const BookTicket = () => {
       if (data.promocode_type === "Flat") {
         const gh = price - data.discount;
         if (gh <= 0) {
+          console.log(
+            "grand total is " + ((price * 3) / 100 + (price * 15) / 100)
+          );
           setGrandTotal((price * 3) / 100 + (price * 15) / 100);
         } else {
+          console.log(
+            "grand total is " + (gh + ((price * 3) / 100 + (price * 15) / 100))
+          );
           setGrandTotal(gh + ((price * 3) / 100 + (price * 15) / 100));
         }
         setDiscount(data.discount);
@@ -389,7 +408,7 @@ const BookTicket = () => {
                       })}
 
                       <hr />
-                      <tr className=" mt-1">
+                      <tr className="mt-1">
                         <td colSpan="9">PREMIUM Rs. 150.0</td>
                       </tr>
 
@@ -476,11 +495,12 @@ const BookTicket = () => {
                         {applyStatus === true ? (
                           <>
                             <span>Discount</span>
-                            {promocodeType === "Flat" ? (
+                            {/* {promocodeType === "Flat" ? (
                               <span>- Rs. {discount}</span>
                             ) : (
                               <span>- Rs. {discount}</span>
-                            )}
+                            )} */}
+                            <span>- Rs. {discount} </span>
                           </>
                         ) : (
                           <span></span>
