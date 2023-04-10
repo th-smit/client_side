@@ -51,8 +51,6 @@ const BookTicket = () => {
   const [promoActive_Status, setPromoActive_Status] = useState();
   const [movieTitle, setMovieTitle] = useState();
 
-  // const [movieTitle, setMovieTitle] = useState();
-
   const [userPromo, setUserPromo] = useState();
   let [userPromoArray] = useState([]);
   const useremail = localStorage.getItem("email");
@@ -157,24 +155,10 @@ const BookTicket = () => {
   const getMovieId = async () => {
     try {
       const movieId = axios.get(`/show/movieid/${id}`);
-    } catch {}
+    } catch (error) {
+      console.log(error);
+    }
   };
-  // const getUserPromo = async () => {
-  //   try {
-  //     const userPromoData = await axios.get(`/getuserpromo/promo/${useremail}`);
-  //     setUserPromo(userPromoData.data.successMessage);
-  //     if (userPromoArray.length === 0) {
-  //       userPromoData.data.successMessage.map((data) => {
-  //         userPromoArray.push(data.promo_name);
-  //       });
-  //     }
-
-  //     console.log("use promo array " + userPromoArray);
-  //     console.log("existance ", userPromoArray.includes("p3"));
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
 
   const getPromoData = async () => {
     try {
