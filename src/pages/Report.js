@@ -19,25 +19,34 @@ const Report = () => {
   const [mpc, setMpc] = useState();
   const [savingData, setSavingData] = useState();
 
-  let pl = [];
-  let ptl = [];
+  // let userEmail = [];
+  // let totalSaving = [];
 
-  let userName = [];
-  let limit = [];
+  const [pl, setPl] = useState([]);
+  const [ptl, setPtl] = useState([]);
 
-  const [pieLabels, setPieLabels] = useState([]);
-  const [pieTotalLimit, setPieTotalLimit] = useState([]);
+  const [userName, setUserName] = useState([]);
+  const [limit, setLimit] = useState([]);
 
-  const data = {
-    labels: ["r", "b"],
-    datasets: [
-      {
-        data: pieTotalLimit,
-        // backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56"],
-        // hoverBackgroundColor: ["#FF6384", "#36A2EB", "#FFCE56"],
-      },
-    ],
-  };
+  // let userName = [];
+  // let limit = [];
+
+  const [userEmail, setUserEmail] = useState([]);
+  const [totalSaving, setTotalSaving] = useState([]);
+
+  // const [pieLabels, setPieLabels] = useState([]);
+  // const [pieTotalLimit, setPieTotalLimit] = useState([]);
+
+  // const data = {
+  //   labels: ["r", "b"],
+  //   datasets: [
+  //     {
+  //       data: pieTotalLimit,
+  //       backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56"],
+  //       hoverBackgroundColor: ["#FF6384", "#36A2EB", "#FFCE56"],
+  //     },
+  //   ],
+  // };
 
   useEffect(() => {
     getPCNameHighestTimeUsed();
@@ -45,6 +54,102 @@ const Report = () => {
     getMoviePromo();
     getSaving();
   }, []);
+
+  useEffect(() => {
+    console.log("chart displayed");
+    const ctx = document.getElementById("PieChart");
+    const PieChart = new Chart(ctx, {
+      type: "doughnut",
+      data: {
+        labels: pl,
+        datasets: [
+          {
+            data: ptl,
+            label: ` of Votes`,
+            borderWidth: 1,
+          },
+        ],
+      },
+    });
+
+    return () => {
+      PieChart.destroy();
+    };
+  }, [pl, ptl]);
+
+  useEffect(() => {
+    const ctx = document.getElementById("BarChart");
+    const BarChart = new Chart(ctx, {
+      type: "bar",
+      data: {
+        labels: userName,
+        datasets: [
+          {
+            data: limit,
+            label: ` Display How Many Times User Used the Promo Code `,
+            borderWidth: 1,
+            backgroundColor: [
+              "rgba(255, 99, 132, 0.2)",
+              "rgba(255, 159, 64, 0.2)",
+              "rgba(255, 205, 86, 0.2)",
+              "rgba(75, 192, 192, 0.2)",
+              "rgba(54, 162, 235, 0.2)",
+              "rgba(153, 102, 255, 0.2)",
+              "rgba(201, 203, 207, 0.2)",
+            ],
+            borderColor: [
+              "rgb(255, 99, 132)",
+              "rgb(255, 159, 64)",
+              "rgb(255, 205, 86)",
+              "rgb(75, 192, 192)",
+              "rgb(54, 162, 235)",
+              "rgb(153, 102, 255)",
+              "rgb(201, 203, 207)",
+            ],
+          },
+        ],
+      },
+    });
+
+    return () => {
+      BarChart.destroy();
+    };
+  }, [userName, limit]);
+
+  useEffect(() => {
+    const ctx = document.getElementById("Bar1Chart");
+    const Bar1Chart = new Chart(ctx, {
+      type: "bar",
+      data: {
+        labels: userEmail,
+        datasets: [
+          {
+            data: totalSaving,
+            label: ` Display How Many Times User Used the Promo Code `,
+            borderWidth: 1,
+            backgroundColor: [
+              "rgba(255, 205, 86, 0.2)",
+              "rgba(75, 192, 192, 0.2)",
+              "rgba(54, 162, 235, 0.2)",
+              "rgba(153, 102, 255, 0.2)",
+              "rgba(201, 203, 207, 0.2)",
+            ],
+            borderColor: [
+              "rgb(255, 205, 86)",
+              "rgb(75, 192, 192)",
+              "rgb(54, 162, 235)",
+              "rgb(153, 102, 255)",
+              "rgb(201, 203, 207)",
+            ],
+          },
+        ],
+      },
+    });
+
+    return () => {
+      Bar1Chart.destroy();
+    };
+  }, [userEmail, totalSaving]);
 
   const getPCNameHighestTimeUsed = async () => {
     try {
@@ -57,28 +162,15 @@ const Report = () => {
       setHighestTimeUsedPC(UserPromoData.data.successMessage);
 
       UserPromoData.data.successMessage.map((data) => {
-        pl.push(data._id);
-        ptl.push(data.totalLimit);
-      });
+        // pl.push(data._id);
+        console.log("promo name " + data._id);
 
-      const ctx = document.getElementById("PieChart");
-      const PieChart = new Chart(ctx, {
-        type: "pie",
-        data: {
-          labels: pl,
-          datasets: [
-            {
-              data: ptl,
-              label: ` of Votes`,
-              borderWidth: 1,
-            },
-          ],
-        },
+        setPl((pl) => [...pl, data._id]);
+        // ptl.push(data.totalLimit);
+        setPtl((ptl) => [...ptl, data.totalLimit]);
       });
-
-      return () => {
-        PieChart.destroy();
-      };
+      // setPl(pl1);
+      // setPtl(ptl1);
     } catch (error) {
       console.log("error in fetching data from the promocode " + error);
       console.log("hello");
@@ -90,32 +182,12 @@ const Report = () => {
       const UserNames = await axios.get(
         "/promocode/getUserNameHighestTimeUsedPC"
       );
-      console.log("data is " + JSON.stringify(data));
 
       UserNames.data.successMessage.map((data) => {
         console.log("user name is " + data.userName[0]);
-        userName.push(data.userName[0]);
-        limit.push(data.totalLimit);
+        setUserName((userName) => [...userName, data.userName[0]]);
+        setLimit((limit) => [...limit, data.totalLimit]);
       });
-
-      const ctx = document.getElementById("BarChart");
-      const BarChart = new Chart(ctx, {
-        type: "bar",
-        data: {
-          labels: userName,
-          datasets: [
-            {
-              data: limit,
-              label: ` Display How Many Times User Used the Promo Code `,
-              borderWidth: 1,
-            },
-          ],
-        },
-      });
-
-      return () => {
-        BarChart.destroy();
-      };
     } catch (error) {
       console.log(error);
     }
@@ -126,9 +198,14 @@ const Report = () => {
       const saving = await axios.get("/promocode/getsaving");
       console.log("saving data  " + JSON.stringify(saving.data.successMessage));
       setSavingData(saving.data.successMessage);
-      // console.log(
-      //   "saving data is " + JSON.stringify(saving.data.successMessage)
-      // );
+
+      saving.data.successMessage.map((data) => {
+        setUserEmail((userName) => [...userName, data._id]);
+        setTotalSaving((totalSaving) => [...totalSaving, data.totalSaving]);
+      });
+
+      console.log("userEmail array is " + userEmail);
+      console.log("totalSaving array is " + totalSaving);
     } catch (error) {
       console.log(error);
     }
@@ -183,13 +260,15 @@ const Report = () => {
             margin: "auto",
           }}
         >
-          {pieLabels && (
-            <div
-              style={{ width: "300px", height: "300px" }}
-              className="col-md-6 w-25"
-            >
-              <canvas id="PieChart"></canvas>
-            </div>
+          {pl && ptl && (
+            <>
+              <div
+                style={{ width: "300px", height: "300px" }}
+                className="col-md-6 w-25"
+              >
+                <canvas id="PieChart"></canvas>
+              </div>
+            </>
           )}
           <div className="col-md-6">
             <div>
@@ -252,7 +331,9 @@ const Report = () => {
             margin: "auto",
           }}
         >
-          {pieLabels && (
+          <p>{userName}</p>
+          <p>{limit}</p>
+          {userName && limit && (
             <div style={{ width: "80%", margin: "auto" }}>
               <canvas id="BarChart"></canvas>
             </div>
@@ -304,16 +385,20 @@ const Report = () => {
 
           <div className="row">
             {/* <p>{mpc}</p> */}
-            {mpc &&
-              mpc.map((data) => {
-                return (
-                  <>
-                    <span>{data.movieName}</span>
-                    <p>hello</p>
-                    <span>{data.promoCodes.join(", ")}</span>
-                  </>
-                );
-              })}
+            {mpc && (
+              <p>
+                {mpc.map((data) => {
+                  return (
+                    <>
+                      <span>{data.movieName + " - "}</span>
+
+                      <span>{data.promoCodes.join(", ")}</span>
+                      <br />
+                    </>
+                  );
+                })}
+              </p>
+            )}
           </div>
         </div>
         <div
@@ -325,17 +410,13 @@ const Report = () => {
             margin: "auto",
           }}
         >
-          <p>
-            {savingData.map((data) => {
-              return (
-                <>
-                  <span>{data._id}</span>
-                  <span>{data.totalSaving}</span>
-                  <br />
-                </>
-              );
-            })}
-          </p>
+          <p>{userEmail}</p>
+          <p>{totalSaving}</p>
+          {userEmail && totalSaving && (
+            <div style={{ width: "80%", margin: "auto" }}>
+              <canvas id="Bar1Chart"></canvas>
+            </div>
+          )}
         </div>
       </>
     </Layout>
