@@ -49,7 +49,6 @@ const BookTicket = () => {
   const [promoExpiry_Date, setPromoExpiry_Date] = useState();
   const [promoLimit, setPromoLimit] = useState();
   const [promoActive_Status, setPromoActive_Status] = useState();
-  const [movieTitle, setMovieTitle] = useState();
 
   const [userPromo, setUserPromo] = useState();
   let [userPromoArray] = useState([]);
@@ -142,11 +141,7 @@ const BookTicket = () => {
     console.log(
       "movie data is " + JSON.stringify(showData.data.successMessage[0].title)
     );
-    // setMovieId(showData.data.successMessage[0]._id);
-
     setShowData(showData.data.successMessage[0]);
-    setMovieTitle(showData.data.successMessage[0].title);
-
     if (selectedSeat === null) {
       setSelectedSeat(showData.data.successMessage[0].seat);
     }
@@ -222,14 +217,27 @@ const BookTicket = () => {
         limit: promoLimit,
         active_status: promoActive_Status,
         promocode_type: promocodeType,
-        title: movieTitle,
         saving: discount,
       };
-      //const unbookedseat = await axios.post("/ticket", ticketDetails);
-      //console.log("movieShowData[0] " + unbookedseat.data.successMessage);
-      navigate("/payment");
-      //setSummary(false);
-      //navigate("/");
+
+      console.log("promo name " + ticketDetails.promoname);
+      console.log("promo id " + ticketDetails.promoid);
+      console.log("promo discount " + ticketDetails.promoDiscount);
+      console.log("promo expiry date " + ticketDetails.expiry_date);
+      console.log("promo limit " + ticketDetails.limit);
+      console.log("promo active_status " + ticketDetails.active_status);
+      console.log("promo type " + ticketDetails.promocode_type);
+
+      console.log("movie title using show" + ticketDetails.movieTitle);
+      console.log("show date " + ticketDetails.date);
+      console.log("show id " + ticketDetails.showid);
+      console.log("movie title " + ticketDetails.title);
+
+      const unbookedseat = await axios.post("/ticket", ticketDetails);
+      console.log("movieShowData[0] " + unbookedseat.data.successMessage);
+      //navigate("/payment");
+      setSummary(false);
+      navigate("/");
     } catch (error) {
       message.error(error.response.data.errorMessage);
       console.log(error.response.data.errorMessage);
@@ -479,11 +487,6 @@ const BookTicket = () => {
                         {applyStatus === true ? (
                           <>
                             <span>Discount</span>
-                            {/* {promocodeType === "Flat" ? (
-                              <span>- Rs. {discount}</span>
-                            ) : (
-                              <span>- Rs. {discount}</span>
-                            )} */}
                             <span>- Rs. {discount} </span>
                           </>
                         ) : (
