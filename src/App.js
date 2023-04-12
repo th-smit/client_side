@@ -19,6 +19,8 @@ import AddPromoCode from "./pages/AddPromoCode";
 import PromoList from "./pages/PromoList";
 import EditPromo from "./pages/EditPromo";
 import Report from "./pages/Report";
+import Payment from "./pages/Payment";
+import Completion from "./pages/Completion";
 
 function App() {
   return (
@@ -53,6 +55,9 @@ function App() {
       <Route path="/promocodelist" element={<PromoList />}></Route>
       <Route path="/editpromo/:id?" element={<EditPromo />}></Route>
       <Route path="/report" element={<Report />}></Route>
+
+      <Route path="/payment" element={<Payment />}></Route>
+      <Route path="/completion" element={<Completion />}></Route>
     </Routes>
   );
 }

@@ -225,11 +225,11 @@ const BookTicket = () => {
         title: movieTitle,
         saving: discount,
       };
-      const unbookedseat = await axios.post("/ticket", ticketDetails);
-      console.log("movieShowData[0] " + unbookedseat.data.successMessage);
-
-      setSummary(false);
-      navigate("/");
+      //const unbookedseat = await axios.post("/ticket", ticketDetails);
+      //console.log("movieShowData[0] " + unbookedseat.data.successMessage);
+      navigate("/payment");
+      //setSummary(false);
+      //navigate("/");
     } catch (error) {
       message.error(error.response.data.errorMessage);
       console.log(error.response.data.errorMessage);

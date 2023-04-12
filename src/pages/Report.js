@@ -1,15 +1,23 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Pie } from "react-chartjs-2";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+import { Pie, Bar } from "react-chartjs-2";
 import Layout from "../component/Layout.js/Layout";
-import { Chart, ArcElement } from "chart.js/auto";
+import { Chart } from "chart.js/auto";
 import List from "@mui/material/List";
+import Typography from "@mui/material/Typography";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
-import Typography from "@mui/material/Typography";
-// import e from "express";
-
-Chart.register(ArcElement);
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
+import { TfiMoreAlt } from "react-icons/tfi";
+import { MdOutlineArrowBackIosNew } from "react-icons/md";
+import Box from "@mui/material/Box";
 
 const Report = () => {
   const [highestTimeUsedPC, setHighestTimeUsedPC] = useState([]);
@@ -28,6 +36,12 @@ const Report = () => {
 
   const [status, setStatus] = useState(false);
 
+  const [pieData, setPieData] = useState();
+  const [bar1Data, setBar1Data] = useState();
+  const [bar2Data, setBar2Data] = useState();
+
+  ChartJS.register(ArcElement, Tooltip, Legend);
+
   useEffect(() => {
     getPCNameHighestTimeUsed();
     getUserNameHighestTimeUsedPC();
@@ -36,157 +50,157 @@ const Report = () => {
   }, []);
 
   useEffect(() => {
-    if (!status) {
-      console.log("chart displayed");
-      const ctx = document.getElementById("PieChart");
-      const PieChart = new Chart(ctx, {
-        type: "doughnut",
-        data: {
-          labels: pl,
-          datasets: [
-            {
-              data: ptl,
-              label: ` of Votes`,
-              borderWidth: 1,
-            },
-          ],
-        },
-      });
-
-      return () => {
-        PieChart.destroy();
+    if (pl.length != 0) {
+      const data = {
+        labels: pl,
+        datasets: [
+          {
+            label: "# of Votes",
+            data: ptl,
+            backgroundColor: [
+              "rgba(255, 99, 132, 0.2)",
+              "rgba(54, 162, 235, 0.2)",
+              "rgba(255, 206, 86, 0.2)",
+              "rgba(75, 192, 192, 0.2)",
+              "rgba(153, 102, 255, 0.2)",
+              "rgba(255, 159, 64, 0.2)",
+            ],
+            borderColor: [
+              "rgba(255, 99, 132, 1)",
+              "rgba(54, 162, 235, 1)",
+              "rgba(255, 206, 86, 1)",
+              "rgba(75, 192, 192, 1)",
+              "rgba(153, 102, 255, 1)",
+              "rgba(255, 159, 64, 1)",
+            ],
+            borderWidth: 1,
+          },
+        ],
       };
+      setPieData(data);
     }
   }, [pl, ptl, status]);
 
   useEffect(() => {
-    const ctx = document.getElementById("BarChart");
-    const BarChart = new Chart(ctx, {
-      type: "bar",
-      data: {
+    if (userName.length != 0) {
+      const data = {
         labels: userName,
         datasets: [
           {
+            label: "Dataset 2",
             data: limit,
-            label: ` Display How Many Times User Used the Promo Code `,
-            borderWidth: 1,
             backgroundColor: [
               "rgba(255, 99, 132, 0.2)",
-              "rgba(255, 159, 64, 0.2)",
-              "rgba(255, 205, 86, 0.2)",
-              "rgba(75, 192, 192, 0.2)",
               "rgba(54, 162, 235, 0.2)",
+              "rgba(255, 206, 86, 0.2)",
+              "rgba(75, 192, 192, 0.2)",
               "rgba(153, 102, 255, 0.2)",
-              "rgba(201, 203, 207, 0.2)",
+              "rgba(255, 159, 64, 0.2)",
             ],
             borderColor: [
-              "rgb(255, 99, 132)",
-              "rgb(255, 159, 64)",
-              "rgb(255, 205, 86)",
-              "rgb(75, 192, 192)",
-              "rgb(54, 162, 235)",
-              "rgb(153, 102, 255)",
-              "rgb(201, 203, 207)",
+              "rgba(255, 99, 132, 1)",
+              "rgba(54, 162, 235, 1)",
+              "rgba(255, 206, 86, 1)",
+              "rgba(75, 192, 192, 1)",
+              "rgba(153, 102, 255, 1)",
+              "rgba(255, 159, 64, 1)",
             ],
+            borderWidth: 1,
           },
         ],
-      },
-    });
-
-    return () => {
-      BarChart.destroy();
-    };
+      };
+      setBar2Data(data);
+    }
   }, [userName, limit, status]);
 
   useEffect(() => {
-    if (!status) {
-      const ctx = document.getElementById("Bar1Chart");
-      const Bar1Chart = new Chart(ctx, {
-        type: "bar",
-        data: {
-          labels: userEmail,
-          datasets: [
-            {
-              data: totalSaving,
-              label: ` Display How Many Times User Used the Promo Code `,
-              borderWidth: 1,
-              backgroundColor: [
-                "rgba(255, 205, 86, 0.2)",
-                "rgba(75, 192, 192, 0.2)",
-                "rgba(54, 162, 235, 0.2)",
-                "rgba(153, 102, 255, 0.2)",
-                "rgba(201, 203, 207, 0.2)",
-              ],
-              borderColor: [
-                "rgb(255, 205, 86)",
-                "rgb(75, 192, 192)",
-                "rgb(54, 162, 235)",
-                "rgb(153, 102, 255)",
-                "rgb(201, 203, 207)",
-              ],
-            },
-          ],
-        },
-      });
-
-      return () => {
-        Bar1Chart.destroy();
+    if (userEmail.length != 0) {
+      const data = {
+        labels: userEmail,
+        datasets: [
+          {
+            label: "Dataset 1",
+            data: totalSaving,
+            backgroundColor: [
+              "rgba(255, 206, 86, 0.2)",
+              "rgba(75, 192, 192, 0.2)",
+              "rgba(153, 102, 255, 0.2)",
+              "rgba(255, 159, 64, 0.2)",
+            ],
+            borderColor: [
+              "rgba(255, 206, 86, 1)",
+              "rgba(75, 192, 192, 1)",
+              "rgba(153, 102, 255, 1)",
+              "rgba(255, 159, 64, 1)",
+            ],
+            borderWidth: 1,
+          },
+        ],
       };
+      setBar1Data(data);
     }
   }, [userEmail, totalSaving, status]);
 
   const getPCNameHighestTimeUsed = async () => {
-    try {
-      const UserPromoData = await axios.get("/promocode/getuserpromodata");
-      console.log(UserPromoData.data.successMessage);
-      setHighestTimeUsedPCCount(
-        UserPromoData.data.successMessage[0].totalLimit
-      );
-      console.log("hello " + JSON.stringify(UserPromoData.data.successMessage));
-      setHighestTimeUsedPC(UserPromoData.data.successMessage);
+    if (pl.length === 0) {
+      try {
+        const UserPromoData = await axios.get("/promocode/getuserpromodata");
+        console.log(UserPromoData.data.successMessage);
+        setHighestTimeUsedPCCount(
+          UserPromoData.data.successMessage[0].totalLimit
+        );
+        console.log(
+          "hello " + JSON.stringify(UserPromoData.data.successMessage)
+        );
+        setHighestTimeUsedPC(UserPromoData.data.successMessage);
 
-      UserPromoData.data.successMessage.map((data) => {
-        console.log("promo name " + data._id);
-        setPl((pl) => [...pl, data._id]);
-        setPtl((ptl) => [...ptl, data.totalLimit]);
-      });
-    } catch (error) {
-      console.log("error in fetching data from the promocode " + error);
-      console.log("hello");
+        UserPromoData.data.successMessage.map((data) => {
+          console.log("promo name " + data._id);
+          setPl((pl) => [...pl, data._id]);
+          setPtl((ptl) => [...ptl, data.totalLimit]);
+        });
+      } catch (error) {
+        console.log("error in fetching data from the promocode " + error);
+      }
     }
   };
 
   const getUserNameHighestTimeUsedPC = async () => {
-    try {
-      const UserNames = await axios.get(
-        "/promocode/getUserNameHighestTimeUsedPC"
-      );
+    if (userName.length === 0) {
+      try {
+        const UserNames = await axios.get(
+          "/promocode/getUserNameHighestTimeUsedPC"
+        );
 
-      UserNames.data.successMessage.map((data) => {
-        console.log("user name is " + data.userName[0]);
-        setUserName((userName) => [...userName, data.userName[0]]);
-        setLimit((limit) => [...limit, data.totalLimit]);
-      });
-    } catch (error) {
-      console.log(error);
+        UserNames.data.successMessage.map((data) => {
+          console.log("user name is " + data.userName[0]);
+          setUserName((userName) => [...userName, data.userName[0]]);
+          setLimit((limit) => [...limit, data.totalLimit]);
+        });
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
   const getSaving = async () => {
-    try {
-      const saving = await axios.get("/promocode/getsaving");
-      console.log("saving data  " + JSON.stringify(saving.data.successMessage));
-      // setSavingData(saving.data.successMessage);
+    if (userName.length === 0) {
+      try {
+        const saving = await axios.get("/promocode/getsaving");
+        console.log(
+          "saving data  " + JSON.stringify(saving.data.successMessage)
+        );
 
-      saving.data.successMessage.map((data) => {
-        setUserEmail((userName) => [...userName, data._id]);
-        setTotalSaving((totalSaving) => [...totalSaving, data.totalSaving]);
-      });
+        saving.data.successMessage.map((data) => {
+          setUserEmail((userName) => [...userName, data._id]);
+          setTotalSaving((totalSaving) => [...totalSaving, data.totalSaving]);
+        });
 
-      console.log("userEmail array is " + userEmail);
-      console.log("totalSaving array is " + totalSaving);
-    } catch (error) {
-      console.log(error);
+        console.log("userEmail array is " + userEmail);
+        console.log("totalSaving array is " + totalSaving);
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
@@ -254,20 +268,21 @@ const Report = () => {
                     style={{ width: "300px", height: "300px" }}
                     className="col-md-6 w-25"
                   >
-                    <canvas id="PieChart"></canvas>
+                    {pieData && <Pie data={pieData} />}
                   </div>
                 </>
               )}
               <div className="col-md-6">
                 <div>
-                  Highest Time Used Promo :{" "}
-                  <span className="mb-3">
+                  <span>Highest Time Used Promo : </span>
+                  <span className="mb-1">
                     {highestTimeUsedPC.map((data) => {
                       if (data.totalLimit === highestTimeUsedPCCount) {
                         return <span key={data._id}>{data._id + " "}</span>;
                       }
                     })}
                   </span>
+
                   <br />
                   <span>
                     Total Number of Promo{" "}
@@ -313,6 +328,7 @@ const Report = () => {
                 </div>
               </div>
             </div>
+
             <div
               className="row mt-4"
               style={{
@@ -322,14 +338,17 @@ const Report = () => {
                 margin: "auto",
               }}
             >
+              <div className="mb-3" style={{ width: "80%", margin: "auto" }}>
+                how much amount the users saved using the promo codes
+              </div>
               {userName && limit && (
                 <div style={{ width: "80%", margin: "auto" }}>
-                  <canvas id="BarChart"></canvas>
+                  {bar1Data && <Bar data={bar1Data} />}
                 </div>
               )}
             </div>
             <div
-              className="row mt-4"
+              className="mt-4"
               style={{
                 backgroundColor: "#dcf7fc",
                 padding: "30px",
@@ -337,28 +356,67 @@ const Report = () => {
                 margin: "auto",
               }}
             >
-              <div className="row">
-                {mpc && (
-                  <p>
-                    {mpc.map((data) => {
-                      return (
-                        <>
-                          <span>{data.movieName + " - "}</span>
-
-                          <span>{data.promoCodes.join(", ")}</span>
-                          <br />
-                        </>
-                      );
-                    })}
-                  </p>
-                )}
+              <div className="mb-3">
+                Which movie has the highest booking with which promo
               </div>
-              <div>
-                <button onClick={viewdetails}>view more</button>
+              <div className="">
+                <Box sx={{ boxShadow: 3 }}>
+                  <TableContainer component={Paper} className="">
+                    <Table sx={{ minWidth: 150 }} aria-label="simple table">
+                      <TableHead sx={{ maxWidth: 550 }}>
+                        <TableRow>
+                          <TableCell>Movie Name</TableCell>
+                          <TableCell align="right">Promo Codes</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {mpc &&
+                          mpc.map((data) => {
+                            return (
+                              <TableRow
+                                key={data.movieName}
+                                scope="row"
+                                sx={{
+                                  "&:last-child td, &:last-child th": {
+                                    border: 0,
+                                  },
+                                }}
+                              >
+                                <TableCell component="th" scope="row">
+                                  {data.movieName}
+                                </TableCell>
+                                <TableCell align="right">
+                                  {data.promoCodes.join(",")}
+                                </TableCell>
+                              </TableRow>
+                            );
+                          })}
+                        <TableRow
+                          key={1}
+                          scope="row"
+                          sx={{
+                            "&:last-child td, &:last-child th": {
+                              border: 0,
+                            },
+                          }}
+                        >
+                          <TableCell component="th" scope="row">
+                            <button
+                              // style={{ backgroundColor: "#dcf7fc" }}
+                              onClick={viewdetails}
+                            >
+                              <TfiMoreAlt />
+                            </button>
+                          </TableCell>
+                        </TableRow>
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </Box>
               </div>
             </div>
             <div
-              className="row mt-4"
+              className="row mt-4 mb-4"
               style={{
                 backgroundColor: "#dcf7fc",
                 padding: "30px",
@@ -366,21 +424,62 @@ const Report = () => {
                 margin: "auto",
               }}
             >
-              <p>{userEmail}</p>
-              <p>{totalSaving}</p>
+              <div className="mb-3" style={{ width: "80%", margin: "auto" }}>
+                Highest times which user uses promo code
+              </div>
               {userEmail && totalSaving && (
                 <div style={{ width: "80%", margin: "auto" }}>
-                  <canvas id="Bar1Chart"></canvas>
+                  {bar2Data && <Bar data={bar2Data} />}
                 </div>
               )}
             </div>
           </>
         )}
         {status && (
-          <>
-            <p>hello</p>
-            <button onClick={viewdetails}>back</button>
-          </>
+          <div className="container">
+            <div>
+              <button onClick={viewdetails} className="mt-2 mb-2">
+                <MdOutlineArrowBackIosNew /> Back
+              </button>
+            </div>
+            <div className="">
+              <Box sx={{ boxShadow: 3 }}>
+                <TableContainer component={Paper} className="">
+                  <Table sx={{ minWidth: 150 }} aria-label="simple table">
+                    <TableHead sx={{ maxWidth: 550 }}>
+                      <TableRow>
+                        <TableCell>Movie Name</TableCell>
+                        <TableCell align="right">Promo Codes</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {mpc &&
+                        mpc.map((data) => {
+                          return (
+                            <TableRow
+                              key={data.movieName}
+                              scope="row"
+                              sx={{
+                                "&:last-child td, &:last-child th": {
+                                  border: 0,
+                                },
+                              }}
+                            >
+                              <TableCell component="th" scope="row">
+                                {data.movieName}
+                              </TableCell>
+                              <TableCell align="right">
+                                {data.promoCodes.join(",")}
+                              </TableCell>
+                            </TableRow>
+                          );
+                        })}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </Box>
+            </div>
+          </div>
         )}
       </>
     </Layout>
