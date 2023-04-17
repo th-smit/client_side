@@ -19,7 +19,6 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import Divider from "@mui/material/Divider";
-import { getValue } from "@mui/system";
 
 const BookTicket = () => {
   const query = new URLSearchParams(window.location.search);
@@ -233,11 +232,20 @@ const BookTicket = () => {
       console.log("show id " + ticketDetails.showid);
       console.log("movie title " + ticketDetails.title);
 
+      console.log("email " + ticketDetails.email);
+
+      console.log("discount " + ticketDetails.saving);
+
+      console.log("grand total " + ticketDetails.price);
+
+      console.log("selected seat " + ticketDetails.seat);
+
       const unbookedseat = await axios.post("/ticket", ticketDetails);
-      console.log("movieShowData[0] " + unbookedseat.data.successMessage);
-      //navigate("/payment");
-      setSummary(false);
-      navigate("/");
+      // console.log("ticket data is " + unbookedseat.data.successMessage._id);
+      // console.log("movieShowData[0] " + unbookedseat.data.successMessage);
+      // navigate(`/payment/${unbookedseat.data.successMessage._id}`);
+      // setSummary(false);
+      // navigate("/");
     } catch (error) {
       message.error(error.response.data.errorMessage);
       console.log(error.response.data.errorMessage);

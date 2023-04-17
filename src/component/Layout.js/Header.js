@@ -26,7 +26,13 @@ const Header = () => {
       <nav className="navbar navbar-expand-lg navbar-light bg-light">
         <div className="container-fluid">
           <Link className="navbar-brand mr-0" to="/">
-            Book My Show
+            <img
+              style={{ width: "200px", height: "80px" }}
+              id="screenimage"
+              // className="rounded mx-auto d-block d-flex justify-content-center"
+              src="/images/logo.png"
+              alt="logo"
+            />
           </Link>
           <div>
             <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
@@ -50,7 +56,7 @@ const Header = () => {
               <li>
                 <button
                   onClick={() => handlerLogout()}
-                  className="mb-2 btn btn-primary"
+                  className="mb-2 mr-2 btn btn-primary"
                 >
                   Logout
                 </button>

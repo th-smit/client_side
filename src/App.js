@@ -56,8 +56,8 @@ function App() {
       <Route path="/editpromo/:id?" element={<EditPromo />}></Route>
       <Route path="/report" element={<Report />}></Route>
 
-      <Route path="/payment" element={<Payment />}></Route>
-      <Route path="/completion" element={<Completion />}></Route>
+      <Route path="/payment/:id" element={<Payment />}></Route>
+      <Route path="/completion/:ticketid" element={<Completion />}></Route>
     </Routes>
   );
 }

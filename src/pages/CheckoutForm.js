@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useStripe, useElements } from "@stripe/react-stripe-js";
 import { Alert } from "react-bootstrap";
 
-const CheckoutForm = () => {
+const CheckoutForm = (props) => {
   const stripe = useStripe();
   const elements = useElements();
 
@@ -11,6 +11,11 @@ const CheckoutForm = () => {
   const [isProcessing, setIsProcessing] = useState(false);
 
   const handleSubmit = async (e) => {
+    console.log("ticket id from the checkout form " + props.ticketid);
+    // const ticketid = {
+    //   ticketid: props.ticketid,
+    // };
+    // const ticketData = axios.put("/ticket", ticketid);
     e.preventDefault();
 
     if (!stripe || !elements) {
@@ -22,7 +27,7 @@ const CheckoutForm = () => {
     const { error } = await stripe.confirmPayment({
       elements,
       confirmParams: {
-        return_url: `${window.location.origin}/completion`,
+        return_url: `${window.location.origin}/completion/${props.ticketid}`,
       },
     });
 
