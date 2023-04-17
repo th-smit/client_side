@@ -41,19 +41,30 @@ const CheckoutForm = (props) => {
   return (
     <div className="d-flex justify-content-center">
       <form id="payment-form" onSubmit={handleSubmit}>
-        <PaymentElement />
-        <button
-          disabled={isProcessing}
-          id="submit"
-          className="mt-4 d-flex justify-content-center"
-          style={{
-            height: "30px",
-            width: "400px",
-            backgroundColor: "#ccd6db",
-          }}
+        <div
+        // style={{ boxShadow: "10px 5px 5px black" }}
         >
-          {isProcessing ? "Processing" : "Pay now"}
-        </button>
+          <div
+            style={{
+              padding: "10px",
+              boxShadow: "10px 5px 5px #D6D6D6",
+            }}
+          >
+            <PaymentElement />
+            <button
+              disabled={isProcessing}
+              id="submit"
+              className="mt-4 d-flex justify-content-center"
+              style={{
+                height: "30px",
+                width: "400px",
+                backgroundColor: "#ccd6db",
+              }}
+            >
+              {isProcessing ? "Processing" : "Pay now"}
+            </button>
+          </div>
+        </div>
 
         <div className="mt-3" style={{ height: "10px" }}>
           {message && <Alert variant="danger">{message}</Alert>}

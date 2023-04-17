@@ -1,0 +1,97 @@
+body {
+    overflow-x: hidden;
+  }
+/* img {
+    max-width: 100%;
+    height: auto;
+} */
+.ticket {
+    width: 450px;
+    height: auto;
+    background-color: #ccd6db;
+    margin: 25px auto;
+    position: relative;
+}
+.holes-top {
+    height: 50px;
+    width: 50px;
+    background-color: white;
+    border-radius: 50%;
+    position: absolute;
+    left: 50%;
+    margin-left: -25px;
+    top: -25px;
+}
+.holes-top:before, .holes-top:after {
+    content: '';
+    height: 50px;
+    width: 50px;
+    background-color: white;
+    position: absolute;
+    border-radius: 50%;
+}
+.th{
+    font-size: 30px;
+    
+}
+.holes-top:before {
+    left: -210px;
+}
+.holes-top:after {
+    left: 210px;
+}
+.holes-lower {
+    position: relative;
+    margin: 25px;
+    border: 1px dashed white;
+}
+.holes-lower:before, .holes-lower:after {
+    content: '';
+    height: 50px;
+    width: 50px;
+    background-color: white;
+    position: absolute;
+    border-radius: 50%;
+}
+.holes-lower:before {
+    top: -25px;
+    left: -50px;
+}
+.holes-lower:after {
+    top: -25px;
+    left: 400px;
+}
+.title {
+    padding: 50px 25px 10px;
+}
+.cinema {
+    color: black;
+    font-size: 15px;
+}
+.movie-title {
+    font-size: 20px;
+}
+.poster{
+    margin-left: 45px;
+}
+.info {
+    padding: 15px 25px;
+}
+.bigger {
+    font-size: 30px;
+}
+.serial {
+    padding: 25px;
+}
+.serial table {
+    border-collapse: collapse;
+    margin: 0 auto;
+}
+.serial td {
+    width: 3px;
+    height: 50px;
+}
+.numbers td {
+    font-size: 16px;
+    text-align: center;
+}

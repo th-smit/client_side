@@ -38,6 +38,7 @@ const BookTicket = () => {
   const [elementVisible, setElementVisible] = useState(false);
   const [promocodeList, setPromocodeList] = useState(null);
   const [grandTotal, setGrandTotal] = useState();
+  const [poster_Api, setPoster_Api] = useState();
 
   const [applyStatus, setApplyStatus] = useState(false);
   const [promocodeType, setPromocodeType] = useState();
@@ -148,7 +149,14 @@ const BookTicket = () => {
 
   const getMovieId = async () => {
     try {
-      const movieId = axios.get(`/show/movieid/${id}`);
+      console.log("movie title is from get movie id" + showdata.title);
+      // const movieId = axios.get(`/show/movieid/${id}`);
+      const movieTitleData = await axios.get(`/movie?title=${showdata.title}`);
+      console.log(
+        "movie data isisis " +
+          JSON.stringify(movieTitleData.data.successMessage[0].poster_api)
+      );
+      setPoster_Api(movieTitleData.data.successMessage[0].poster_api);
     } catch (error) {
       console.log(error);
     }
@@ -217,6 +225,7 @@ const BookTicket = () => {
         active_status: promoActive_Status,
         promocode_type: promocodeType,
         saving: discount,
+        poster_api: poster_Api,
       };
 
       console.log("promo name " + ticketDetails.promoname);
@@ -241,9 +250,9 @@ const BookTicket = () => {
       console.log("selected seat " + ticketDetails.seat);
 
       const unbookedseat = await axios.post("/ticket", ticketDetails);
-      // console.log("ticket data is " + unbookedseat.data.successMessage._id);
-      // console.log("movieShowData[0] " + unbookedseat.data.successMessage);
-      // navigate(`/payment/${unbookedseat.data.successMessage._id}`);
+      console.log("ticket data is " + unbookedseat.data.successMessage._id);
+      console.log("movieShowData[0] " + unbookedseat.data.successMessage);
+      navigate(`/payment/${unbookedseat.data.successMessage._id}`);
       // setSummary(false);
       // navigate("/");
     } catch (error) {
