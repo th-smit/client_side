@@ -3,6 +3,8 @@ import axios from "axios";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { setHeader, clearStorage } from "./Utils";
+import { MdArrowBackIos } from "react-icons/md";
+import TextField from "@mui/material/TextField";
 
 const UserDetails = () => {
   const {
@@ -50,11 +52,30 @@ const UserDetails = () => {
 
   return (
     <>
-      <form className="App1" onSubmit={handleSubmit(onUserDetailSubmit)}>
-        <h3>User Details</h3>
+      <form className="App2" onSubmit={handleSubmit(onUserDetailSubmit)}>
+        <div className="row">
+          <button
+            onClick={() => onBack()}
+            style={{
+              fontSize: "20px",
+              background: "#F6D3A3",
+              marginLeft: "2px",
+            }}
+            className="col-md-2"
+          >
+            <MdArrowBackIos />
+          </button>
+          <span style={{ marginLeft: "10px" }} className="col-md-7">
+            {" "}
+            <h3>User Details</h3>
+          </span>
+        </div>
         <label htmlFor="name">User Name : &nbsp;</label>
-        <input
+        <TextField
           type="text"
+          id="outlined-basic"
+          label="User Name"
+          variant="outlined"
           {...register("name", {
             required: true,
             minLength: 3,
@@ -75,8 +96,11 @@ const UserDetails = () => {
         </p>
 
         <label htmlFor="email">Email: &nbsp;</label>
-        <input
+        <TextField
           type="text"
+          id="outlined-basic"
+          label="User Email"
+          variant="outlined"
           disabled={true}
           {...register("email", {
             required: true,
@@ -93,24 +117,26 @@ const UserDetails = () => {
         <input
           type="submit"
           disabled={disable}
-          className="btn btn-primary"
+          style={{ background: "#f7b067" }}
+          className="btn"
           value="Update"
         />
         <input
           type="button"
           // disabled={disable}
-          className="btn btn-primary mt-2"
+          style={{ background: "#f7b067" }}
+          className="btn mt-2"
           value="My Booking"
           onClick={() => onMyBooked()}
         />
-        <div className="mt-2">
+        {/* <div className="mt-2">
           <button
             className="btn btn-primary pointer-link"
             onClick={() => onBack()}
           >
             &#60;- Back
           </button>
-        </div>
+        </div> */}
       </form>
     </>
   );

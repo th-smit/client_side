@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { FiEdit2 } from "react-icons/fi";
 import { MdDelete } from "react-icons/md";
+import { MdArrowBackIos } from "react-icons/md";
 import Layout from "../component/Layout.js/Layout";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
@@ -58,10 +59,15 @@ const PromoList = () => {
       <div>
         <div className="mb-2 mt-2">
           <button
-            className="btn btn-primary pointer-link"
+            style={{ background: "#ff944d" }}
+            className="btn d-flex justify-items-center"
             onClick={() => onBack()}
           >
-            &#60;- Back
+            <div style={{ marginTop: "2px" }}>
+              <MdArrowBackIos />
+            </div>
+
+            <div>BACK</div>
           </button>
         </div>
         <h4>PromoCodes</h4>

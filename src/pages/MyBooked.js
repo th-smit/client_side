@@ -11,6 +11,7 @@ import NavbarCollapse from "react-bootstrap/esm/NavbarCollapse";
 import { Button } from "@progress/kendo-react-buttons";
 import { PDFExport, savePDF } from "@progress/kendo-react-pdf";
 import ExportPDF from "../component/ExportPdf/ExportPDF";
+import { MdArrowBackIos } from "react-icons/md";
 
 const MyBooked = () => {
   const canvasRef = useRef(null);
@@ -48,12 +49,17 @@ const MyBooked = () => {
   return (
     <Layout>
       <div className="">
-        <div className="mt-2">
+        <div className="mb-2 mt-2">
           <button
-            className="btn btn-primary pointer-link"
+            style={{ background: "#ff944d" }}
+            className="btn d-flex justify-items-center"
             onClick={() => onBack()}
           >
-            &#60;- Back
+            <div style={{ marginTop: "2px" }}>
+              <MdArrowBackIos />
+            </div>
+
+            <div>BACK</div>
           </button>
         </div>
         {allTicket.length !== 0 ? (

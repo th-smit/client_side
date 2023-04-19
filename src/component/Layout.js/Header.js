@@ -27,7 +27,7 @@ const Header = () => {
         <div className="container-fluid">
           <Link className="navbar-brand mr-0" to="/">
             <img
-              style={{ width: "200px", height: "80px" }}
+              style={{ width: "160px", height: "60px" }}
               id="screenimage"
               // className="rounded mx-auto d-block d-flex justify-content-center"
               src="/images/logo.png"
@@ -35,10 +35,11 @@ const Header = () => {
             />
           </Link>
           <div>
-            <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
+            <ul className="navbar-nav ms-auto mb-2 ">
               <li className="nav-item">
                 <Link
-                  className="nav-link active"
+                  style={{ color: "white" }}
+                  className="nav-link"
                   to="/userdetails"
                   aria-current="page"
                 >
@@ -47,24 +48,28 @@ const Header = () => {
               </li>
               <li>
                 <button
+                  type="button"
+                  style={{ color: "white", backgroundColor: "#424242" }}
                   onClick={() => handlerPromos()}
-                  className="mb-2 mr-2 btn btn-primary"
+                  className="mb-2 mr-2 nav-link"
                 >
                   Promos
                 </button>
               </li>
               <li>
                 <button
+                  style={{ color: "white", backgroundColor: "#424242" }}
                   onClick={() => handlerLogout()}
-                  className="mb-2 mr-2 btn btn-primary"
+                  className="mb-2 mr-2 nav-link"
                 >
                   Logout
                 </button>
               </li>
               <li>
                 <button
+                  style={{ color: "white", backgroundColor: "#424242" }}
                   onClick={() => handlerReport()}
-                  className="mb-2 btn btn-primary"
+                  className="mb-2 nav-link"
                 >
                   Report
                 </button>

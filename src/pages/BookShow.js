@@ -11,6 +11,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { FiEdit2 } from "react-icons/fi";
 import { MdDelete } from "react-icons/md";
+import { MdArrowBackIos } from "react-icons/md";
 
 const BookShow = () => {
   var { title, currentdate } = useParams();
@@ -81,19 +82,6 @@ const BookShow = () => {
     navigate(`/bookticket/${data._id}`);
   };
 
-  // const handleEditShowDetails = (data) => {
-  //   navigate("/editshow", {
-  //     state: {
-  //       movieDetails: data,
-  //     },
-  //   });
-  // };
-  // const handleDeleteShowDetails = async (data) => {
-  //   console.log(data._id);
-  //   const movieShowData = await axios.delete(`/show/${data._id}`);
-  //   navigate(-1);
-  // };
-
   const onSortingChange = (event) => {
     console.log(event.target.value);
     console.log(typeof event.target.value);
@@ -118,6 +106,18 @@ const BookShow = () => {
     moviedata && (
       <Layout>
         <div className="container">
+          <div className="mb-3">
+            <button
+              style={{ background: "#ff944d", marginTop: "10px" }}
+              className="btn d-flex justify-items-center"
+              onClick={() => onBack()}
+            >
+              <div style={{ marginTop: "2px" }}>
+                <MdArrowBackIos />
+              </div>
+              <div>BACK</div>
+            </button>
+          </div>
           <h3>
             {moviedata.title} - {moviedata.language + " "}
           </h3>
@@ -188,14 +188,14 @@ const BookShow = () => {
               <h5>"Oops No Any Show Available On The Selected Date"</h5>
             )}
           </div>
-          <div className="mt-2">
+          {/* <div className="mt-2">
             <button
               className="btn btn-primary pointer-link"
               onClick={() => onBack()}
             >
               &#60;- Back
             </button>
-          </div>
+          </div> */}
         </div>
       </Layout>
     )

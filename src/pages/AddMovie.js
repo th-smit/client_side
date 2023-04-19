@@ -11,6 +11,10 @@ import TextField from "@mui/material/TextField";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import ButtonCom from "../component/Button/ButtonCom";
+import Box from "@mui/material/Box";
+import TextareaAutosize from "@mui/base/TextareaAutosize";
+import Checkbox from "@mui/material/Checkbox";
+import { MdArrowBackIos } from "react-icons/md";
 
 function AddMovie() {
   const navigate = useNavigate();
@@ -75,7 +79,7 @@ function AddMovie() {
       e.target.style.backgroundColor = "#efefef";
     } else {
       setLanguage([...language, e.target.value]);
-      e.target.style.backgroundColor = "lightblue";
+      e.target.style.backgroundColor = "#ffd199";
     }
   };
 
@@ -85,162 +89,241 @@ function AddMovie() {
       e.target.style.backgroundColor = "#efefef";
     } else {
       setFormat([...format, e.target.value]);
-      e.target.style.backgroundColor = "lightblue";
+      e.target.style.backgroundColor = "#ffd199";
     }
   };
   return (
     <>
-      <form className="App1" onSubmit={handleSubmit(onAddMovieDetailSubmit)}>
-        <h3 className="title">Add Movies</h3>
-        <label htmlFor="title">Movie Title : &nbsp;</label>
-        <input
-          type="text"
-          {...register("title", {
-            required: true,
-            minLength: 3,
-            maxLength: 100,
-          })}
-        />
-        <p>
-          {errors.title && (
-            <span style={{ color: "red" }}>
-              title is mandatory, must be length between 3-100{" "}
+      <div>
+        <form className="App1" onSubmit={handleSubmit(onAddMovieDetailSubmit)}>
+          <div className="row">
+            <span className="col-sm-2">
+              <a
+                onClick={() => onBack()}
+                style={{
+                  fontSize: "20px",
+                  background: "#F6D3A3",
+                  marginLeft: "2px",
+                }}
+              >
+                <MdArrowBackIos />
+              </a>
             </span>
-          )}
-        </p>
-        <label htmlFor="description">Description : &nbsp;</label>
-        <textarea
-          type="text"
-          {...register("description", {
-            required: true,
-            minLength: 3,
-            maxLength: 5000,
-          })}
-        />
-        <p>
-          {errors.description && (
-            <span style={{ color: "red" }}>
-              description is mandatory, must be length between 3-5000{" "}
+            <span className="col-md-7" style={{ marginLeft: "10px" }}>
+              <h3 className="title1">Add Movies</h3>
             </span>
-          )}
-        </p>
-        <label htmlFor="poster_api">Poster_API : &nbsp;</label>
-        <input
-          type="text"
-          {...register("poster_api", {
-            required: true,
-          })}
-        />
-        <p>
-          {errors.poster_api && (
-            <span style={{ color: "red" }}>poster_api is mandatory</span>
-          )}
-        </p>
-        <label htmlFor="movie_type">Movie Type : &nbsp;</label>
-        <input
-          type="text"
-          {...register("movie_type", {
-            required: true,
-            minLength: 4,
-            maxLength: 50,
-          })}
-        />
-        <p>
-          {errors.movie_type && (
-            <span style={{ color: "red" }}>
-              Movie type is mandatory must be length between 4-50{" "}
-            </span>
-          )}
-        </p>
-        <div>
-          <label htmlFor="is_released">Is_Released ? &nbsp;</label>
-          <input type="checkbox" {...register("is_released")}></input>
-        </div>
-        <div>
-          Release Date:
-          <div>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DesktopDatePicker
-                label="Date"
-                inputFormat="MM/DD/YYYY"
-                value={date}
-                disablePast
-                onChange={handleDate}
-                renderInput={(params) => <TextField {...params} />}
-              />
-            </LocalizationProvider>
           </div>
-        </div>
-        <div>
-          Movie Length :
-          <div>
-            <label htmlFor="hour">Hour : &nbsp;</label>
-            <input
-              className="w-25 mr-1"
-              type="text"
-              {...register("hour", {
-                required: true,
-              })}
-            />
-            <label htmlFor="minute">Minute : &nbsp;</label>
-            <input
-              className="w-25"
-              type="text"
-              {...register("minute", {
-                required: true,
-              })}
-            />
-          </div>
-        </div>
-        <div className="mt-4">
-          Language :&nbsp;
-          <input
-            type="button"
-            value="Hindi"
-            className="mr-2"
-            onClick={handleLanguage}
-          />
-          <input
-            type="button"
-            value="English"
-            className="mr-2"
-            onClick={handleLanguage}
-          />
-          <input
-            type="button"
-            value="Tamil"
-            className="mr-2"
-            onClick={handleLanguage}
-          />
-          <input
-            type="button"
-            value="Malayalam"
-            className="mr-2"
-            onClick={handleLanguage}
-          />
-          <input
-            type="button"
-            value="Telugu"
-            className="mr-2"
-            onClick={handleLanguage}
-          />
-        </div>
-        <div className="mt-2">
-          Format : &nbsp;
-          <ButtonCom value="2D" onHandleFormat={handleFormat} />
-          <ButtonCom value="3D" onHandleFormat={handleFormat} />
-          <ButtonCom value="4DX" onHandleFormat={handleFormat} />
-        </div>
-        <input type="submit" className="btn btn-primary mt-3" value="Add" />
-        <div className="mt-2">
-          <button
-            className="btn btn-primary pointer-link"
-            onClick={() => onBack()}
+          <Box
+            component="form"
+            sx={{
+              "& > :not(style)": { m: 1, width: "35ch" },
+            }}
+            noValidate
+            autoComplete="off"
           >
-            &#60;- Back
-          </button>
-        </div>
-      </form>
+            {/* <TextField id="outlined-basic" label="Outlined" variant="outlined" /> */}
+          </Box>
+          <label htmlFor="title">Movie Title : &nbsp;</label>
+          <TextField
+            type="text"
+            id="outlined-basic"
+            label="Movie Title"
+            variant="outlined"
+            {...register("title", {
+              required: true,
+              minLength: 3,
+              maxLength: 100,
+            })}
+          />
+          <p>
+            {errors.title && (
+              <span style={{ color: "red" }}>
+                title is mandatory, must be length between 3-100{" "}
+              </span>
+            )}
+          </p>
+
+          <label htmlFor="description">Description : &nbsp;</label>
+          <TextareaAutosize
+            aria-label="empty textarea"
+            label="Movie Title"
+            style={{
+              width: 565,
+              height: 100,
+              background: "#F6D3A3",
+              borderRadius: "5px",
+            }}
+            type="textarea"
+            {...register("description", {
+              required: true,
+              minLength: 3,
+              maxLength: 5000,
+            })}
+          />
+          {/* <textarea
+            type="text"
+            {...register("description", {
+              required: true,
+              minLength: 3,
+              maxLength: 5000,
+            })}
+          /> */}
+          <p>
+            {errors.description && (
+              <span style={{ color: "red" }}>
+                description is mandatory, must be length between 3-5000{" "}
+              </span>
+            )}
+          </p>
+          <label htmlFor="poster_api">Poster_API : &nbsp;</label>
+          <TextField
+            type="text"
+            id="outlined-basic"
+            label="Poster API"
+            variant="outlined"
+            {...register("poster_api", {
+              required: true,
+            })}
+          />
+          <p>
+            {errors.poster_api && (
+              <span style={{ color: "red" }}>poster_api is mandatory</span>
+            )}
+          </p>
+          <label htmlFor="movie_type">Movie Type : &nbsp;</label>
+          <TextField
+            type="text"
+            id="outlined-basic"
+            label="Movie Type"
+            variant="outlined"
+            {...register("movie_type", {
+              required: true,
+              minLength: 4,
+              maxLength: 50,
+            })}
+          />
+          <p>
+            {errors.movie_type && (
+              <span style={{ color: "red" }}>
+                Movie type is mandatory must be length between 4-50{" "}
+              </span>
+            )}
+          </p>
+          <div className="row mb-4">
+            <div className="col-md-5" style={{ marginTop: "30px" }}>
+              <label htmlFor="is_released">Is_Released ? &nbsp;</label>
+              <Checkbox type="checkbox" {...register("is_released")}></Checkbox>
+            </div>
+            <div className="col-md-7">
+              Release Date:
+              <div>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DesktopDatePicker
+                    label="Date"
+                    inputFormat="MM/DD/YYYY"
+                    value={date}
+                    disablePast
+                    onChange={handleDate}
+                    renderInput={(params) => <TextField {...params} />}
+                  />
+                </LocalizationProvider>
+              </div>
+            </div>
+          </div>
+          <div>
+            Movie Length :
+            <div className="mt-3 d-flex justify-content-around">
+              <span>
+                <label className="mt-1" htmlFor="hour">
+                  Hour : &nbsp;
+                </label>
+
+                <TextField
+                  inputProps={{
+                    style: {
+                      height: "5px",
+                      width: "100px",
+                    },
+                  }}
+                  className=" mr-1"
+                  type="text"
+                  {...register("hour", {
+                    required: true,
+                  })}
+                />
+              </span>
+              <span>
+                <label className="mt-1" htmlFor="minute">
+                  Minute : &nbsp;
+                </label>
+
+                <TextField
+                  inputProps={{
+                    style: {
+                      height: "5px",
+                      width: "100px",
+                    },
+                  }}
+                  type="text"
+                  {...register("minute", {
+                    required: true,
+                  })}
+                />
+              </span>
+            </div>
+          </div>
+          <div className="mt-4">
+            Language :&nbsp;
+            <input
+              style={{ padding: "3px", borderRadius: "8px" }}
+              type="button"
+              value="Hindi"
+              className="mr-2"
+              onClick={handleLanguage}
+            />
+            <input
+              style={{ padding: "3px", borderRadius: "8px" }}
+              type="button"
+              value="English"
+              className="mr-2"
+              onClick={handleLanguage}
+            />
+            <input
+              style={{ padding: "3px", borderRadius: "8px" }}
+              type="button"
+              value="Tamil"
+              className="mr-2"
+              onClick={handleLanguage}
+            />
+            <input
+              style={{ padding: "3px", borderRadius: "8px" }}
+              type="button"
+              value="Malayalam"
+              className="mr-2"
+              onClick={handleLanguage}
+            />
+            <input
+              style={{ padding: "3px", borderRadius: "8px" }}
+              type="button"
+              value="Telugu"
+              className="mr-2"
+              onClick={handleLanguage}
+            />
+          </div>
+          <div className="mt-2">
+            Format : &nbsp;
+            <ButtonCom value="2D" onHandleFormat={handleFormat} />
+            <ButtonCom value="3D" onHandleFormat={handleFormat} />
+            <ButtonCom value="4DX" onHandleFormat={handleFormat} />
+          </div>
+          <input
+            type="submit"
+            style={{ background: "#f7b067" }}
+            className="btn mt-3"
+            value="Add"
+          />
+        </form>
+      </div>
     </>
   );
 }

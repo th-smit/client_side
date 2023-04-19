@@ -9,6 +9,7 @@ import { message } from "antd";
 import moment from "moment/moment";
 import { FiEdit2 } from "react-icons/fi";
 import { MdDelete } from "react-icons/md";
+import { MdArrowBackIos } from "react-icons/md";
 
 const MovieDetails = () => {
   const currentdate = new Date().toISOString();
@@ -74,6 +75,7 @@ const MovieDetails = () => {
 
   const onBack = async () => {
     localStorage.removeItem("title");
+    console.log("hello on back");
     navigate("/");
   };
 
@@ -107,10 +109,14 @@ const MovieDetails = () => {
           <div id="layout" className="container mt-3">
             <div className="mb-3">
               <button
-                className="btn btn-primary pointer-link"
+                style={{ background: "#ff944d" }}
+                className="btn d-flex justify-items-center"
                 onClick={() => onBack()}
               >
-                &#60;- Back
+                <div style={{ marginTop: "2px" }}>
+                  <MdArrowBackIos />
+                </div>
+                <div>BACK</div>
               </button>
             </div>
             <div className="row">
@@ -128,7 +134,8 @@ const MovieDetails = () => {
                       <div className="col-md-3">
                         <button
                           type="button"
-                          className="btn btn-primary"
+                          style={{ background: "#F3AA60" }}
+                          className="btn"
                           onClick={() => onEditButton()}
                         >
                           Edit
@@ -137,7 +144,8 @@ const MovieDetails = () => {
                       <div className="col-md-3">
                         <button
                           type="button"
-                          className="btn btn-primary"
+                          style={{ background: "#F3AA60" }}
+                          className="btn"
                           onClick={() => {
                             const confirmBox = window.confirm(
                               "Do you Really want to delete this movie?"
@@ -214,7 +222,8 @@ const MovieDetails = () => {
                 <div>
                   <button
                     type="button"
-                    className="btn btn-primary mr-2"
+                    style={{ background: "#F3AA60" }}
+                    className="btn mr-2"
                     onClick={() => onBookShow()}
                   >
                     Book Show
@@ -222,7 +231,8 @@ const MovieDetails = () => {
                   {role === "admin" && (
                     <button
                       type="button"
-                      className="btn btn-primary"
+                      style={{ background: "#F3AA60" }}
+                      className="btn"
                       onClick={() => onAddShow()}
                     >
                       Add Show

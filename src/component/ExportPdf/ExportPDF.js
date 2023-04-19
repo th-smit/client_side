@@ -45,7 +45,7 @@ const ExportPDF = (props) => {
               <h1>
                 Book My <span>Show</span>
               </h1>
-              <div class="title">
+              <div class="movietitle">
                 <h2>{props.data.movie_title}</h2>
                 <span>movie</span>
               </div>
@@ -92,11 +92,11 @@ const ExportPDF = (props) => {
                 <Button
                   type="button"
                   className="rounded"
-                  primary={true}
+                  // primary={true}
                   onClick={(data) => handleClick()}
                   style={{
                     padding: "3px",
-                    backgroundColor: "#f25a5a",
+                    backgroundColor: "#ff944d",
                     color: "white",
                   }}
                 >
@@ -109,7 +109,7 @@ const ExportPDF = (props) => {
                     <input
                       style={{
                         padding: "3px",
-                        backgroundColor: "#f25a5a",
+                        backgroundColor: "#ff944d",
                         color: "white",
                       }}
                       type="button"
@@ -130,7 +130,7 @@ const ExportPDF = (props) => {
               <div class="qrcode">
                 <QRCode
                   id="qrCodeImage"
-                  value={props.data}
+                  value={JSON.stringify(props.data._id)}
                   style={{ width: "100px", height: "100px" }}
                 />
               </div>

@@ -12,7 +12,8 @@ import Divider from "@mui/material/Divider";
 
 const Payment = () => {
   const [stripPromise, setStripePromise] = useState(null);
-  const [clientSecret, setClientSecret] = useState("");
+  const [paymentIntentKey, setPaymentIntentKey] = useState("");
+  const [pik, setPIK] = useState(null);
   const { id } = useParams();
   const [ticketData, setTicketData] = useState();
   const [movietitle, setMovieTitle] = useState();
@@ -36,7 +37,7 @@ const Payment = () => {
         .get("/config")
         .then((result) => {
           setStripePromise(loadStripe(result.data.publishableKey));
-          console.log(result.data.publishableKey);
+          console.log("publicahble key ", result.data.publishableKey);
         })
         .catch((error) => console.log(error));
 
@@ -57,15 +58,22 @@ const Payment = () => {
 
   const PaymentIntent = async () => {
     try {
-      await axios
-        .post("payment/create-payment-intent")
-        .then((result) => {
-          setClientSecret(result.data.successMessage.client_secret);
-          console.log(result.data.successMessage.client_secret);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      if (pik === null) {
+        await axios
+          .post("payment/create-payment-intent")
+          .then((result) => {
+            setPaymentIntentKey(result.data.successMessage.client_secret);
+            console.log(
+              "payment intent key",
+              result.data.successMessage.paymentkey
+            );
+
+            setPIK(result.data.successMessage.paymentkey);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
     } catch (error) {
       console.log("error " + error);
     }
@@ -74,7 +82,7 @@ const Payment = () => {
 
   return (
     <>
-      {stripPromise && clientSecret && ticketData && (
+      {stripPromise && paymentIntentKey && ticketData && (
         <body>
           <div className="row">
             <div className="col-md-6">
@@ -83,8 +91,11 @@ const Payment = () => {
                   <Typography sx={{ fontSize: 18 }}>P A Y M E N T</Typography>
                 </div>
                 <div>
-                  <Elements stripe={stripPromise} options={{ clientSecret }}>
-                    <CheckoutForm ticketid={id} />
+                  <Elements
+                    stripe={stripPromise}
+                    options={{ clientSecret: paymentIntentKey }}
+                  >
+                    <CheckoutForm ticketid={id} paymentIntentKey={pik} />
                   </Elements>
                 </div>
               </div>

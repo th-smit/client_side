@@ -12,6 +12,7 @@ const CheckoutForm = (props) => {
 
   const handleSubmit = async (e) => {
     console.log("ticket id from the checkout form " + props.ticketid);
+    console.log("payment intent key is " + props.paymentIntentKey);
     // const ticketid = {
     //   ticketid: props.ticketid,
     // };
@@ -27,7 +28,8 @@ const CheckoutForm = (props) => {
     const { error } = await stripe.confirmPayment({
       elements,
       confirmParams: {
-        return_url: `${window.location.origin}/completion/${props.ticketid}`,
+        return_url: `${window.location.origin}/completion/${props.ticketid}/${props.paymentIntentKey}`,
+        // return_url: `${window.location.origin}/completion/${props.ticketid}`,
       },
     });
 

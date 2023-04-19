@@ -4,6 +4,7 @@ import axios from "axios";
 
 const Completion = (req, res) => {
   const { ticketid } = useParams();
+  const { paymentIntentKey } = useParams();
   const navigate = useNavigate();
   useEffect(() => {
     changeTicketStatus();
@@ -12,6 +13,7 @@ const Completion = (req, res) => {
   const changeTicketStatus = async () => {
     const ticketid1 = {
       ticketid: ticketid,
+      paymentIntentKey: paymentIntentKey,
     };
     const ticketData = await axios.put("/ticket", ticketid1);
     setTimeout(() => {

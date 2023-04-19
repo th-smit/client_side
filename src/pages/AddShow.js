@@ -11,6 +11,7 @@ import TextField from "@mui/material/TextField";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
+import { MdArrowBackIos } from "react-icons/md";
 
 const AddShow = () => {
   const navigate = useNavigate();
@@ -75,10 +76,25 @@ const AddShow = () => {
   return (
     <>
       <form className="App1" onSubmit={handleSubmit(onAddShowDetailSubmit)}>
-        <h3>Add Movies Show</h3>
+        <div className="row">
+          <a
+            style={{ background: "#F6D3A3" }}
+            className="btn col-md-1 ml-1"
+            onClick={() => onBack()}
+          >
+            <MdArrowBackIos />
+          </a>
+
+          <span className="col-md-10">
+            <h3>Add Movies Show</h3>
+          </span>
+        </div>
         <label htmlFor="title">Movie Title : &nbsp;</label>
-        <input
+        <TextField
           type="text"
+          id="outlined-basic"
+          label="Movie Title"
+          variant="outlined"
           readOnly={true}
           {...register("title", {
             required: true,
@@ -93,10 +109,10 @@ const AddShow = () => {
             </span>
           )}
         </p>
-        Show Date & Time:
-        <div>
+        <p>Show Date & Time:</p>
+        <div className="row mt-2 mb-2 d-flex justify-content-around">
           <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <div>
+            <div className="col-md-5">
               <DesktopDatePicker
                 label="Date"
                 inputFormat="MM/DD/YYYY"
@@ -107,7 +123,7 @@ const AddShow = () => {
                 renderInput={(params) => <TextField {...params} />}
               />
             </div>
-            <div className="mt-2">
+            <div className="col-md-5">
               <TimePicker
                 label="Time"
                 value={datetime}
@@ -118,15 +134,20 @@ const AddShow = () => {
             </div>
           </LocalizationProvider>
         </div>
-        <input type="submit" className="btn btn-primary mt-3" value="Add" />
-        <div className="mt-2">
+        <input
+          style={{ background: "#ff944d" }}
+          type="submit"
+          className="btn mt-3"
+          value="Add"
+        />
+        {/* <div className="mt-2">
           <a
             className="btn btn-primary pointer-link text-white"
             onClick={() => onBack()}
           >
             &#60;- Back
           </a>
-        </div>
+        </div> */}
       </form>
     </>
   );

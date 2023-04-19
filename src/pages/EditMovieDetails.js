@@ -9,6 +9,9 @@ import dayjs from "dayjs";
 import TextField from "@mui/material/TextField";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import Checkbox from "@mui/material/Checkbox";
+import { MdArrowBackIos } from "react-icons/md";
+import TextareaAutosize from "@mui/base/TextareaAutosize";
 
 const EditMovieDetails = () => {
   const navigate = useNavigate();
@@ -96,7 +99,7 @@ const EditMovieDetails = () => {
         e.target.style.backgroundColor = "#efefef";
       } else {
         setLanguage([...language, e.target.value]);
-        e.target.style.backgroundColor = "lightblue";
+        e.target.style.backgroundColor = "#ffd199";
       }
     }
   };
@@ -109,7 +112,7 @@ const EditMovieDetails = () => {
         e.target.style.backgroundColor = "#efefef";
       } else {
         setFormat([...format, e.target.value]);
-        e.target.style.backgroundColor = "lightblue";
+        e.target.style.backgroundColor = "#ffd199";
       }
     }
   };
@@ -122,10 +125,29 @@ const EditMovieDetails = () => {
             className="App1"
             onSubmit={handleSubmit(onEditMovieDetailSubmit)}
           >
-            <h3 className="title">Edit Movie Details</h3>
+            <div className="row">
+              <span className="col-sm-2">
+                <a
+                  onClick={() => onBack()}
+                  style={{
+                    fontSize: "20px",
+                    background: "#F6D3A3",
+                    marginLeft: "2px",
+                  }}
+                >
+                  <MdArrowBackIos />
+                </a>
+              </span>
+              <span className="col-md-7" style={{ marginLeft: "10px" }}>
+                <h3 className="title1">Edit Movie Details</h3>
+              </span>
+            </div>
             <label htmlFor="title">Movie Title : &nbsp;</label>
-            <input
+            <TextField
               type="text"
+              id="outlined-basic"
+              label="Movie Title"
+              variant="outlined"
               disabled
               {...register("title", {
                 required: true,
@@ -142,8 +164,16 @@ const EditMovieDetails = () => {
             </p>
 
             <label htmlFor="description">Description : &nbsp;</label>
-            <textarea
-              type="text"
+            <TextareaAutosize
+              type="textarea"
+              aria-label="empty textarea"
+              label="Movie Title"
+              style={{
+                width: 565,
+                height: 100,
+                background: "#F6D3A3",
+                borderRadius: "5px",
+              }}
               {...register("description", {
                 required: true,
                 minLength: 3,
@@ -159,8 +189,11 @@ const EditMovieDetails = () => {
             </p>
 
             <label htmlFor="poster_api">Poster_API : &nbsp;</label>
-            <input
+            <TextField
               type="text"
+              id="outlined-basic"
+              label="Movie Title"
+              variant="outlined"
               {...register("poster_api", {
                 required: true,
               })}
@@ -172,8 +205,11 @@ const EditMovieDetails = () => {
             </p>
 
             <label htmlFor="movie_type">Movie Type : &nbsp;</label>
-            <input
+            <TextField
               type="text"
+              id="outlined-basic"
+              label="Movie Title"
+              variant="outlined"
               {...register("movie_type", {
                 required: true,
                 minLength: 4,
@@ -187,45 +223,69 @@ const EditMovieDetails = () => {
                 </span>
               )}
             </p>
-            <div>
-              <label htmlFor="is_released">Is_Released ? &nbsp;</label>
-              <input type="checkbox" {...register("is_released")}></input>
-            </div>
-            <div>
-              Release Date:
-              <div>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DesktopDatePicker
-                    sx={{ backgroundColor: "white" }}
-                    label="Date"
-                    inputFormat="MM/DD/YYYY"
-                    value={date}
-                    onChange={handleDate}
-                    renderInput={(params) => <TextField {...params} />}
-                  />
-                </LocalizationProvider>
+            <div className="row mb-4">
+              <div className="col-md-5" style={{ marginTop: "30px" }}>
+                <label htmlFor="is_released">Is_Released ? &nbsp;</label>
+                <Checkbox
+                  type="checkbox"
+                  {...register("is_released")}
+                ></Checkbox>
+              </div>
+              <div className="col-md-7">
+                Release Date:
+                <div>
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DesktopDatePicker
+                      sx={{ backgroundColor: "white" }}
+                      label="Date"
+                      inputFormat="MM/DD/YYYY"
+                      value={date}
+                      onChange={handleDate}
+                      renderInput={(params) => <TextField {...params} />}
+                    />
+                  </LocalizationProvider>
+                </div>
               </div>
             </div>
 
-            <div>
+            <div className="mt-1">
               Movie Length :
-              <div>
-                <label htmlFor="hour">Hour : &nbsp;</label>
-                <input
-                  className="w-25 mr-1"
-                  type="text"
-                  {...register("hour", {
-                    required: true,
-                  })}
-                />
-                <label htmlFor="minute">Minute : &nbsp;</label>
-                <input
-                  className="w-25"
-                  type="text"
-                  {...register("minute", {
-                    required: true,
-                  })}
-                />
+              <div className="mt-3 d-flex justify-content-around">
+                <span>
+                  <label className="mt-1" htmlFor="hour">
+                    Hour : &nbsp;
+                  </label>
+                  <TextField
+                    inputProps={{
+                      style: {
+                        height: "5px",
+                        width: "100px",
+                      },
+                    }}
+                    className=" mr-1"
+                    type="text"
+                    {...register("hour", {
+                      required: true,
+                    })}
+                  />
+                </span>
+                <span>
+                  <label className="mt-1" htmlFor="minute">
+                    Minute : &nbsp;
+                  </label>
+                  <TextField
+                    inputProps={{
+                      style: {
+                        height: "5px",
+                        width: "100px",
+                      },
+                    }}
+                    type="text"
+                    {...register("minute", {
+                      required: true,
+                    })}
+                  />
+                </span>
               </div>
             </div>
             <div className="mt-4">
@@ -235,8 +295,10 @@ const EditMovieDetails = () => {
                 value="Hindi"
                 style={{
                   background: moviedata.language.includes("Hindi")
-                    ? "lightblue"
+                    ? "#ffd199"
                     : "#efefef",
+                  padding: "3px",
+                  borderRadius: "8px",
                 }}
                 className="mr-2"
                 onClick={handleLanguage}
@@ -246,8 +308,10 @@ const EditMovieDetails = () => {
                 value="English"
                 style={{
                   background: moviedata.language.includes("English")
-                    ? "lightblue"
+                    ? "#ffd199"
                     : "#efefef",
+                  padding: "3px",
+                  borderRadius: "8px",
                 }}
                 className="mr-2"
                 onClick={handleLanguage}
@@ -257,8 +321,10 @@ const EditMovieDetails = () => {
                 value="Tamil"
                 style={{
                   background: moviedata.language.includes("Tamil")
-                    ? "lightblue"
+                    ? "#ffd199"
                     : "#efefef",
+                  padding: "3px",
+                  borderRadius: "8px",
                 }}
                 className="mr-2"
                 onClick={handleLanguage}
@@ -268,8 +334,10 @@ const EditMovieDetails = () => {
                 value="Malayalam"
                 style={{
                   background: moviedata.language.includes("Malayalam")
-                    ? "lightblue"
+                    ? "#ffd199"
                     : "#efefef",
+                  padding: "3px",
+                  borderRadius: "8px",
                 }}
                 className="mr-2"
                 onClick={handleLanguage}
@@ -279,8 +347,10 @@ const EditMovieDetails = () => {
                 value="Telugu"
                 style={{
                   background: moviedata.language.includes("Telugu")
-                    ? "lightblue"
+                    ? "#ffd199"
                     : "#efefef",
+                  padding: "3px",
+                  borderRadius: "8px",
                 }}
                 className="mr-2"
                 onClick={handleLanguage}
@@ -293,8 +363,10 @@ const EditMovieDetails = () => {
                 value="2D"
                 style={{
                   background: moviedata.format.includes("2D")
-                    ? "lightblue"
+                    ? "#ffd199"
                     : "#efefef",
+                  padding: "3px",
+                  borderRadius: "8px",
                 }}
                 className="mr-2"
                 onClick={handleFormat}
@@ -304,8 +376,10 @@ const EditMovieDetails = () => {
                 value="3D"
                 style={{
                   background: moviedata.format.includes("3D")
-                    ? "lightblue"
+                    ? "#ffd199"
                     : "#efefef",
+                  padding: "3px",
+                  borderRadius: "8px",
                 }}
                 className="mr-2"
                 onClick={handleFormat}
@@ -315,22 +389,21 @@ const EditMovieDetails = () => {
                 value="4DX"
                 style={{
                   background: moviedata.format.includes("4DX")
-                    ? "lightblue"
+                    ? "#ffd199"
                     : "#efefef",
+                  padding: "3px",
+                  borderRadius: "8px",
                 }}
                 className="mr-2"
                 onClick={handleFormat}
               />
             </div>
-            <input type="submit" className="btn btn-primary" value="Update" />
-            <div className="mt-2">
-              <button
-                className="btn btn-primary pointer-link"
-                onClick={() => onBack()}
-              >
-                &#60;- Back
-              </button>
-            </div>
+            <input
+              type="submit"
+              style={{ background: "#f7b067" }}
+              className="btn mt-2"
+              value="Update"
+            />
           </form>
         </>
       )

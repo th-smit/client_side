@@ -87,7 +87,7 @@ input::-webkit-inner-spin-button {
   font-family: sans-serif;
 }
 .card {
-  background: linear-gradient(to bottom, #e84c3d 0%, #e84c3d 26%, #ecedef 26%, #ecedef 100%);
+  background: linear-gradient(to bottom, #F1A454 0%, #E97D0E 26%, #ecedef 26%, #ecedef 100%);
   height: 20em;
   float: left;
   position: relative;
@@ -128,20 +128,20 @@ h1 {
 h1 span {
   font-weight: normal;
 }
-.title, .name, .seat, .time {
+.movietitle, .name, .seat, .time {
   text-transform: uppercase;
   font-weight: normal;
 }
-.title h2, .name h2, .seat h2, .time h2 {
+.movietitle h2, .name h2, .seat h2, .time h2 {
   font-size: 0.9em;
   color: #525252;
   margin: 0;
 }
-.title span, .name span, .seat span, .time span {
+.movietitle span, .name span, .seat span, .time span {
   font-size: 0.7em;
   color: #a2aeae;
 }
-.title {
+.movietitle {
   margin: 2em 0 0 0;
 }
 .name, .seat {
@@ -171,7 +171,7 @@ h1 span {
 .eye:before {
   width: 1em;
   height: 1em;
-  background: #e84c3d;
+  background: #424242;
   z-index: 2;
   left: 8px;
   top: 4px;
@@ -189,7 +189,7 @@ h1 span {
   text-transform: uppercase;
 }
 .number h3 {
-  color: #e84c3d;
+  color: #424242;
   margin: 0.9em 0 0 0;
   font-size: 1.5em;
 }

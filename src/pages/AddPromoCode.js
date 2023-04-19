@@ -19,6 +19,7 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import Chip from "@mui/material/Chip";
 import { message } from "antd";
+import { MdArrowBackIos } from "react-icons/md";
 
 const AddPromoCode = () => {
   const navigate = useNavigate();
@@ -116,9 +117,26 @@ const AddPromoCode = () => {
   return (
     <>
       <form className="App1" onSubmit={handleSubmit(onAddMovieDetailSubmit)}>
-        <h3 className="promocode">Add PromoCode</h3>
+        <div className="row">
+          <button
+            onClick={() => onBack()}
+            style={{
+              fontSize: "20px",
+              background: "#F6D3A3",
+              marginLeft: "2px",
+            }}
+            className="col-md-2"
+          >
+            <MdArrowBackIos />
+          </button>
+          <span>
+            <h3 className="promocode" style={{ marginLeft: "80px" }}>
+              Add PromoCode
+            </h3>
+          </span>
+        </div>
         <label htmlFor="promo_name">PromoCode Name : &nbsp;</label>
-        <input
+        <TextField
           type="text"
           {...register("promo_name", {
             required: true,
@@ -131,7 +149,7 @@ const AddPromoCode = () => {
         </p>
 
         <label htmlFor="discount">Discount : &nbsp;</label>
-        <input
+        <TextField
           type="number"
           min={promocode_type === "Percentage" ? 1 : 1}
           max={promocode_type === "Percentage" ? 100 : undefined}
@@ -162,7 +180,7 @@ const AddPromoCode = () => {
         </div>
 
         <label htmlFor="limit">Limit : &nbsp;</label>
-        <input
+        <TextField
           type="number"
           {...register("limit", {
             required: true,
@@ -180,32 +198,36 @@ const AddPromoCode = () => {
             required: true,
           })}
         /> */}
-        <div className="d-flex justify-content-around" onChange={handleType}>
-          <label htmlFor="promocode_type">Promocode Type : &nbsp;</label>
+        <div className="d-flex justify-content-center" onChange={handleType}>
           <span>
-            <input
-              type="radio"
-              name="type"
-              value="Flat"
-              // className="mr-2"
-              style={{ width: "18px" }}
-              // onClick={handleType}
-            />
+            <label htmlFor="promocode_type">Promocode Type : &nbsp;</label>
           </span>
-
-          <span>Flat</span>
           <span>
-            <input
-              type="radio"
-              name="type"
-              value="Percentage"
-              // className="mr-2"
-              style={{ width: "18px" }}
-              // onClick={handleType}
-            />
-          </span>
+            <span className="">
+              <input
+                type="radio"
+                name="type"
+                value="Flat"
+                // className="mr-2"
+                style={{ width: "18px" }}
+                // onClick={handleType}
+              />
 
-          <span>Percentage</span>
+              <span className="ml-2">Flat</span>
+            </span>
+            <span className="ml-4">
+              <input
+                type="radio"
+                name="type"
+                value="Percentage"
+                // className="mr-2"
+                style={{ width: "18px" }}
+                // onClick={handleType}
+              />
+
+              <span className="ml-2">Percentage</span>
+            </span>
+          </span>
         </div>
 
         <div>
@@ -245,15 +267,21 @@ const AddPromoCode = () => {
           <input type="checkbox" {...register("active_status")}></input>
         </div>
 
-        <input type="submit" className="btn btn-primary mt-3" value="Add" />
-        <div className="mt-2">
+        <input
+          type="submit"
+          style={{ background: "#f7b067" }}
+          className="btn mt-3"
+          value="Add"
+        />
+        {/* <div className="mt-2">
           <button
-            className="btn btn-primary pointer-link"
+            style={{ background: "#f7b067" }}
+            className="btn pointer-link"
             onClick={() => onBack()}
           >
             &#60;- Back
           </button>
-        </div>
+        </div> */}
       </form>
     </>
   );

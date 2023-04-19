@@ -95,13 +95,21 @@ const HomePage = () => {
               />
             </div>
             <div className="col-sm-1">
-              <button className="btn btn-primary" onClick={handlerSearchButton}>
+              <button
+                style={{ background: "#ff944d" }}
+                className="btn"
+                onClick={handlerSearchButton}
+              >
                 Search
               </button>
             </div>
           </div>
           <div className="col-sm-5 d-flex">
-            <select onChange={onSortingChange}>
+            <select
+              className="border rounded"
+              style={{ padding: "5px" }}
+              onChange={onSortingChange}
+            >
               <option value={sort.Asc_created.text}>
                 {sort.Asc_created.text}
               </option>
@@ -120,15 +128,17 @@ const HomePage = () => {
             {role === "admin" && (
               <>
                 <button
+                  style={{ background: "#ff944d" }}
                   type="button"
-                  className="btn btn-primary"
+                  className="btn"
                   onClick={() => handleAddButton()}
                 >
                   Add Movie
                 </button>
                 <button
                   type="button"
-                  className="btn btn-primary ml-2"
+                  style={{ background: "#ff944d" }}
+                  className="btn  ml-2"
                   onClick={() => handlePromoButton()}
                 >
                   Add Promo
