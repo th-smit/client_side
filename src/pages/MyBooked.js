@@ -4,12 +4,6 @@ import Layout from "../component/Layout.js/Layout";
 import { setHeader, clearStorage } from "./Utils";
 import axios from "axios";
 import { useState } from "react";
-import moment from "moment/moment";
-import { message } from "antd";
-import QRCode from "qrcode.react";
-import NavbarCollapse from "react-bootstrap/esm/NavbarCollapse";
-import { Button } from "@progress/kendo-react-buttons";
-import { PDFExport, savePDF } from "@progress/kendo-react-pdf";
 import ExportPDF from "../component/ExportPdf/ExportPDF";
 import { MdArrowBackIos } from "react-icons/md";
 
@@ -21,7 +15,6 @@ const MyBooked = () => {
   const [allTicket, setAllTicket] = useState([]);
   const currenttime = new Date();
   useEffect(() => {
-    console.log("from homepage " + localStorage.getItem("token"));
     if (!localStorage.getItem("token")) {
       navigate("/login");
     }

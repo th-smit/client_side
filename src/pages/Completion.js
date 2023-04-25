@@ -4,7 +4,6 @@ import axios from "axios";
 
 const Completion = (req, res) => {
   const { ticketid } = useParams();
-  const { paymentIntentKey } = useParams();
   const navigate = useNavigate();
   useEffect(() => {
     changeTicketStatus();
@@ -13,18 +12,30 @@ const Completion = (req, res) => {
   const changeTicketStatus = async () => {
     const ticketid1 = {
       ticketid: ticketid,
-      paymentIntentKey: paymentIntentKey,
     };
-    const ticketData = await axios.put("/ticket", ticketid1);
+    await axios.put("/ticket", ticketid1);
     setTimeout(() => {
       navigate("/");
     }, 9000);
   };
 
+  const GoToOrder = async () => {
+    navigate("/mybooking");
+  };
+
   return (
-    <div>
-      <h1>Thank You</h1>
-    </div>
+    <center>
+      <div style={{ marginTop: "200px", fontSize: "20px" }} className="">
+        <img
+          style={{ width: "80px", height: "80px" }}
+          src="/images/right.png"
+        />{" "}
+        <span style={{ fontSize: "30px" }}>Thank You for Your Payment</span>
+      </div>
+      <button className="border btn" onClick={() => GoToOrder()}>
+        Go To Your Order
+      </button>
+    </center>
   );
 };
 

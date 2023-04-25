@@ -2,50 +2,48 @@ import { PaymentElement } from "@stripe/react-stripe-js";
 import React, { useEffect, useState } from "react";
 import { useStripe, useElements } from "@stripe/react-stripe-js";
 import { Alert } from "react-bootstrap";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const CheckoutForm = (props) => {
   const stripe = useStripe();
   const elements = useElements();
 
+  const navigate = useNavigate();
+
   const [message, setMessage] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
 
   const handleSubmit = async (e) => {
-    console.log("ticket id from the checkout form " + props.ticketid);
-    console.log("payment intent key is " + props.paymentIntentKey);
-    // const ticketid = {
-    //   ticketid: props.ticketid,
-    // };
-    // const ticketData = axios.put("/ticket", ticketid);
     e.preventDefault();
+    const ticketData = await axios.get(`/ticket?ticket_id=${props.ticketid}`);
 
-    if (!stripe || !elements) {
-      return;
+    if (ticketData.data.successMessage[0].pending_status) {
+      if (!stripe || !elements) {
+        return;
+      }
+
+      setIsProcessing(true);
+      const { error } = await stripe.confirmPayment({
+        elements,
+        confirmParams: {
+          return_url: `${window.location.origin}/completion/${props.ticketid}`,
+        },
+      });
+      if (error) {
+        setMessage(error.message);
+      }
+
+      setIsProcessing(false);
+    } else {
+      navigate("/");
     }
-
-    setIsProcessing(true);
-
-    const { error } = await stripe.confirmPayment({
-      elements,
-      confirmParams: {
-        return_url: `${window.location.origin}/completion/${props.ticketid}/${props.paymentIntentKey}`,
-        // return_url: `${window.location.origin}/completion/${props.ticketid}`,
-      },
-    });
-
-    if (error) {
-      setMessage(error.message);
-    }
-
-    setIsProcessing(false);
   };
 
   return (
     <div className="d-flex justify-content-center">
       <form id="payment-form" onSubmit={handleSubmit}>
-        <div
-        // style={{ boxShadow: "10px 5px 5px black" }}
-        >
+        <div>
           <div
             style={{
               padding: "10px",

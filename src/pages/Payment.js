@@ -9,6 +9,9 @@ import moment from "moment/moment";
 import "../css/ticket.css";
 import QRCode from "qrcode.react";
 import Divider from "@mui/material/Divider";
+import { MdArrowBackIos } from "react-icons/md";
+import Layout from "../component/Layout.js/Layout";
+import { message } from "antd";
 
 const Payment = () => {
   const [stripPromise, setStripePromise] = useState(null);
@@ -16,7 +19,6 @@ const Payment = () => {
   const [pik, setPIK] = useState(null);
   const { id } = useParams();
   const [ticketData, setTicketData] = useState();
-  const [movietitle, setMovieTitle] = useState();
   const [count, setCount] = useState();
   const navigate = useNavigate();
 
@@ -24,16 +26,22 @@ const Payment = () => {
   useEffect(() => {
     ConfigPayment();
     PaymentIntent();
-  }, [count]);
+    // checkPendingStatus();
+  }, []);
 
-  useEffect(() => {
-    // setCount(1);
-    setTimeout(() => setCount(1), 500);
-  });
+  // useEffect(() => {
+  //   // setCount(1);
+  //   setTimeout(() => setCount(1), 500);
+  // });
+
+  // const checkPendingStatus = async () => {
+  //   const TicketData = await axios.get(`/ticket?ticket_id=${id}`);
+  //   console.log("ticket data ", TicketData);
+  // };
 
   const ConfigPayment = async () => {
     try {
-      const key = await axios
+      await axios
         .get("/config")
         .then((result) => {
           setStripePromise(loadStripe(result.data.publishableKey));
@@ -42,14 +50,11 @@ const Payment = () => {
         .catch((error) => console.log(error));
 
       const ticketData = await axios.get(`/ticket?ticket_id=${id}`);
-      console.log("ticket data is is ", ticketData.data.successMessage[0]);
       setTicketData(ticketData.data.successMessage[0]);
-      setMovieTitle(ticketData.data.successMessage[0].movie_title);
-      console.log(
-        "pending status " + ticketData.data.successMessage[0].pending_status
-      );
       if (!ticketData.data.successMessage[0].pending_status) {
-        navigate("/");
+        message.success("payment already done");
+
+        navigate(`/completion/${id}`);
       }
     } catch (error) {
       console.log(error);
@@ -58,154 +63,170 @@ const Payment = () => {
 
   const PaymentIntent = async () => {
     try {
-      if (pik === null) {
-        await axios
-          .post("payment/create-payment-intent")
-          .then((result) => {
-            setPaymentIntentKey(result.data.successMessage.client_secret);
-            console.log(
-              "payment intent key",
-              result.data.successMessage.paymentkey
-            );
+      await axios
+        .post(`payment/create-payment-intent/${id}`, {
+          email: localStorage.getItem("email"),
+        })
+        .then((result) => {
+          setPaymentIntentKey(result.data.successMessage.client_secret);
+          setPIK(result.data.successMessage.paymentkey);
+        })
 
-            setPIK(result.data.successMessage.paymentkey);
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-      }
+        .catch((error) => {
+          console.log(error);
+        });
     } catch (error) {
       console.log("error " + error);
     }
   };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+
+  const onBack = async () => {
+    await axios.delete(`/ticket?ticketid=${id}&showid=${ticketData.show_id}`);
+    navigate(-1);
+  };
 
   return (
     <>
       {stripPromise && paymentIntentKey && ticketData && (
-        <body>
-          <div className="row">
-            <div className="col-md-6">
-              <div style={{ marginTop: "20%" }}>
-                <div className="d-flex justify-content-center mt-2 mb-4">
-                  <Typography sx={{ fontSize: 18 }}>P A Y M E N T</Typography>
+        <Layout>
+          <body className="">
+            <div className="mt-3">
+              <button
+                style={{ background: "#ff944d" }}
+                className="col-sm- btn d-flex"
+                onClick={() => onBack()}
+              >
+                <div style={{ marginTop: "2px" }}>
+                  <MdArrowBackIos />
                 </div>
-                <div>
-                  <Elements
-                    stripe={stripPromise}
-                    options={{ clientSecret: paymentIntentKey }}
-                  >
-                    <CheckoutForm ticketid={id} paymentIntentKey={pik} />
-                  </Elements>
+
+                <div>BACK</div>
+              </button>
+            </div>
+            <div className="row">
+              <div className="col-md-6">
+                <div style={{ marginTop: "20%" }}>
+                  <div className="d-flex justify-content-center mt-2 mb-4">
+                    <Typography sx={{ fontSize: 18 }}>P A Y M E N T</Typography>
+                  </div>
+                  <div>
+                    <Elements
+                      stripe={stripPromise}
+                      options={{ clientSecret: paymentIntentKey }}
+                    >
+                      <CheckoutForm ticketid={id} paymentIntentKey={pik} />
+                    </Elements>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div className="col-md-6">
-              <div class="ticket">
-                <div class="holes-top"></div>
-                <div class="title">
-                  <p class="cinema">INOX CINEMA PRESENTS</p>
-                  <p class="movie-title">{ticketData.movie_title + " "}</p>
-                </div>
-
-                <div className="row">
-                  <div className="col-md-7">
-                    <img
-                      style={{ width: "170px", height: "250px" }}
-                      class="poster"
-                      src={ticketData.poster_api}
-                      alt="Movie: Only God Forgives"
-                    />
+              <div className="col-md-6">
+                <div class="ticket">
+                  <div class="holes-top"></div>
+                  <div class="title">
+                    <p class="cinema">INOX CINEMA PRESENTS</p>
+                    <p class="movie-title">{ticketData.movie_title + " "}</p>
                   </div>
 
-                  <div class="bigger" className="col-md-5 mt-4">
-                    <div class="seat" className="mb-3">
-                      <div className="row">
-                        <th style={{ fontSize: "22px" }}>SEAT</th>
-                      </div>
-                      <div className="row">
-                        <th>{ticketData.seat + " "}</th>
-                      </div>
+                  <div className="row">
+                    <div className="col-sm-7">
+                      <img
+                        style={{ width: "170px", height: "250px" }}
+                        class="poster"
+                        src={ticketData.poster_api}
+                        alt="Movie: Only God Forgives"
+                      />
                     </div>
 
-                    <div class="date">
-                      <div className="row">
-                        <th style={{ fontSize: "22px" }}>DATE</th>
-                      </div>
-                      <div className="row">
-                        <th> {moment(ticketData.show_time).format("l")}</th>
-                      </div>
-                    </div>
-                    <div class="time">
-                      <div className="row">
-                        <th style={{ fontSize: "22px" }}>TIME</th>
-                      </div>
-                      <div className="row">
-                        <th>{moment(ticketData.show_time).format("LT")}</th>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* <div class="poster">
-                  <img
-                    src={ticketData.poster_api}
-                    alt="Movie: Only God Forgives"
-                  />
-                </div> */}
-                <div class="info">
-                  {ticketData.discount && (
-                    <div className="row d-flex justify-content-between mr-2 ml-2">
-                      <th className="">SAVING</th>
-                      {ticketData.discount && (
-                        <th className="">₹{ticketData.discount}</th>
-                      )}
-                    </div>
-                  )}
-
-                  {ticketData.promo_name && (
-                    <div className="row d-flex justify-content-between mr-2 ml-2">
-                      <div>
-                        <th className="">PROMO USED</th>
-                      </div>
-                      {ticketData.discount && (
-                        <div>
-                          <th className="">{ticketData.promo_name}</th>
+                    <div className="col-sm-5 mt-4">
+                      <div class="seat" className="mb-3">
+                        <div className="row">
+                          <th style={{ fontSize: "22px" }}>SEAT</th>
                         </div>
-                      )}
-                    </div>
-                  )}
+                        <div className="row">
+                          <th>{ticketData.seat + " "}</th>
+                        </div>
+                      </div>
 
-                  <Divider
-                    className=" mt-3 mb-3"
-                    sx={{ borderStyle: "dashed" }}
-                  />
-                  <div className="row mt-2 d-flex justify-content-between">
-                    <div>
-                      <th className="col-md-6">PAYABLE AMOUNT</th>
-                    </div>
-                    <div>
-                      <th className="col-md-6">₹{ticketData.price}</th>
+                      <div class="date">
+                        <div className="row">
+                          <th style={{ fontSize: "22px" }}>DATE</th>
+                        </div>
+                        <div className="row">
+                          <th>
+                            {" "}
+                            {moment(ticketData.show_datetime).format("l")}
+                          </th>
+                        </div>
+                      </div>
+                      <div class="time">
+                        <div className="row">
+                          <th style={{ fontSize: "22px" }}>TIME</th>
+                        </div>
+                        <div className="row">
+                          <th>
+                            {moment(ticketData.show_datetime).format("LT")}
+                          </th>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
+                  <div class="info">
+                    {ticketData.discount && (
+                      <div className="row d-flex justify-content-between mr-2 ml-2">
+                        <th className="">SAVING</th>
+                        {ticketData.discount && (
+                          <th className="">₹{ticketData.discount}</th>
+                        )}
+                      </div>
+                    )}
 
-                <div class="holes-lower"></div>
-                <div class="serial">
-                  <div class="qrcode" className="d-flex justify-content-center">
-                    <QRCode
-                      id="qrCodeImage"
-                      value={ticketData}
-                      style={{ width: "150px", height: "150px" }}
+                    {ticketData.promo_name && (
+                      <div className="row d-flex justify-content-between mr-2 ml-2">
+                        <div>
+                          <th className="">PROMO USED</th>
+                        </div>
+                        {ticketData.discount && (
+                          <div>
+                            <th className="">{ticketData.promo_name}</th>
+                          </div>
+                        )}
+                      </div>
+                    )}
+
+                    <Divider
+                      className=" mt-3 mb-3"
+                      sx={{ borderStyle: "dashed" }}
                     />
+                    <div className="row mt-2 d-flex justify-content-between">
+                      <div>
+                        <th className="col-md-6">PAYABLE AMOUNT</th>
+                      </div>
+                      <div>
+                        <th className="col-md-6">₹{ticketData.price}</th>
+                      </div>
+                    </div>
                   </div>
-                  <table class="numbers"></table>
+
+                  <div class="holes-lower"></div>
+                  <div class="serial">
+                    <div
+                      class="qrcode"
+                      className="d-flex justify-content-center"
+                    >
+                      <QRCode
+                        id="qrCodeImage"
+                        value={ticketData}
+                        style={{ width: "150px", height: "150px" }}
+                      />
+                    </div>
+                    <table class="numbers"></table>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </body>
+          </body>
+        </Layout>
       )}
     </>
   );

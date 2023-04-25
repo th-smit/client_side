@@ -11,7 +11,7 @@ const SeatCom = (props) => {
             <button
               value={`${props.value}${data}`}
               key={`${props.value}${data}`}
-              className="flex-row btn btn-outline-success btn-sm m-2"
+              className="flex-row btn btn-outline-success btn-sm m-1"
               disabled={
                 `${props.selectedSeat}`.includes(`${props.value}${data}`)
                   ? true
@@ -25,6 +25,8 @@ const SeatCom = (props) => {
                   : props.qseats.includes(`${props.value}${data}`)
                   ? "green"
                   : "white",
+                width: "35px",
+                height: "35px",
               }}
               onClick={props.onHandleSeat}
             >

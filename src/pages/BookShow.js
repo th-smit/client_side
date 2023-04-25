@@ -9,8 +9,6 @@ import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import TextField from "@mui/material/TextField";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { FiEdit2 } from "react-icons/fi";
-import { MdDelete } from "react-icons/md";
 import { MdArrowBackIos } from "react-icons/md";
 
 const BookShow = () => {
@@ -28,9 +26,7 @@ const BookShow = () => {
   const [endHour, setEndHour] = useState("23");
 
   useEffect(() => {
-    console.log("1st");
     getMovieRecord();
-    console.log("2nd");
   }, [selectedDate]);
 
   useEffect(() => {
@@ -57,18 +53,14 @@ const BookShow = () => {
 
   const getMovieRecord = async () => {
     const movieDetails = await axios.get(`/movie?title=${title}`);
-    console.log("moviedetails " + movieDetails.data.successMessage[0]);
     setMovieData(movieDetails.data.successMessage[0]);
   };
   const getMovieShowRecords = async () => {
-    console.log(title);
-    console.log(selectedDate);
     try {
       setHeader(localStorage.getItem("token"));
       const movieShowData = await axios.get(
         `/show?title=${title}&date=${selectedDate}`
       );
-      console.log(movieShowData.data.successMessage);
       setAllMovieShow(movieShowData.data.successMessage);
     } catch (error) {
       console.log(error);
@@ -78,13 +70,10 @@ const BookShow = () => {
   };
 
   const handleShowDetails = (data) => {
-    console.log("show id " + data._id);
     navigate(`/bookticket/${data._id}`);
   };
 
   const onSortingChange = (event) => {
-    console.log(event.target.value);
-    console.log(typeof event.target.value);
     setSortValue(event.target.value);
   };
 
@@ -99,7 +88,6 @@ const BookShow = () => {
       new Date(newDateValue).toISOString()
     );
     setSelectedDate(newDateValue);
-    console.log(newDateValue);
   };
 
   return (
@@ -144,9 +132,6 @@ const BookShow = () => {
               </h6>
               <span>
                 <select onChange={onSortingChange}>
-                  {/* <option selected disabled hidden>
-                    Choose here
-                  </option> */}
                   <option value="all">All Time</option>
                   <option value="1">12PM - 11PM</option>
                   <option value="2">7AM - 11AM</option>
@@ -162,11 +147,10 @@ const BookShow = () => {
               allMovieShow.map((data) => {
                 return (
                   <>
-                    {startHour <
-                      parseInt(moment(data.datetime).format("H")) && (
-                      // endHour > parseInt(moment(data.datetime).format("H")) &&
+                    {parseInt(moment(data.datetime).format("H")) >
+                      parseInt(moment(new Date()).format("H")) && (
                       <div key={data._id} className="col-md-3">
-                        <>
+                        <div>
                           <button
                             type="button"
                             className={`btn mr-2 ${
@@ -178,24 +162,16 @@ const BookShow = () => {
                           >
                             {moment(data.datetime).format("LT")}
                           </button>
-                        </>
+                        </div>
                       </div>
                     )}
                   </>
                 );
               })
             ) : (
-              <h5>"Oops No Any Show Available On The Selected Date"</h5>
+              <h5>Oops No Any Show Available On The Selected Date</h5>
             )}
           </div>
-          {/* <div className="mt-2">
-            <button
-              className="btn btn-primary pointer-link"
-              onClick={() => onBack()}
-            >
-              &#60;- Back
-            </button>
-          </div> */}
         </div>
       </Layout>
     )

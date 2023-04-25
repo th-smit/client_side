@@ -7,9 +7,7 @@ import { MdArrowBackIos } from "react-icons/md";
 import Layout from "../component/Layout.js/Layout";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
-import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import moment from "moment/moment";
 import Badge from "@mui/material/Badge";
@@ -35,40 +33,53 @@ const PromoList = () => {
   );
 
   const getPromoRecords = async () => {
-    console.log("promo code is ");
     const promoRecord = await axios.get(`/promocode`);
-    console.log(promoRecord.data.successMessage);
     setPromoRecord(promoRecord.data.successMessage);
   };
 
   const handleEditShowDetails = (data) => {
-    console.log(data);
     navigate(`/editpromo/${data._id}`);
   };
 
   const handleDeleteShowDetails = async (data) => {
-    console.log(data.promo_name);
     axios.delete(`/promocode/${data.promo_name}`);
     navigate(-1);
   };
+
+  const handlePromoButton = () => {
+    navigate("/addpromocode");
+  };
+
   const onBack = async () => {
     navigate(-1);
   };
   return (
     <Layout>
       <div>
-        <div className="mb-2 mt-2">
-          <button
-            style={{ background: "#ff944d" }}
-            className="btn d-flex justify-items-center"
-            onClick={() => onBack()}
-          >
-            <div style={{ marginTop: "2px" }}>
-              <MdArrowBackIos />
-            </div>
+        <div className="row mb-2 mt-3 d-flex justify-content-between">
+          <div className="">
+            <button
+              style={{ background: "#ff944d" }}
+              className="col-sm- btn d-flex"
+              onClick={() => onBack()}
+            >
+              <div style={{ marginTop: "2px" }}>
+                <MdArrowBackIos />
+              </div>
 
-            <div>BACK</div>
-          </button>
+              <div>BACK</div>
+            </button>
+          </div>
+          <div className="">
+            <button
+              type="button"
+              style={{ background: "#ff944d" }}
+              className="btn  col-sm- ml-2"
+              onClick={() => handlePromoButton()}
+            >
+              Add Promo
+            </button>
+          </div>
         </div>
         <h4>PromoCodes</h4>
         <div className="row">
@@ -85,10 +96,9 @@ const PromoList = () => {
                             color="text.secondary"
                             gutterBottom
                           >
-                            {data.discount}
                             {data.promocode_type === "Flat"
-                              ? "₹ Flat"
-                              : "%"}{" "}
+                              ? `₹${data.discount} Flat`
+                              : `${data.discount}%`}{" "}
                             OFF
                           </Typography>
                         </span>
@@ -137,10 +147,14 @@ const PromoList = () => {
                           )}
                         </span>
                       </Typography>
-                      <Typography variant="body2">
-                        Available For : {" " + data.movies + " "}
-                        <br />
-                      </Typography>
+                      {data.movies.length === 0 ? (
+                        "Not Available for anyone"
+                      ) : (
+                        <Typography variant="body2">
+                          Available For : {" " + data.movies + " "}
+                          <br />
+                        </Typography>
+                      )}
                     </CardContent>
                   </Card>
                 </div>

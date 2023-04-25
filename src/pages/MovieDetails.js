@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/img-redundant-alt */
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Header from "../component/Layout.js/Header";
@@ -37,24 +38,15 @@ const MovieDetails = () => {
     ).data.successMessage[0];
 
     const showDetails = await axios.get(`/show?title=${movieDetails.title}`);
-    console.log(
-      "show details from the movieDetails " + showDetails.data.successMessage
-    );
-
     setMovieShow(showDetails.data.successMessage);
-    console.log(
-      "show details " + JSON.stringify(showDetails.data.successMessage)
-    );
     setMovieData(movieDetails);
   };
   const onDeleteButton = async () => {
     // setHeader(localStorage.getItem("token"));
     try {
       await axios.delete(`/movie/${moviedata.title}`);
-      console.log("deleted successfully ");
       navigate("/");
     } catch (error) {
-      console.log(error);
       navigate("/");
       // message.error(error.response.data.errorMessage);
 
@@ -75,12 +67,10 @@ const MovieDetails = () => {
 
   const onBack = async () => {
     localStorage.removeItem("title");
-    console.log("hello on back");
     navigate("/");
   };
 
   const onBookShow = async () => {
-    console.log(moviedata._id);
     navigate(`/bookshow/${moviedata.title}/${currentdate}`);
   };
   const onAddShow = async () => {
@@ -96,8 +86,7 @@ const MovieDetails = () => {
   };
 
   const handleDeleteShowDetails = async (data) => {
-    console.log(data._id);
-    const movieShowData = await axios.delete(`/show/${data._id}`);
+    await axios.delete(`/show/${data._id}`);
     navigate(-1);
   };
 

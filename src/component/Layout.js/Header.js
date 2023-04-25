@@ -29,7 +29,6 @@ const Header = () => {
             <img
               style={{ width: "160px", height: "60px" }}
               id="screenimage"
-              // className="rounded mx-auto d-block d-flex justify-content-center"
               src="/images/logo.png"
               alt="logo"
             />

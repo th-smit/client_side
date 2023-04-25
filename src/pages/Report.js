@@ -3,9 +3,7 @@ import axios from "axios";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Pie, Bar } from "react-chartjs-2";
 import Layout from "../component/Layout.js/Layout";
-import { Chart } from "chart.js/auto";
 import List from "@mui/material/List";
-import Typography from "@mui/material/Typography";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import Table from "@mui/material/Table";
@@ -50,7 +48,7 @@ const Report = () => {
   }, []);
 
   useEffect(() => {
-    if (pl.length != 0) {
+    if (pl.length !== 0) {
       const data = {
         labels: pl,
         datasets: [
@@ -82,7 +80,7 @@ const Report = () => {
   }, [pl, ptl, status]);
 
   useEffect(() => {
-    if (userName.length != 0) {
+    if (userName.length !== 0) {
       const data = {
         labels: userName,
         datasets: [
@@ -114,7 +112,7 @@ const Report = () => {
   }, [userName, limit, status]);
 
   useEffect(() => {
-    if (userEmail.length != 0) {
+    if (userEmail.length !== 0) {
       const data = {
         labels: userEmail,
         datasets: [
@@ -145,12 +143,8 @@ const Report = () => {
     if (pl.length === 0) {
       try {
         const UserPromoData = await axios.get("/promocode/getuserpromodata");
-        console.log(UserPromoData.data.successMessage);
         setHighestTimeUsedPCCount(
           UserPromoData.data.successMessage[0].totalLimit
-        );
-        console.log(
-          "hello " + JSON.stringify(UserPromoData.data.successMessage)
         );
         setHighestTimeUsedPC(UserPromoData.data.successMessage);
 
@@ -173,7 +167,6 @@ const Report = () => {
         );
 
         UserNames.data.successMessage.map((data) => {
-          console.log("user name is " + data.userName[0]);
           setUserName((userName) => [...userName, data.userName[0]]);
           setLimit((limit) => [...limit, data.totalLimit]);
         });
@@ -187,17 +180,11 @@ const Report = () => {
     if (userName.length === 0) {
       try {
         const saving = await axios.get("/promocode/getsaving");
-        console.log(
-          "saving data  " + JSON.stringify(saving.data.successMessage)
-        );
 
         saving.data.successMessage.map((data) => {
           setUserEmail((userName) => [...userName, data._id]);
           setTotalSaving((totalSaving) => [...totalSaving, data.totalSaving]);
         });
-
-        console.log("userEmail array is " + userEmail);
-        console.log("totalSaving array is " + totalSaving);
       } catch (error) {
         console.log(error);
       }
@@ -206,12 +193,7 @@ const Report = () => {
 
   const getMoviePromo = async () => {
     try {
-      console.log("movie promo data1");
       const moviepromo = await axios.get("/promocode/getmoviepromo");
-      console.log(
-        "movie promo data2" + JSON.stringify(moviepromo.data.successMessage)
-      );
-
       const mergedPromocodes = {};
 
       moviepromo.data.successMessage.forEach((doc) => {
@@ -222,18 +204,12 @@ const Report = () => {
           mergedPromocodes[movie_title] = promoname;
         }
       });
-
-      console.log("merged promo is " + JSON.stringify(mergedPromocodes));
-
       const result = Object.entries(mergedPromocodes).map(([key, value]) => ({
         movieName: key,
         promoCodes: value.split(","),
       }));
 
-      const firstTwoElements = result.slice(0, 2);
-      console.log("first two element is " + JSON.stringify(firstTwoElements));
-
-      console.log("resultant is " + JSON.stringify(result));
+      result.slice(0, 2);
       setMpc(result);
     } catch (error) {
       console.log(error);

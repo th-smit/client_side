@@ -14,31 +14,21 @@ const ExportPDF = (props) => {
   const navigate = useNavigate();
 
   const handleClick = (data) => {
-    console.log("clickable data is " + data);
     pdfExportComponent.current.save(data);
-    console.log(data);
   };
 
   const onDeleteTicket = async (data) => {
     try {
-      console.log(data);
-      const deleteticket = await axios.delete(
-        `/ticket?ticketid=${data._id}&showid=${data.show_id}`
-      );
-      console.log(deleteticket);
+      await axios.delete(`/ticket?ticketid=${data._id}&showid=${data.show_id}`);
       navigate("/");
     } catch (error) {
-      console.log(error);
       message.error(error.response.data.errorMessage);
     }
   };
 
   return (
     <PDFExport ref={pdfExportComponent} paperSize="A4">
-      <div
-        key={props.data._id}
-        // className="border bg-opacity-50 p-4 m-2 rounded"
-      >
+      <div key={props.data._id}>
         <div>
           <div class="cardWrap">
             <div class="card cardLeft">
@@ -92,7 +82,6 @@ const ExportPDF = (props) => {
                 <Button
                   type="button"
                   className="rounded"
-                  // primary={true}
                   onClick={(data) => handleClick()}
                   style={{
                     padding: "3px",

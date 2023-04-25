@@ -57,10 +57,7 @@ function App() {
       <Route path="/report" element={<Report />}></Route>
 
       <Route path="/payment/:id" element={<Payment />}></Route>
-      <Route
-        path="/completion/:ticketid/:paymentIntentKey"
-        element={<Completion />}
-      ></Route>
+      <Route path="/completion/:ticketid" element={<Completion />}></Route>
     </Routes>
   );
 }

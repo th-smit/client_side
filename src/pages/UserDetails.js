@@ -30,10 +30,8 @@ const UserDetails = () => {
   const onUserDetailSubmit = async (values) => {
     setHeader(localStorage.getItem("token"));
     try {
-      const updatedUserData = await axios.put("/users/userDetails", values);
-      console.log(updatedUserData);
+      await axios.put("/users/userDetails", values);
       localStorage.setItem("name", values.name);
-
       navigate("/");
     } catch (error) {
       console.log(error);

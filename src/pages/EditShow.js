@@ -26,8 +26,6 @@ const EditShow = () => {
   const onEditShowDetailSubmit = async (values) => {
     try {
       values.datetime = datetime;
-      console.log("movie id " + movieData._id);
-      console.log(values);
       setHeader(localStorage.getItem("token"));
       await axios.put(`/show/${movieData._id}`, values);
       navigate("/");
@@ -51,7 +49,6 @@ const EditShow = () => {
 
   const handleDateTime = (newDateValue) => {
     setDateTime(newDateValue);
-    console.log(newDateValue);
   };
 
   const onBack = async () => {

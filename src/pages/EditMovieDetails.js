@@ -34,16 +34,14 @@ const EditMovieDetails = () => {
   };
 
   useEffect(() => {
-    console.log("1st");
     getMovieRecord();
   }, []);
+
   useEffect(() => {
-    console.log("2nd");
     if (!localStorage.getItem("token")) {
       navigate("/login");
     } else {
       if (moviedata == null) {
-        console.log("data null");
       } else {
         setValue("title", moviedata.title);
         setValue("description", moviedata.description);
@@ -60,12 +58,8 @@ const EditMovieDetails = () => {
   }, [moviedata]);
 
   const getMovieRecord = async () => {
-    console.log("1st");
     const movieDetails = await axios.get(`/movie?title=${title}`);
-
-    console.log(movieDetails.data.successMessage[0]);
     let temp = movieDetails.data.successMessage[0];
-    console.log(temp._id);
     setMovieData(temp);
   };
 
@@ -74,10 +68,8 @@ const EditMovieDetails = () => {
       values.language = language;
       values.format = format;
       values.date = date;
-      console.log("updated value" + values);
       setHeader(localStorage.getItem("token"));
-      const newUserData = await axios.put(`/movie/${moviedata._id}`, values);
-      console.log(newUserData);
+      await axios.put(`/movie/${moviedata._id}`, values);
       navigate(-1);
     } catch (error) {
       console.log(error);
@@ -91,8 +83,6 @@ const EditMovieDetails = () => {
   };
 
   const handleLanguage = async (e) => {
-    console.log(e.target.value);
-    console.log(language);
     if (moviedata !== null) {
       if (language.includes(e.target.value)) {
         setLanguage(language.filter((value) => value !== e.target.value));
@@ -105,7 +95,6 @@ const EditMovieDetails = () => {
   };
 
   const handleFormat = async (e) => {
-    console.log(e.target.value);
     if (moviedata !== null) {
       if (format.includes(e.target.value)) {
         setFormat(format.filter((value) => value !== e.target.value));

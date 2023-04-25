@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import axios from "axios";
 import { message } from "antd";
 import moment from "moment/moment";
@@ -19,6 +19,7 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import Divider from "@mui/material/Divider";
+import { MdArrowBackIos } from "react-icons/md";
 
 const BookTicket = () => {
   const query = new URLSearchParams(window.location.search);
@@ -49,9 +50,6 @@ const BookTicket = () => {
   const [promoExpiry_Date, setPromoExpiry_Date] = useState();
   const [promoLimit, setPromoLimit] = useState();
   const [promoActive_Status, setPromoActive_Status] = useState();
-
-  const [userPromo, setUserPromo] = useState();
-  let [userPromoArray] = useState([]);
   const useremail = localStorage.getItem("email");
 
   const seatRow = [
@@ -73,11 +71,21 @@ const BookTicket = () => {
 
   var { id } = useParams();
 
+  // const onBack = async () => {
+  //   console.log(window.history);
+  //   if (window.history.state || window.history.state.idx > 0) {
+  //     navigate(-1);
+  //   } else {
+  //     navigate("/");
+  //   }
+  // };
+
   const onBack = async () => {
-    if (window.history.state && window.history.state.idx > 0) {
-      navigate(-1);
-    } else {
+    console.log(window.history);
+    if (window.history.length === 2) {
       navigate("/");
+    } else {
+      navigate(-1);
     }
   };
 
@@ -104,7 +112,7 @@ const BookTicket = () => {
     getShowData();
     getPromoData();
     getMovieId();
-    // getUserPromo();
+
     let totalprice = 0;
     temSeat.map((data) => {
       if (selectedSeat !== null) {
@@ -135,12 +143,7 @@ const BookTicket = () => {
   }, [selectedSeat]);
 
   const getShowData = async () => {
-    console.log("function2 called");
     const showData = await axios.get(`/show/seat/${id}`);
-
-    console.log(
-      "movie data is " + JSON.stringify(showData.data.successMessage[0].title)
-    );
     setShowData(showData.data.successMessage[0]);
     if (selectedSeat === null) {
       setSelectedSeat(showData.data.successMessage[0].seat);
@@ -149,13 +152,7 @@ const BookTicket = () => {
 
   const getMovieId = async () => {
     try {
-      console.log("movie title is from get movie id" + showdata.title);
-      // const movieId = axios.get(`/show/movieid/${id}`);
       const movieTitleData = await axios.get(`/movie?title=${showdata.title}`);
-      console.log(
-        "movie data isisis " +
-          JSON.stringify(movieTitleData.data.successMessage[0].poster_api)
-      );
       setPoster_Api(movieTitleData.data.successMessage[0].poster_api);
     } catch (error) {
       console.log(error);
@@ -167,7 +164,6 @@ const BookTicket = () => {
       const promoData = await axios.get(
         `/promocode/${useremail}/${showdata.title}`
       );
-      console.log("final data is ", promoData);
       setPromocodeList(promoData.data.successMessage);
     } catch (error) {
       console.log("error in fetching data from the promocode " + error);
@@ -179,7 +175,6 @@ const BookTicket = () => {
       temSeat.splice(index, 1);
       setTemSeat([...temSeat]);
       e.target.style.backgroundColor = "white";
-      console.log("target value" + e.target.value.charCodeAt(0));
       if (
         e.target.value.charCodeAt(0) > 67 &&
         e.target.value.charCodeAt(0) <= 73
@@ -228,36 +223,12 @@ const BookTicket = () => {
         poster_api: poster_Api,
       };
 
-      console.log("promo name " + ticketDetails.promoname);
-      console.log("promo id " + ticketDetails.promoid);
-      console.log("promo discount " + ticketDetails.promoDiscount);
-      console.log("promo expiry date " + ticketDetails.expiry_date);
-      console.log("promo limit " + ticketDetails.limit);
-      console.log("promo active_status " + ticketDetails.active_status);
-      console.log("promo type " + ticketDetails.promocode_type);
-
-      console.log("movie title using show" + ticketDetails.movieTitle);
-      console.log("show date " + ticketDetails.date);
-      console.log("show id " + ticketDetails.showid);
-      console.log("movie title " + ticketDetails.title);
-
-      console.log("email " + ticketDetails.email);
-
-      console.log("discount " + ticketDetails.saving);
-
-      console.log("grand total " + ticketDetails.price);
-
-      console.log("selected seat " + ticketDetails.seat);
-
       const unbookedseat = await axios.post("/ticket", ticketDetails);
-      console.log("ticket data is " + unbookedseat.data.successMessage._id);
-      console.log("movieShowData[0] " + unbookedseat.data.successMessage);
       navigate(`/payment/${unbookedseat.data.successMessage._id}`);
       // setSummary(false);
       // navigate("/");
     } catch (error) {
       message.error(error.response.data.errorMessage);
-      console.log(error.response.data.errorMessage);
     }
   };
 
@@ -281,25 +252,18 @@ const BookTicket = () => {
         ticketDetails
       );
       setGrandTotal(price + ((price * 3) / 100 + (price * 15) / 100));
-      console.log("unbooked seat is " + unbookedseat.data.successMessage);
       setUnbooked(unbookedseat.data.successMessage);
       setSummary(true);
     } catch (error) {
-      console.log("error + ", error.response.data.errorMessage);
+      message.error(error.response.data.errorMessage);
     }
   };
 
   const handlePromocodeStatus = (data) => {
-    console.log("seleceted promo is " + JSON.stringify(data));
-    console.log("selected type is " + JSON.stringify(data.promocode_type));
-    console.log("selected discount is " + JSON.stringify(data.discount));
     if (promoName === data.promo_name) {
       console.log("active status is " + applyStatus);
       setApplyStatus(false);
       setValue("promo_name", "");
-      console.log(
-        "grand total is " + (price + ((price * 3) / 100 + (price * 15) / 100))
-      );
       setGrandTotal(price + ((price * 3) / 100 + (price * 15) / 100));
       setPromoId(null);
       setPromocodeType(null);
@@ -310,8 +274,6 @@ const BookTicket = () => {
       setPromoActive_Status(null);
       setPromoName("");
     } else {
-      console.log("promo is " + data.promo_name);
-      console.log("active status is " + applyStatus);
       setApplyStatus(true);
       setPromocodeType(data.promocode_type);
       setPromoId(data._id);
@@ -324,14 +286,8 @@ const BookTicket = () => {
       if (data.promocode_type === "Flat") {
         const gh = price - data.discount;
         if (gh <= 0) {
-          console.log(
-            "grand total is " + ((price * 3) / 100 + (price * 15) / 100)
-          );
           setGrandTotal((price * 3) / 100 + (price * 15) / 100);
         } else {
-          console.log(
-            "grand total is " + (gh + ((price * 3) / 100 + (price * 15) / 100))
-          );
           setGrandTotal(gh + ((price * 3) / 100 + (price * 15) / 100));
         }
         setDiscount(data.discount);
@@ -346,7 +302,6 @@ const BookTicket = () => {
   };
 
   const onCross = () => {
-    console.log("cross clicked");
     setApplyStatus(false);
     setValue("promo_name", "");
     setGrandTotal(price + ((price * 3) / 100 + (price * 15) / 100));
@@ -360,10 +315,11 @@ const BookTicket = () => {
             <div className="row bg-dark text-white ">
               <div className="col-sm-1">
                 <button
-                  className="mt-3 btn pointer-link"
+                  style={{ fontSize: "35px" }}
+                  className="mt-2 bg-dark text-white btn "
                   onClick={() => onBack()}
                 >
-                  &#60;- Back
+                  <MdArrowBackIos />
                 </button>
               </div>
 
@@ -375,98 +331,112 @@ const BookTicket = () => {
                 </p>
               </div>
             </div>
-            <div className="container">
+
+            <div style={{ marginBottom: "90px" }}>
+              <div className="d-flex justify-content-center">
+                <table>
+                  <tfoot>
+                    <tr className=" mt-1">
+                      <td colSpan="9">EXCLUSIVE Rs. 120.0</td>
+                    </tr>
+                    {seatRow.slice(0, 3).map((seatRowAlphabet) => {
+                      return (
+                        <tr key={seatRowAlphabet}>
+                          <SeatCom
+                            key={seatRowAlphabet}
+                            value={seatRowAlphabet}
+                            seatArray={seat}
+                            qseats={temSeat}
+                            onHandleSeat={handleSeat}
+                            selectedSeat={selectedSeat}
+                          />
+                        </tr>
+                      );
+                    })}
+
+                    <hr />
+                    <tr className="mt-1">
+                      <td colSpan="9">PREMIUM Rs. 150.0</td>
+                    </tr>
+
+                    {seatRow.slice(3, 9).map((seatRowAlphabet) => {
+                      return (
+                        <tr key={seatRowAlphabet}>
+                          <SeatCom
+                            key={seatRowAlphabet}
+                            value={seatRowAlphabet}
+                            seatArray={seat}
+                            qseats={temSeat}
+                            onHandleSeat={handleSeat}
+                            selectedSeat={selectedSeat}
+                          />
+                        </tr>
+                      );
+                    })}
+                    <hr />
+                    <tr>
+                      <td colSpan="9" className="mt-1">
+                        Golden Rs. 180.0
+                      </td>
+                    </tr>
+                    {seatRow.slice(9).map((seatRowAlphabet) => {
+                      return (
+                        <tr key={seatRowAlphabet}>
+                          <SeatCom
+                            key={seatRowAlphabet}
+                            value={seatRowAlphabet}
+                            seatArray={seat}
+                            qseats={temSeat}
+                            onHandleSeat={handleSeat}
+                            selectedSeat={selectedSeat}
+                          />
+                        </tr>
+                      );
+                    })}
+                  </tfoot>
+                </table>
+              </div>
               <div
-                id="pay"
-                className="align-bottom d-flex justify-content-left"
+                style={{ marginTop: "20px" }}
+                className="mt-5 d-flex justify-content-center"
               >
-                {price !== 0 ? (
-                  <button
-                    type="button"
-                    className="btn btn-outline-primary"
-                    onClick={() => gotosummary()}
-                  >
-                    {price == 0 ? "" : "Pay : " + price}
-                  </button>
-                ) : (
-                  ""
-                )}
+                <img
+                  id="screenimage"
+                  className="rounded mx-auto d-block"
+                  src="/images/screen.png"
+                  alt="logo"
+                />
               </div>
-              <div className="mt-2"></div>
-              <div>
-                <br />
-                <div>
-                  <table>
-                    <tfoot>
-                      <tr className=" mt-1">
-                        <td colSpan="9">EXCLUSIVE Rs. 120.0</td>
-                      </tr>
-                      {seatRow.slice(0, 3).map((seatRowAlphabet) => {
-                        return (
-                          <tr key={seatRowAlphabet}>
-                            <SeatCom
-                              key={seatRowAlphabet}
-                              value={seatRowAlphabet}
-                              seatArray={seat}
-                              qseats={temSeat}
-                              onHandleSeat={handleSeat}
-                              selectedSeat={selectedSeat}
-                            />
-                          </tr>
-                        );
-                      })}
-
-                      <hr />
-                      <tr className="mt-1">
-                        <td colSpan="9">PREMIUM Rs. 150.0</td>
-                      </tr>
-
-                      {seatRow.slice(3, 9).map((seatRowAlphabet) => {
-                        return (
-                          <tr key={seatRowAlphabet}>
-                            <SeatCom
-                              key={seatRowAlphabet}
-                              value={seatRowAlphabet}
-                              seatArray={seat}
-                              qseats={temSeat}
-                              onHandleSeat={handleSeat}
-                              selectedSeat={selectedSeat}
-                            />
-                          </tr>
-                        );
-                      })}
-                      <hr />
-                      <tr>
-                        <td colSpan="9" className="mt-1">
-                          Golden Rs. 180.0
-                        </td>
-                      </tr>
-                      {seatRow.slice(9).map((seatRowAlphabet) => {
-                        return (
-                          <tr key={seatRowAlphabet}>
-                            <SeatCom
-                              key={seatRowAlphabet}
-                              value={seatRowAlphabet}
-                              seatArray={seat}
-                              qseats={temSeat}
-                              onHandleSeat={handleSeat}
-                              selectedSeat={selectedSeat}
-                            />
-                          </tr>
-                        );
-                      })}
-                    </tfoot>
-                  </table>
-                </div>
-                <div className="mt-5">
-                  <img
-                    id="screenimage"
-                    className="rounded mx-auto d-block d-flex justify-content-center"
-                    src="/images/screen.png"
-                    alt="logo"
-                  />
-                </div>
-              </div>
+            </div>
+            <div
+              id="pay"
+              className="d-flex justify-content-center w-100"
+              style={{
+                background: "white",
+                position: "fixed",
+                bottom: 0,
+              }}
+            >
+              {price !== 0 ? (
+                <button
+                  style={{
+                    width: "150px",
+                    border: "2px solid black",
+                    padding: "5px",
+                  }}
+                  type="button"
+                  className=" mb-3 mt-2"
+                  onClick={() => gotosummary()}
+                >
+                  <span>
+                    {price == 0 ? "" : "Pay Rs. " + price}
+                    <br />
+                    <span>{" Seat : " + temSeat.map((seat) => seat)}</span>
+                  </span>
+                </button>
+              ) : (
+                ""
+              )}
             </div>
           </div>
         </>
@@ -477,13 +447,33 @@ const BookTicket = () => {
             <div className="d-flex justify-content-center mt-4">
               <Card className="bg-light" style={{ width: 450 }}>
                 <CardContent>
-                  <Typography
-                    sx={{ fontSize: 18 }}
-                    component="div"
-                    className="d-flex justify-content-center"
-                  >
-                    B O O K I N G &nbsp; S U M M A R Y
-                  </Typography>
+                  <div className="row">
+                    <span className="col-sm-2">
+                      <button
+                        onClick={() => onBackTicket()}
+                        style={{
+                          fontSize: "20px",
+                          marginLeft: "2px",
+                        }}
+                        className="bg-light"
+                      >
+                        <MdArrowBackIos />
+                      </button>
+                    </span>
+                    <span
+                      className="col-md-8 mb-4"
+                      style={{ marginLeft: "10px" }}
+                    >
+                      <Typography
+                        sx={{ fontSize: 18 }}
+                        component="div"
+                        className="d-flex justify-content-center"
+                      >
+                        B O O K I N G &nbsp; S U M M A R Y
+                      </Typography>
+                    </span>
+                  </div>
+
                   <div className="ml-4 mr-2 mt-4 d-flex justify-content-between">
                     <span style={{ overflowWrap: "break-word" }}>
                       <Typography sx={{ fontSize: 18 }} gutterBottom>
@@ -656,15 +646,6 @@ const BookTicket = () => {
                       onClick={() => onPay()}
                     >
                       Pay Rs.{grandTotal}
-                    </button>
-                  </div>
-
-                  <div>
-                    <button
-                      className="mt-3 btn pointer-link bg-light"
-                      onClick={() => onBackTicket()}
-                    >
-                      &#60;- Back
                     </button>
                   </div>
                 </CardContent>

@@ -53,7 +53,6 @@ const HomePage = () => {
   };
 
   const handlerSearchButton = () => {
-    console.log(movieTitle);
     setMovieTitle(movieTitle);
     getRecords();
   };
@@ -64,19 +63,11 @@ const HomePage = () => {
 
   const handleImageClickDetails = (data) => {
     localStorage.setItem("title", data.title);
-    console.log("on image clicked " + JSON.stringify(data));
-    console.log("movie title " + data.title);
     navigate(`/moviedetails/${data.title}`);
   };
 
   const handleAddButton = () => {
-    console.log("handleAddMovie");
     navigate("/addmovie");
-  };
-
-  const handlePromoButton = () => {
-    console.log("handleAddMovie");
-    navigate("/addpromocode");
   };
 
   return (
@@ -134,14 +125,6 @@ const HomePage = () => {
                   onClick={() => handleAddButton()}
                 >
                   Add Movie
-                </button>
-                <button
-                  type="button"
-                  style={{ background: "#ff944d" }}
-                  className="btn  ml-2"
-                  onClick={() => handlePromoButton()}
-                >
-                  Add Promo
                 </button>
               </>
             )}

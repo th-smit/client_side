@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { message } from "antd";
@@ -120,14 +121,11 @@ function AddMovie() {
             }}
             noValidate
             autoComplete="off"
-          >
-            {/* <TextField id="outlined-basic" label="Outlined" variant="outlined" /> */}
-          </Box>
+          ></Box>
           <label htmlFor="title">Movie Title : &nbsp;</label>
           <TextField
             type="text"
             id="outlined-basic"
-            label="Movie Title"
             variant="outlined"
             {...register("title", {
               required: true,
@@ -145,7 +143,6 @@ function AddMovie() {
 
           <label htmlFor="description">Description : &nbsp;</label>
           <TextareaAutosize
-            aria-label="empty textarea"
             label="Movie Title"
             style={{
               width: 565,
@@ -153,21 +150,13 @@ function AddMovie() {
               background: "#F6D3A3",
               borderRadius: "5px",
             }}
-            type="textarea"
+            aria-label="my textarea"
             {...register("description", {
               required: true,
               minLength: 3,
               maxLength: 5000,
             })}
           />
-          {/* <textarea
-            type="text"
-            {...register("description", {
-              required: true,
-              minLength: 3,
-              maxLength: 5000,
-            })}
-          /> */}
           <p>
             {errors.description && (
               <span style={{ color: "red" }}>
@@ -179,7 +168,6 @@ function AddMovie() {
           <TextField
             type="text"
             id="outlined-basic"
-            label="Poster API"
             variant="outlined"
             {...register("poster_api", {
               required: true,
@@ -194,7 +182,6 @@ function AddMovie() {
           <TextField
             type="text"
             id="outlined-basic"
-            label="Movie Type"
             variant="outlined"
             {...register("movie_type", {
               required: true,

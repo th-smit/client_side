@@ -31,7 +31,6 @@ const AddPromoCode = () => {
 
   const [expiry_date, setExpiryDate] = React.useState(dayjs(new Date()));
   const [promocode_type, setType] = useState(null);
-  const [movies, setMovies] = useState([]);
 
   const theme = useTheme();
   const [personName, setPersonName] = React.useState([]);
@@ -54,7 +53,6 @@ const AddPromoCode = () => {
 
   const getMovieRecord = async () => {
     const movieRecord = await axios.get("/movie");
-    console.log("movie record is" + movieRecord);
     setMovieData(movieRecord.data.successMessage);
   };
 
@@ -79,7 +77,6 @@ const AddPromoCode = () => {
 
   const handleDate = (newDateValue) => {
     setExpiryDate(newDateValue);
-    console.log(newDateValue);
   };
 
   const onBack = async () => {
@@ -87,15 +84,7 @@ const AddPromoCode = () => {
   };
 
   const handleType = async (e) => {
-    console.log(e.target.value);
     setType(e.target.value);
-    // if (promocode_type.includes(e.target.value)) {
-    //   setType("");
-    //   e.target.style.backgroundColor = "#efefef";
-    // } else {
-    //   setType([e.target.value]);
-    //   e.target.style.backgroundColor = "lightblue";
-    // }
   };
 
   const onAddMovieDetailSubmit = async (values) => {
@@ -107,7 +96,6 @@ const AddPromoCode = () => {
       await axios.post("/promocode", values);
       navigate("/");
     } catch (error) {
-      console.log(error);
       message.error(error.response.data.errorMessage);
       // clearStorage();
       // navigate("/");
@@ -192,29 +180,22 @@ const AddPromoCode = () => {
           )}
         </p>
 
-        {/* <input
-          type="text"
-          {...register("promocode_type", {
-            required: true,
-          })}
-        /> */}
         <div className="d-flex justify-content-center" onChange={handleType}>
           <span>
             <label htmlFor="promocode_type">Promocode Type : &nbsp;</label>
           </span>
           <span>
-            <span className="">
-              <input
-                type="radio"
-                name="type"
-                value="Flat"
-                // className="mr-2"
-                style={{ width: "18px" }}
-                // onClick={handleType}
-              />
+            <input
+              type="radio"
+              name="type"
+              value="Flat"
+              // className="mr-2"
+              style={{ width: "18px" }}
+              // onClick={handleType}
+            />
 
-              <span className="ml-2">Flat</span>
-            </span>
+            <span className="ml-2">Flat</span>
+
             <span className="ml-4">
               <input
                 type="radio"
@@ -273,15 +254,6 @@ const AddPromoCode = () => {
           className="btn mt-3"
           value="Add"
         />
-        {/* <div className="mt-2">
-          <button
-            style={{ background: "#f7b067" }}
-            className="btn pointer-link"
-            onClick={() => onBack()}
-          >
-            &#60;- Back
-          </button>
-        </div> */}
       </form>
     </>
   );

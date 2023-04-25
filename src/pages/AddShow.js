@@ -32,14 +32,11 @@ const AddShow = () => {
       values.datetime = datetime;
       values.hour = parseInt(moviedata.hour);
       values.minute = parseInt(moviedata.minute);
-      console.log(values);
       setHeader(localStorage.getItem("token"));
       await axios.post("/show", values);
       navigate("/");
     } catch (error) {
-      console.log(error.response.data.errorMessage);
       message.error(error.response.data.errorMessage);
-
       navigate(-1);
     }
   };
@@ -57,16 +54,12 @@ const AddShow = () => {
   }, []);
 
   const getMovieRecord = async () => {
-    console.log(title);
     const movieDetails = await axios.get(`/movie?title=${title}`);
-
-    console.log(movieDetails.data.successMessage[0]);
     setMovieData(movieDetails.data.successMessage[0]);
   };
 
   const handleDateTime = (newDateValue) => {
     setDateTime(newDateValue);
-    console.log(newDateValue);
   };
 
   const onBack = async () => {
@@ -117,7 +110,6 @@ const AddShow = () => {
                 label="Date"
                 inputFormat="MM/DD/YYYY"
                 value={datetime}
-                // minDate={new Date()}
                 disablePast
                 onChange={handleDateTime}
                 renderInput={(params) => <TextField {...params} />}
@@ -127,7 +119,6 @@ const AddShow = () => {
               <TimePicker
                 label="Time"
                 value={datetime}
-                // minTime={now.hours(now.hour()).minutes(now.minutes())}
                 onChange={handleDateTime}
                 renderInput={(params) => <TextField {...params} />}
               />
@@ -140,14 +131,6 @@ const AddShow = () => {
           className="btn mt-3"
           value="Add"
         />
-        {/* <div className="mt-2">
-          <a
-            className="btn btn-primary pointer-link text-white"
-            onClick={() => onBack()}
-          >
-            &#60;- Back
-          </a>
-        </div> */}
       </form>
     </>
   );

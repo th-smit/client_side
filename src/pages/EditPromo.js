@@ -10,10 +10,8 @@ import TextField from "@mui/material/TextField";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { useForm } from "react-hook-form";
-import { TimePicker } from "@mui/x-date-pickers/TimePicker";
-import dayjs from "dayjs";
+import { MdArrowBackIos } from "react-icons/md";
 
-// ----------------
 import { useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import OutlinedInput from "@mui/material/OutlinedInput";
@@ -22,11 +20,9 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import Chip from "@mui/material/Chip";
-// ---------------
 
 const EditPromo = () => {
   var { id } = useParams();
-  console.log("promocode data " + id);
   const [promoData, setPromoData] = useState(null);
   const [movieData, setMovieData] = useState([]);
   const navigate = useNavigate();
@@ -41,7 +37,7 @@ const EditPromo = () => {
     setValue,
     formState: { errors },
   } = useForm();
-  // --------------
+
   const ITEM_HEIGHT = 48;
   const ITEM_PADDING_TOP = 8;
   const MenuProps = {
@@ -88,29 +84,19 @@ const EditPromo = () => {
     );
   };
 
-  // ---------------
-
   const getPromoRecord = async () => {
     const promoRecord = await axios.get(`/promocode?id=${id}`);
-    console.log("promo is " + promoRecord.data.successMessage[0]);
     setPromoData(promoRecord.data.successMessage[0]);
-    console.log(
-      "stored movie data " + promoRecord.data.successMessage[0].movies
-    );
     setPersonName(promoRecord.data.successMessage[0].movies);
     const movieRecord = await axios.get("/movie");
-    console.log("movie record is" + movieRecord);
     setMovieData(movieRecord.data.successMessage);
   };
 
   const onUpdateDetailSubmit = async (values) => {
     values.movies = personName;
     values.expiry_date = date;
-    console.log("promocode value " + JSON.stringify(values));
     try {
-      const updatedData = axios.put(`/promocode/${id}`, values);
-      // console.log()
-      console.log(updatedData);
+      axios.put(`/promocode/${id}`, values);
       navigate("/");
     } catch (error) {
       console.log(error);
@@ -121,11 +107,9 @@ const EditPromo = () => {
 
   const handleDateTime = (newDateValue) => {
     setDate(newDateValue);
-    console.log("date is " + newDateValue);
   };
 
   const handleType = async (e) => {
-    console.log("type is " + e.target.value);
     setPromo_type(e.target.value);
   };
   const onBack = async () => {
@@ -137,31 +121,59 @@ const EditPromo = () => {
       <Layout>
         <>
           <form className="App1" onSubmit={handleSubmit(onUpdateDetailSubmit)}>
+            <div className="row">
+              <button
+                onClick={() => onBack()}
+                style={{
+                  fontSize: "20px",
+                  background: "#F6D3A3",
+                  marginLeft: "2px",
+                }}
+                className="col-md-2"
+              >
+                <MdArrowBackIos />
+              </button>
+              <span>
+                <h3 className="promocode" style={{ marginLeft: "80px" }}>
+                  Edit PromoCode
+                </h3>
+              </span>
+            </div>
+            <label htmlFor="promo_name">PromoCode Name : &nbsp;</label>
+            <TextField
+              type="text"
+              {...register("promo_name", {
+                required: true,
+              })}
+            />
             <p>
-              <label htmlFor="promo_name">PromoCode Name : &nbsp;</label>
-              <input
-                type="text"
-                {...register("promo_name", {
-                  required: true,
-                })}
-              />
+              {errors.promo_name && (
+                <span style={{ color: "red" }}>
+                  promocode name is mandatory
+                </span>
+              )}
             </p>
+
+            <label htmlFor="discount">Discount : &nbsp;</label>
+            <TextField
+              type="number"
+              min={promo_type === "Percentage" ? 1 : 1}
+              max={promo_type === "Percentage" ? 100 : undefined}
+              {...register("discount", {
+                required: true,
+              })}
+            />
             <p>
-              <label htmlFor="discount">Discount : &nbsp;</label>
-              <input
-                type="text"
-                {...register("discount", {
-                  required: true,
-                })}
-              />
+              {errors.discount && (
+                <span style={{ color: "red" }}>
+                  promocode number is mandatory
+                </span>
+              )}
             </p>
-            <p>
-              <label htmlFor="active_status">Active : &nbsp;</label>
-              <input type="checkbox" {...register("active_status")} />
-            </p>
-            <p>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <div>
+            <div>
+              Expiry Date:
+              <div>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DesktopDatePicker
                     label="Date"
                     inputFormat="MM/DD/YYYY"
@@ -169,38 +181,44 @@ const EditPromo = () => {
                     onChange={handleDateTime}
                     renderInput={(params) => <TextField {...params} />}
                   />
-                </div>
-              </LocalizationProvider>
-            </p>
-            <p>
-              <label htmlFor="count">count : &nbsp;</label>
-              <input
-                type="text"
-                {...register("count", {
-                  required: true,
-                })}
-              />
-            </p>
+                </LocalizationProvider>
+              </div>
+            </div>
+
+            <label htmlFor="count">limit : &nbsp;</label>
+            <TextField
+              type="text"
+              {...register("count", {
+                required: true,
+              })}
+            />
+
             <div
-              className="d-flex justify-content-around"
+              className="mt-4 mb-2 d-flex justify-content-center"
               onChange={handleType}
             >
-              {/* <label htmlFor="promo_type"> &nbsp;</label> */}
-              Promo_Type :
-              <input
-                type="radio"
-                value="Percentage"
-                checked={promo_type === "Percentage"}
-                {...register("promo_type", {})}
-              />
-              <span>Percentage</span>
-              <input
-                type="radio"
-                value="Flat"
-                checked={promo_type === "Flat"}
-                {...register("promo_type", {})}
-              />
-              <span>Flat</span>
+              <span>
+                <label htmlFor="promocode_type">Promocode Type : &nbsp;</label>
+              </span>
+              <span>
+                <input
+                  type="radio"
+                  value="Percentage"
+                  checked={promo_type === "Percentage"}
+                  {...register("promo_type", {})}
+                />
+                <span className="ml-2">Percentage</span>
+
+                <span className="ml-4">
+                  <input
+                    type="radio"
+                    value="Flat"
+                    checked={promo_type === "Flat"}
+                    {...register("promo_type", {})}
+                  />
+                  <span className="ml-2">Flat</span>
+                </span>
+              </span>
             </div>
             <p>
               <div>
@@ -238,17 +256,16 @@ const EditPromo = () => {
                 </FormControl>
               </div>
             </p>
+            <div className="mt-1">
+              <label htmlFor="active_status">Active : &nbsp;</label>
+              <input type="checkbox" {...register("active_status")} />
+            </div>
             <input
               type="submit"
-              className="btn btn-primary mt-3"
+              style={{ background: "#f7b067" }}
+              className="btn mt-3"
               value="Update"
             />
-            <button
-              className="btn btn-primary pointer-link"
-              onClick={() => onBack()}
-            >
-              &#60;- Back
-            </button>
           </form>
         </>
       </Layout>

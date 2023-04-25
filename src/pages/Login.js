@@ -15,7 +15,6 @@ const Login = () => {
   });
 
   const onLoginButtonClick = async (values) => {
-    console.log(values);
     try {
       const newUserData = await axios.post("/users/login", values);
       localStorage.setItem("role", newUserData.data.successMessage.user.role);
@@ -23,10 +22,8 @@ const Login = () => {
       localStorage.setItem("token", newUserData.data.successMessage.token);
       localStorage.setItem("name", newUserData.data.successMessage.user.name);
       setHeader(newUserData.data.successMessage.token);
-      // console.log("state " + JSON.stringify(location.state));
 
       if (location.state?.from) {
-        console.log(location.state.from.pathname);
         navigate(location.state.from.pathname);
       } else {
         navigate("/");

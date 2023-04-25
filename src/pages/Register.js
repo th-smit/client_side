@@ -15,11 +15,8 @@ const Register = () => {
 
   const submitRegisterDetails = async (values) => {
     delete values.confirmpassword;
-    console.log(values);
     try {
       const userData = await axios.post("/users/register", values);
-
-      console.log(userData);
       localStorage.setItem("token", userData.data.successMessage.token);
       localStorage.setItem("role", userData.data.successMessage.user.role);
       localStorage.setItem("name", userData.data.successMessage.user.name);
