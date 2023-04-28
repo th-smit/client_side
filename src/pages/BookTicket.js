@@ -578,7 +578,9 @@ const BookTicket = () => {
                     </span>
                   </div>
                   <div className="mt-4 ml-4 mb-2">
-                    <Typography sx={{ fontSize: 14 }}>PROMO CODES</Typography>
+                    {promocodeList && (
+                      <Typography sx={{ fontSize: 14 }}>PROMO CODES</Typography>
+                    )}
                   </div>
 
                   <div className="mb-4 ml-4">

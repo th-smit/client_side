@@ -104,7 +104,15 @@ const ExportPDF = (props) => {
                       type="button"
                       className="ml-2 border rounded"
                       value="Cancel Ticket"
-                      onClick={() => onDeleteTicket(props.data)}
+                      onClick={() => {
+                        const confirmBox = window.confirm(
+                          "Are you sure want to delete the ticket?"
+                        );
+                        if (confirmBox === true) {
+                          onDeleteTicket(props.data);
+                        }
+                      }}
+                      // onClick={() => onDeleteTicket(props.data)}
                     />
                   </>
                 )}

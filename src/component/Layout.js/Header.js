@@ -2,6 +2,10 @@ import React from "react";
 import { message } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { TbBrandGoogleAnalytics } from "react-icons/tb";
+import { FiLogOut } from "react-icons/fi";
+import { RiCoupon2Line } from "react-icons/ri";
+import { CgProfile } from "react-icons/cg";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -34,15 +38,16 @@ const Header = () => {
             />
           </Link>
           <div>
-            <ul className="navbar-nav ms-auto mb-2 ">
+            <ul className="navbar-nav ms-auto ">
               <li className="nav-item">
                 <Link
                   style={{ color: "white" }}
-                  className="nav-link"
+                  className="nav-link mr-2"
                   to="/userdetails"
                   aria-current="page"
                 >
-                  {name}
+                  <CgProfile style={{ fontSize: "25px" }} />
+                  {/* {name} */}
                 </Link>
               </li>
               <li>
@@ -52,7 +57,7 @@ const Header = () => {
                   onClick={() => handlerPromos()}
                   className="mb-2 mr-2 nav-link"
                 >
-                  Promos
+                  <RiCoupon2Line style={{ fontSize: "25px" }} />
                 </button>
               </li>
               <li>
@@ -61,7 +66,7 @@ const Header = () => {
                   onClick={() => handlerLogout()}
                   className="mb-2 mr-2 nav-link"
                 >
-                  Logout
+                  <FiLogOut style={{ fontSize: "25px" }} />
                 </button>
               </li>
               <li>
@@ -70,7 +75,7 @@ const Header = () => {
                   onClick={() => handlerReport()}
                   className="mb-2 nav-link"
                 >
-                  Report
+                  <TbBrandGoogleAnalytics style={{ fontSize: "25px" }} />
                 </button>
               </li>
             </ul>

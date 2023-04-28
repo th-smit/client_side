@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+
+import Chart from "chart.js/auto";
 import { Pie, Bar } from "react-chartjs-2";
 import Layout from "../component/Layout.js/Layout";
 import List from "@mui/material/List";
@@ -37,8 +38,6 @@ const Report = () => {
   const [pieData, setPieData] = useState();
   const [bar1Data, setBar1Data] = useState();
   const [bar2Data, setBar2Data] = useState();
-
-  ChartJS.register(ArcElement, Tooltip, Legend);
 
   useEffect(() => {
     getPCNameHighestTimeUsed();
@@ -317,6 +316,22 @@ const Report = () => {
               <div className="mb-3" style={{ width: "80%", margin: "auto" }}>
                 how much amount the users saved using the promo codes
               </div>
+
+              {/* <Bar
+                data={{
+                  labels: [1, 2, 3, 4],
+                  datasets: [
+                    {
+                      label: "Promo Use",
+                      data: [],
+                      backgroundColor: "rgba(54, 162, 235, 0.2)",
+                      borderColor: "rgba(54, 162, 235, 1)",
+                      borderWidth: 1,
+                    },
+                  ],
+                }}
+                options={options}
+              /> */}
               {userName && limit && (
                 <div style={{ width: "80%", margin: "auto" }}>
                   {bar1Data && <Bar data={bar1Data} />}

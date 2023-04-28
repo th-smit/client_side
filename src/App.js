@@ -21,6 +21,7 @@ import EditPromo from "./pages/EditPromo";
 import Report from "./pages/Report";
 import Payment from "./pages/Payment";
 import Completion from "./pages/Completion";
+import Wallet from "./pages/Wallet";
 
 function App() {
   return (
@@ -58,6 +59,7 @@ function App() {
 
       <Route path="/payment/:id" element={<Payment />}></Route>
       <Route path="/completion/:ticketid" element={<Completion />}></Route>
+      <Route path="/wallet" element={<Wallet />}></Route>
     </Routes>
   );
 }

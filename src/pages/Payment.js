@@ -15,19 +15,20 @@ import { message } from "antd";
 
 const Payment = () => {
   const [stripPromise, setStripePromise] = useState(null);
-  const [paymentIntentKey, setPaymentIntentKey] = useState("");
+  const [cilentSecretKey, setCilentSecretKey] = useState("");
   const [pik, setPIK] = useState(null);
   const { id } = useParams();
   const [ticketData, setTicketData] = useState();
   const [count, setCount] = useState();
   const navigate = useNavigate();
+  const [paymentMethod, setPaymentMethod] = useState();
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     ConfigPayment();
     PaymentIntent();
     // checkPendingStatus();
-  }, []);
+  }, [cilentSecretKey]);
 
   // useEffect(() => {
   //   // setCount(1);
@@ -52,9 +53,9 @@ const Payment = () => {
       const ticketData = await axios.get(`/ticket?ticket_id=${id}`);
       setTicketData(ticketData.data.successMessage[0]);
       if (!ticketData.data.successMessage[0].pending_status) {
-        message.success("payment already done");
-
-        navigate(`/completion/${id}`);
+        // message.success("payment already done");
+        navigate("/", { replace: true });
+        // navigate(`/completion/${id}`);
       }
     } catch (error) {
       console.log(error);
@@ -68,8 +69,12 @@ const Payment = () => {
           email: localStorage.getItem("email"),
         })
         .then((result) => {
-          setPaymentIntentKey(result.data.successMessage.client_secret);
+          if (!cilentSecretKey) {
+            setCilentSecretKey(result.data.successMessage.client_secret);
+          }
           setPIK(result.data.successMessage.paymentkey);
+          setPaymentMethod(result.data.successMessage.paymentMethods);
+          console.log(result.data.successMessage.paymentMethods);
         })
 
         .catch((error) => {
@@ -87,14 +92,22 @@ const Payment = () => {
 
   return (
     <>
-      {stripPromise && paymentIntentKey && ticketData && (
+      {stripPromise && cilentSecretKey && ticketData && paymentMethod && (
         <Layout>
           <body className="">
             <div className="mt-3">
               <button
                 style={{ background: "#ff944d" }}
                 className="col-sm- btn d-flex"
-                onClick={() => onBack()}
+                // onClick={() => onBack()}
+                onClick={() => {
+                  const confirmBox = window.confirm(
+                    "Are you sure want to cancel a transection"
+                  );
+                  if (confirmBox === true) {
+                    onBack();
+                  }
+                }}
               >
                 <div style={{ marginTop: "2px" }}>
                   <MdArrowBackIos />
@@ -104,7 +117,7 @@ const Payment = () => {
               </button>
             </div>
             <div className="row">
-              <div className="col-md-6">
+              <div className="col-sm-6">
                 <div style={{ marginTop: "20%" }}>
                   <div className="d-flex justify-content-center mt-2 mb-4">
                     <Typography sx={{ fontSize: 18 }}>P A Y M E N T</Typography>
@@ -112,9 +125,14 @@ const Payment = () => {
                   <div>
                     <Elements
                       stripe={stripPromise}
-                      options={{ clientSecret: paymentIntentKey }}
+                      options={{ clientSecret: cilentSecretKey }}
                     >
-                      <CheckoutForm ticketid={id} paymentIntentKey={pik} />
+                      <CheckoutForm
+                        ticketid={id}
+                        paymentMethod={paymentMethod}
+                        paymentIntentKey={pik}
+                        clientSecret={cilentSecretKey}
+                      />
                     </Elements>
                   </div>
                 </div>

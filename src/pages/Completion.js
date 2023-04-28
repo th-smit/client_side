@@ -1,25 +1,28 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 
 const Completion = (req, res) => {
   const { ticketid } = useParams();
   const navigate = useNavigate();
+
   useEffect(() => {
     changeTicketStatus();
   }, []);
+
+  // const v = setTimeout(() => {
+  //   navigate("/");
+  // }, 9000);
 
   const changeTicketStatus = async () => {
     const ticketid1 = {
       ticketid: ticketid,
     };
     await axios.put("/ticket", ticketid1);
-    setTimeout(() => {
-      navigate("/");
-    }, 9000);
   };
 
   const GoToOrder = async () => {
+    // clearTimeout(v);
     navigate("/mybooking");
   };
 
